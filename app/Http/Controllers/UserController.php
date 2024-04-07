@@ -235,9 +235,10 @@ class UserController extends Controller
     {
         if (Auth::user()->isAdmin == 1) {
             $user = User::where('so_hieu_cong_chuc', $id)->first();
-            $user->password = Hash::make('123456');
+            $password = '123456';
+            $user->password = Hash::make($password);
             $user->save();
-            return back()->with('msg_success', 'Reset mật mã thành công');
+            return back()->with('msg_success', 'Reset mật mã thành công. Mật mã mặc định là: '.$password);
         } else {
             return view('404');
         }

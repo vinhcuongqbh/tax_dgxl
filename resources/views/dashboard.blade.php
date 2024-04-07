@@ -84,7 +84,7 @@
                 <li class="nav-item">
                     <form action="{{ route('logout') }}" method="post">
                         {{ csrf_field() }}
-                        <input class="btn btn-default btn-sm" type="submit" value="{{ __('Log Out') }}">
+                        <input class="btn btn-default btn-sm" type="submit" value="{{ __('Đăng xuất') }}">
                     </form>
                 </li>
             </ul>
@@ -328,23 +328,22 @@
     @yield('css')
     @yield('js')
     <script>
-        $(function() {
-            var url = window.location;
-            // for single sidebar menu
-            $('ul.nav-sidebar a').filter(function() {
-                return this.href == url;
-            }) //.addClass('active');
+        /*** add active class and stay opened when selected ***/
+        var url = window.location;
 
-            // for sidebar menu and treeview
-            $('ul.nav-treeview a').filter(function() {
-                    return this.href == url;
-                }).parentsUntil(".nav-sidebar > .nav-treeview")
-                .css({
-                    'display': 'block'
-                })
-                .addClass('menu-open').prev('a')
-                .addClass('active');
-        });
+        // for sidebar menu entirely but not cover treeview
+        $('ul.nav-sidebar a').filter(function() {
+            if (this.href) {
+                return this.href == url || url.href.indexOf(this.href) == 0;
+            }
+        })//.addClass('active');
+
+        // for the treeview
+        $('ul.nav-treeview a').filter(function() {
+            if (this.href) {
+                return this.href == url || url.href.indexOf(this.href) == 0;
+            }
+        }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
     </script>
 </body>
 
