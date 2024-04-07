@@ -31,11 +31,21 @@
             <h3 style="color:white; font-size:20px">CỤC THUẾ TỈNH QUẢNG BÌNH</h3>
         </div>
 
-        <div
+        <div id="loginForm" style="opacity: 0.5;" onclick="changeOpacity()" onchange="changeOpacity()"
             class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
             {{ $slot }}
         </div>
     </div>
+    <script>
+        function changeOpacity() {
+            // document.getElementById("loginForm").style.opacity = "0.5";
+            // document.getElementById("loginForm").style.opacity = "0.6";
+            // document.getElementById("loginForm").style.opacity = "0.7";
+            // document.getElementById("loginForm").style.opacity = "0.8";
+            // document.getElementById("loginForm").style.opacity = "0.9";
+            document.getElementById("loginForm").style.opacity = "1";
+        }
+    </script>
 </body>
 
 </html>
