@@ -10,6 +10,7 @@ use App\Models\LyDoDiemCong;
 use App\Models\LyDoDiemTru;
 use App\Models\PhieuDanhGia;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 trait PhieuDanhGiaTrait
 {
@@ -93,9 +94,9 @@ trait PhieuDanhGiaTrait
     {
         foreach ($danh_sach_phe_duyet as $danh_sach) {
             // Xác định năm đánh giá            
-            $nam_danh_gia = date("Y", strtotime($danh_sach->thoi_diem_danh_gia));
+            $nam_danh_gia = Carbon::create($danh_sach->thoi_diem_danh_gia)->year;
             // Xác định tháng đánh giá
-            $thang_danh_gia = date("m", strtotime($danh_sach->thoi_diem_danh_gia));
+            $thang_danh_gia = Carbon::create($danh_sach->thoi_diem_danh_gia)->month;
             // Tạo Mã xếp loại
             $ma_kqxl = $nam_danh_gia . "_" . $danh_sach->so_hieu_cong_chuc;
             $ket_qua = KQXLThang::where('ma_kqxl', $ma_kqxl)->first();

@@ -513,7 +513,8 @@ class PhieuDanhGiaController extends Controller
     }
 
 
-    public function captrenSendBack ($ma_phieu_danh_gia) {
+    public function captrenSendBack($ma_phieu_danh_gia)
+    {
         $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
         $phieu_danh_gia->ma_trang_thai = 11;
         $phieu_danh_gia->save();
@@ -674,7 +675,8 @@ class PhieuDanhGiaController extends Controller
     }
 
 
-    public function capqdSendBack ($ma_phieu_danh_gia) {
+    public function capqdSendBack($ma_phieu_danh_gia)
+    {
         $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
         $phieu_danh_gia->ma_trang_thai = 15;
         $phieu_danh_gia->save();
@@ -720,7 +722,6 @@ class PhieuDanhGiaController extends Controller
                 ->get();
         }
 
-        // $don_vi = DonVi::where('ma_don_vi', Auth::user()->ma_don_vi)->where('ma_trang_thai', 1)->get();
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
         return view('danhgia.thongbaothang', [
@@ -996,11 +997,11 @@ class PhieuDanhGiaController extends Controller
             }
 
             if ($quy_danh_gia == "1") {
-                $list_thang = ["01", "02", "03"];
+                $list_thang = ["1", "2", "3"];
             } elseif ($quy_danh_gia == "2") {
-                $list_thang = ["04", "05", "06"];
+                $list_thang = ["4", "5", "6"];
             } elseif ($quy_danh_gia == "3") {
-                $list_thang = ["07", "08", "09"];
+                $list_thang = ["7", "8", "9"];
             } elseif ($quy_danh_gia == "4") {
                 $list_thang = ["10", "11", "12"];
             }
@@ -1083,7 +1084,6 @@ class PhieuDanhGiaController extends Controller
     }
 
 
-
     // Phê duyệt Danh sách kết quả xếp loại theo quý
     public function capQDPheDuyetDSQuy(Request $request)
     {
@@ -1133,22 +1133,19 @@ class PhieuDanhGiaController extends Controller
         }
 
         if ($quy_danh_gia == "1") {
-            $list_thang = ["01", "02", "03"];
+            $list_thang = ["1", "2", "3"];
         } elseif ($quy_danh_gia == "2") {
-            $list_thang = ["04", "05", "06"];
+            $list_thang = ["4", "5", "6"];
         } elseif ($quy_danh_gia == "3") {
-            $list_thang = ["07", "08", "09"];
+            $list_thang = ["7", "8", "9"];
         } elseif ($quy_danh_gia == "4") {
             $list_thang = ["10", "11", "12"];
         }
-
-
+        
         // Thực hiện xếp loại theo quý
-        $collection = collect();
         $xep_loai_1 = null;
         $xep_loai_2 = null;
         $xep_loai_3 = null;
-
 
         foreach ($user_list as $user) {
             // Tìm kết quả xếp loại các tháng trong quý
@@ -1161,7 +1158,6 @@ class PhieuDanhGiaController extends Controller
                 $xep_loai_1->save();
                 $xep_loai_1 = $xep_loai_1->ket_qua_xep_loai;
             }
-
 
             $xep_loai_2 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
                 ->where('thoi_diem_danh_gia', $thang_thu_hai->toDateString())
@@ -1183,7 +1179,6 @@ class PhieuDanhGiaController extends Controller
                 $xep_loai_3 = $xep_loai_3->ket_qua_xep_loai;
             }
 
-
             // Tính toán xếp loại quý
             $countA = 0;
             $countB = 0;
@@ -1203,8 +1198,7 @@ class PhieuDanhGiaController extends Controller
             elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
             elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
             elseif ($countD > 0) $ket_qua_xep_loai = "D";
-            else $ket_qua_xep_loai = null;
-
+           
             $this->kQXLQuy($user, $ket_qua_xep_loai, $nam_danh_gia, $quy_danh_gia);
         }
 
@@ -1235,7 +1229,7 @@ class PhieuDanhGiaController extends Controller
             $quy_danh_gia = Carbon::now()->quarter;
             $nam_danh_gia = Carbon::now()->year;
         }
-
+        
         $danh_sach = KQXLThang::where('kqxl_thang.nam_danh_gia', $nam_danh_gia)->get();
 
         // Thực hiện xếp loại theo quý
@@ -1250,12 +1244,12 @@ class PhieuDanhGiaController extends Controller
                 ->first();
 
             if (isset($xep_loai_thang)) {
-                $diem_1 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_dau_tien->format("m")};
-                $xep_loai_1 = $xep_loai_thang->{"kqxl_t" . $thang_dau_tien->format("m")};
-                $diem_2 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_thu_hai->format("m")};
-                $xep_loai_2 = $xep_loai_thang->{"kqxl_t" . $thang_thu_hai->format("m")};
-                $diem_3 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_cuoi_cung->format("m")};
-                $xep_loai_3 = $xep_loai_thang->{"kqxl_t" . $thang_cuoi_cung->format("m")};
+                $diem_1 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_dau_tien->month};
+                $xep_loai_1 = $xep_loai_thang->{"kqxl_t" . $thang_dau_tien->month};
+                $diem_2 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_thu_hai->month};
+                $xep_loai_2 = $xep_loai_thang->{"kqxl_t" . $thang_thu_hai->month};
+                $diem_3 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_cuoi_cung->month};
+                $xep_loai_3 = $xep_loai_thang->{"kqxl_t" . $thang_cuoi_cung->month};
             }
 
             // Tính toán xếp loại quý
@@ -1328,7 +1322,7 @@ class PhieuDanhGiaController extends Controller
     }
 
 
-    // Báo cáo tổng hợp kết quả tháng
+    // Báo cáo tổng hợp kết quả quý
     public function baoCaoQuy(Request $request)
     {
         if (!isset($request->quy_danh_gia)) {
@@ -1343,7 +1337,7 @@ class PhieuDanhGiaController extends Controller
 
         $xep_loai = XepLoai::all();
 
-        // Danh sách phiếu đánh giá trong tháng
+        // Danh sách phiếu đánh giá trong quý
         $phieu_danh_gia = KQXLQuy::where('kqxl_quy.nam_danh_gia', $nam_danh_gia)
             ->leftjoin('phieu_danh_gia', 'phieu_danh_gia.so_hieu_cong_chuc', 'kqxl_quy.so_hieu_cong_chuc')
             ->where('phieu_danh_gia.thoi_diem_danh_gia', $thang_cuoi_cung)
@@ -1426,7 +1420,7 @@ class PhieuDanhGiaController extends Controller
         ]);
     }
 
-    ////////////////////////////////// Hàm dùng chung //////////////////////////////////////////
+    ////////////////////////////////// Hàm dùng chung ////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // Xác định mẫu phiếu
