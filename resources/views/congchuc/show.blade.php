@@ -3,7 +3,15 @@
 @section('title', 'Thông tin Công chức')
 
 @section('heading')
-    Thông tin Công chức
+    <div class="d-flex justify-content-between col-6">
+        <div>
+            Thông tin Công chức
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary text-nowrap" 
+            data-toggle="modal" data-target="#reset-pass">Đổi mật mã</button>
+        </div>
+    </div>
 @stop
 
 @section('content')
@@ -129,10 +137,6 @@
                         </div>
                     </div>
                     <!-- /.card-body -->
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-primary text-nowrap col-2" data-toggle="modal"
-                            data-target="#reset-pass">Đổi mật mã</button>
-                    </div>
                 </div>
                 <!-- /.card -->
             </div>
