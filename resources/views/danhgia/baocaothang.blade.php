@@ -5,15 +5,15 @@
 @section('heading')
     <form action="{{ route('phieudanhgia.baocaothang') }}" method="get" id="mauphieudanhgia">
         <div class="d-flex">
-            <div class="col-9">
+            <div class="col-8">
                 Báo cáo kết quả xếp loại tháng
             </div>
-            <div class="d-flex justify-content-end col-3">
+            <div class="d-flex justify-content-end col-4">
                 <label for="thang_danh_gia" class="h6 mt-2 mx-2">Tháng: </label>
                 <input id="thang_danh_gia" name="thang_danh_gia" type="number" min="1" max="12"
-                    value="{{ $thoi_diem_danh_gia->month }}" class="form-control col-3"><label
+                    value="{{ $thoi_diem_danh_gia->month }}" class="form-control col-3 text-center"><label
                     class="h6 mt-2 mx-2">/</label><input type="number" name="nam_danh_gia"
-                    value="{{ $thoi_diem_danh_gia->year }}" class="form-control col-3">
+                    value="{{ $thoi_diem_danh_gia->year }}" class="form-control col-3 text-center">
                 <button type="submit" class="btn bg-olive form-control ml-2">Xem</button>
             </div>
         </div>
