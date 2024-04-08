@@ -137,10 +137,6 @@
                         </div>
                     </div>
                     <!-- /.card-body -->
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-primary text-nowrap col-2" data-toggle="modal"
-                            data-target="#reset-pass">Đổi mật mã</button>
-                    </div>
                 </div>
                 <!-- /.card -->
             </div>
