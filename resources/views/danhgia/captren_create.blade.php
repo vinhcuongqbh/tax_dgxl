@@ -382,11 +382,10 @@
                     <!-- /.card -->
                     <div class="text-right">
                         <a href="{{ route('phieudanhgia.captren.sendback', $phieu_danh_gia->ma_phieu_danh_gia) }}">
-                            <button type="button" class="btn bg-warning text-nowrap mb-2 col-1" id="sendBack">GỬI
+                            <button type="button" class="btn bg-warning text-nowrap mb-2" id="sendBack">GỬI
                                 TRẢ</button>
                         </a>
-                        <button type="submit" class="btn bg-olive text-nowrap mb-2 ml-2 col-1" id="submitForm">ĐÁNH
-                            GIÁ</button>
+                        <button type="submit" class="btn bg-olive text-nowrap mb-2 ml-2" id="submitForm">ĐÁNH GIÁ</button>
 
                     </div>
                     <input type="hidden" name="mau_phieu_danh_gia" value="{{ $phieu_danh_gia->ma_phieu_danh_gia }}">

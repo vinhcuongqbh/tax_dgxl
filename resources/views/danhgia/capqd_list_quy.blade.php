@@ -5,15 +5,15 @@
 @section('heading')
     <form action="{{ route('phieudanhgia.capqd.dsquy') }}" method="get">
         <div class="d-flex">
-            <div class="col-9">
+            <div class="col-8">
                 Hội đồng TĐKT / Cấp có thẩm quyền quyết định
             </div>
-            <div class="d-flex justify-content-end col-3">
+            <div class="d-flex justify-content-end col-4">
                 <label for="quy_danh_gia" class="h6 mt-2 mx-2">Quý: </label>
                 <input id="quy_danh_gia" name="quy_danh_gia" type="number" min="1" max="4"
-                    value="{{ $quy_danh_gia }}" class="form-control col-3"><label class="h6 mt-2 mx-2">/</label><input
+                    value="{{ $quy_danh_gia }}" class="form-control col-3 text-center"><label class="h6 mt-2 mx-2">/</label><input
                     type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $nam_danh_gia }}"
-                    class="form-control col-3">
+                    class="form-control col-3 text-center">
                 <button type="submit" class="btn bg-olive form-control ml-2">Xem</button>
             </div>
         </div>
