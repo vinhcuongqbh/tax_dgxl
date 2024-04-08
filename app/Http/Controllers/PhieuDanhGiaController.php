@@ -989,12 +989,12 @@ class PhieuDanhGiaController extends Controller
                 $quy_danh_gia = $request->quy_danh_gia;
                 $nam_danh_gia = $request->nam_danh_gia;
             } else {
-                $thang_dau_tien = Carbon::now()->firstOfQuarter()->endOfMonth();
-                $thang_thu_hai = Carbon::now()->firstOfQuarter()->addMonth()->endOfMonth();
-                $thang_cuoi_cung = Carbon::now()->lastOfQuarter()->endOfMonth();
-                $quy_danh_gia = Carbon::now()->quarter;
-                $nam_danh_gia = Carbon::now()->year;
-            }
+                $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+                $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+                $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+                $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+                $nam_danh_gia = Carbon::now()->subQuarter()->year;
+            }  
 
             if ($quy_danh_gia == "1") {
                 $list_thang = ["1", "2", "3"];
@@ -1125,12 +1125,12 @@ class PhieuDanhGiaController extends Controller
             $quy_danh_gia = $request->quy_danh_gia;
             $nam_danh_gia = $request->nam_danh_gia;
         } else {
-            $thang_dau_tien = Carbon::now()->firstOfQuarter()->endOfMonth();
-            $thang_thu_hai = Carbon::now()->firstOfQuarter()->addMonth()->endOfMonth();
-            $thang_cuoi_cung = Carbon::now()->lastOfQuarter()->endOfMonth();
-            $quy_danh_gia = Carbon::now()->quarter;
-            $nam_danh_gia = Carbon::now()->year;
-        }
+            $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+            $nam_danh_gia = Carbon::now()->subQuarter()->year;
+        }  
 
         if ($quy_danh_gia == "1") {
             $list_thang = ["1", "2", "3"];
@@ -1213,9 +1213,123 @@ class PhieuDanhGiaController extends Controller
     }
 
 
+
+
+
+    // // Danh sách Thông báo Kết quả xếp loại theo Quý
+    // public function thongBaoQuy(Request $request)
+    // {
+    //     if (isset($request->quy_danh_gia)) {
+    //         $thang_dau_tien = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->endOfMonth();
+    //         $thang_thu_hai = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->addMonth()->endOfMonth();
+    //         $thang_cuoi_cung = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->lastOfQuarter()->endOfMonth();
+    //         $quy_danh_gia = $request->quy_danh_gia;
+    //         $nam_danh_gia = $request->nam_danh_gia;
+    //     } else {
+    //         $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+    //         $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+    //         $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+    //         $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+    //         $nam_danh_gia = Carbon::now()->subQuarter()->year;
+    //     }        
+        
+        
+    //     $danh_sach = KQXLThang::where('kqxl_thang.nam_danh_gia', $nam_danh_gia)->get();
+
+    //     // Thực hiện xếp loại theo quý
+    //     $collection = collect();
+    //     $xep_loai_1 = null;
+    //     $xep_loai_2 = null;
+    //     $xep_loai_3 = null;
+
+    //     foreach ($danh_sach as $ds) {
+    //         $xep_loai_thang = KQXLThang::where('so_hieu_cong_chuc', $ds->so_hieu_cong_chuc)
+    //             ->where('nam_danh_gia', $nam_danh_gia)
+    //             ->first();
+
+    //         if (isset($xep_loai_thang)) {
+    //             $diem_1 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_dau_tien->month};
+    //             $xep_loai_1 = $xep_loai_thang->{"kqxl_t" . $thang_dau_tien->month};
+    //             $diem_2 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_thu_hai->month};
+    //             $xep_loai_2 = $xep_loai_thang->{"kqxl_t" . $thang_thu_hai->month};
+    //             $diem_3 = $xep_loai_thang->{"diem_phe_duyet_t" . $thang_cuoi_cung->month};
+    //             $xep_loai_3 = $xep_loai_thang->{"kqxl_t" . $thang_cuoi_cung->month};
+    //         }
+
+    //         // Tính toán xếp loại quý
+    //         $countA = 0;
+    //         $countB = 0;
+    //         $countC = 0;
+    //         $countD = 0;
+
+    //         for ($i = 1; $i <= 3; $i++) {
+    //             if (${"xep_loai_" . $i} == "A") $countA++;
+    //             elseif (${"xep_loai_" . $i} == "B") $countB++;
+    //             elseif (${"xep_loai_" . $i} == "C") $countC++;
+    //             elseif (${"xep_loai_" . $i} == "D")  $countD++;
+    //         }
+
+    //         $ket_qua_xep_loai = null;
+    //         if (($xep_loai_1 == null) || ($xep_loai_2 == null) || ($xep_loai_3 == null)) $ket_qua_xep_loai = null;
+    //         elseif (($countA >= 2) && ($countC == 0) && ($countD == 0)) $ket_qua_xep_loai = "A";
+    //         elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
+    //         elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
+    //         elseif ($countD > 0) $ket_qua_xep_loai = "D";
+    //         else $ket_qua_xep_loai = null;
+
+    //         $user = PhieuDanhGia::where('phieu_danh_gia.so_hieu_cong_chuc', $ds->so_hieu_cong_chuc)
+    //             ->where('phieu_danh_gia.thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
+    //             ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+    //             ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+    //             ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+    //             ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+    //             ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+    //             ->orderBy('users.ma_don_vi', 'ASC')
+    //             ->orderBy('users.ma_phong', 'ASC')
+    //             ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+    //             ->first();
+
+    //         // Đưa vào danh sách
+    //         if (isset($user)) {
+    //             $collection->push([
+    //                 'name' => $user->name,
+    //                 'ma_chuc_vu' => $user->ma_chuc_vu,
+    //                 'ten_chuc_vu' => $user->ten_chuc_vu,
+    //                 'ma_phong' => $user->ma_phong,
+    //                 'ten_phong' => $user->ten_phong,
+    //                 'ma_don_vi' => $user->ma_don_vi,
+    //                 'ten_don_vi' => $user->ten_don_vi,
+    //                 'diem_1' => $diem_1,
+    //                 'xep_loai_1' => $xep_loai_1,
+    //                 'diem_2' => $diem_2,
+    //                 'xep_loai_2' => $xep_loai_2,
+    //                 'diem_3' => $diem_3,
+    //                 'xep_loai_3' => $xep_loai_3,
+    //                 'ket_qua_xep_loai' => $ket_qua_xep_loai,
+    //             ]);
+    //         }
+    //     }
+    //     $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
+    //     $phong = Phong::where('ma_trang_thai', 1)->get();
+
+    //     return view('danhgia.thongbaoquy', [
+    //         //'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+    //         'phieu_danh_gia' => $collection,
+    //         'don_vi' => $don_vi,
+    //         'phong' => $phong,
+    //         'quy_danh_gia' => $quy_danh_gia,
+    //         'nam_danh_gia' => $nam_danh_gia,
+    //         'thang_dau_tien' => $thang_dau_tien->month,
+    //         'thang_thu_hai' => $thang_thu_hai->month,
+    //         'thang_cuoi_cung' => $thang_cuoi_cung->month,
+    //     ]);
+    // }
+
+
     // Danh sách Thông báo Kết quả xếp loại theo Quý
     public function thongBaoQuy(Request $request)
     {
+        //Xác định quý đánh giá, năm đánh giá
         if (isset($request->quy_danh_gia)) {
             $thang_dau_tien = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->endOfMonth();
             $thang_thu_hai = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->addMonth()->endOfMonth();
@@ -1223,14 +1337,19 @@ class PhieuDanhGiaController extends Controller
             $quy_danh_gia = $request->quy_danh_gia;
             $nam_danh_gia = $request->nam_danh_gia;
         } else {
-            $thang_dau_tien = Carbon::now()->firstOfQuarter()->endOfMonth();
-            $thang_thu_hai = Carbon::now()->firstOfQuarter()->addMonth()->endOfMonth();
-            $thang_cuoi_cung = Carbon::now()->lastOfQuarter()->endOfMonth();
-            $quy_danh_gia = Carbon::now()->quarter;
-            $nam_danh_gia = Carbon::now()->year;
-        }
+            $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+            $nam_danh_gia = Carbon::now()->subQuarter()->year;
+        }        
         
-        $danh_sach = KQXLThang::where('kqxl_thang.nam_danh_gia', $nam_danh_gia)->get();
+        
+        $danh_sach = KQXLQuy::where('kqxl_quy.nam_danh_gia', $nam_danh_gia)
+            ->leftjoin('kqxl_thang','kqxl_quy.so_hieu_cong_chuc', 'kqxl_thang.so_hieu_cong_chuc')
+            ->select('kqxl_quy.*', 'kqxl_thang.*')
+            ->get();
+        
 
         // Thực hiện xếp loại theo quý
         $collection = collect();
@@ -1279,9 +1398,9 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')                
                 ->orderBy('users.ma_don_vi', 'ASC')
-                ->orderBy('users.ma_phong', 'ASC')
+                ->orderBy('users.ma_phong', 'ASC')                
                 ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                 ->first();
 
@@ -1305,6 +1424,12 @@ class PhieuDanhGiaController extends Controller
                 ]);
             }
         }
+        $collection = $collection->sortBy([
+            ['ma_don_vi', 'asc'],
+            ['ma_phong', 'asc'],
+            ['ma_chuc_vu', 'asc'],
+        ]);
+
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
 
@@ -1325,12 +1450,12 @@ class PhieuDanhGiaController extends Controller
     // Báo cáo tổng hợp kết quả quý
     public function baoCaoQuy(Request $request)
     {
-        if (!isset($request->quy_danh_gia)) {
-            $quy_danh_gia = Carbon::now()->quarter;
-            $nam_danh_gia = Carbon::now()->format("Y");
-        } else {
+        if (isset($request->quy_danh_gia)) {
             $quy_danh_gia = $request->quy_danh_gia;
-            $nam_danh_gia = $request->nam_danh_gia;
+            $nam_danh_gia = $request->nam_danh_gia;            
+        } else {            
+            $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+            $nam_danh_gia = Carbon::now()->subQuarter()->year;
         }
 
         $thang_cuoi_cung = Carbon::createFromDate($request->nam_danh_gia, $quy_danh_gia * 3)->endOfMonth()->format("Ymd");
@@ -1522,6 +1647,7 @@ class PhieuDanhGiaController extends Controller
     {
         $user_list = User::wherein('users.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
             ->orwhere('users.ma_don_vi', Auth::user()->ma_don_vi)
+            ->where('users.ma_chuc_vu', '<>', '01')
             ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
             ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
             ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
