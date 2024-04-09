@@ -98,15 +98,15 @@
                                         @foreach ($phieu_danh_gia->where('ma_phong', $ph->ma_phong) as $phieu)
                                             <tr>
                                                 <td class="text-center">{{ $j++ }}</td>
-                                                <td>{{ $phieu['name'] }}</td>
-                                                <td class="text-center">{{ $phieu['ten_chuc_vu'] }}</td>
-                                                <td class="text-center">{{ $phieu['diem_1'] }}</td>
-                                                <td class="text-center">{{ $phieu['xep_loai_1'] }}</td>
-                                                <td class="text-center">{{ $phieu['diem_2'] }}</td>
-                                                <td class="text-center">{{ $phieu['xep_loai_2'] }}</td>
-                                                <td class="text-center">{{ $phieu['diem_3'] }}</td>
-                                                <td class="text-center">{{ $phieu['xep_loai_3'] }}</td>
-                                                <td class="text-center text-bold">{{ $phieu['ket_qua_xep_loai'] }}</td>
+                                                <td>{{ $phieu->name }}</td>
+                                                <td class="text-center">{{ $phieu->ten_chuc_vu }}</td>
+                                                <td class="text-center">{{ $phieu->{'diem_phe_duyet_t'.$thang_dau_tien} }}</td>
+                                                <td class="text-center">{{ $phieu->{'kqxl_t'.$thang_dau_tien} }}</td>
+                                                <td class="text-center">{{ $phieu->{'diem_phe_duyet_t'.$thang_thu_hai} }}</td>
+                                                <td class="text-center">{{ $phieu->{'kqxl_t'.$thang_thu_hai} }}</td>
+                                                <td class="text-center">{{ $phieu->{'diem_phe_duyet_t'.$thang_cuoi_cung} }}</td>
+                                                <td class="text-center">{{ $phieu->{'kqxl_t'.$thang_cuoi_cung} }}</td>
+                                                <td class="text-center text-bold">{{ $phieu->{'kqxl_q'.$quy_danh_gia} }}</td>
                                                 <td></td>
                                             </tr>
                                         @endforeach
