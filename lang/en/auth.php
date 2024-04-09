@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Sai Số hiệu công chức hoặc Mật mã.',
+    'failed' => 'Sai số Căn cước công dân hoặc Mật mã.',
     'password' => 'Mật mã không đúng.',
     'throttle' => 'Bạn đã đăng nhập thất bại nhiều lần. Vui lòng thử lại sau :seconds giây.',
 

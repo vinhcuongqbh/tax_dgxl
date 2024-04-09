@@ -6,7 +6,7 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="so_hieu_cong_chuc" :value="__('Số hiệu công chức')" />
+            <x-input-label for="so_hieu_cong_chuc" :value="__('Số Căn cước công dân')" />
             <x-text-input id="so_hieu_cong_chuc" class="block mt-1 w-full" type="text" name="so_hieu_cong_chuc"
                 :value="old('so_hieu_cong_chuc')" required autofocus autocomplete="so_hieu_cong_chuc" />
             <x-input-error :messages="$errors->get('so_hieu_cong_chuc')" class="mt-2" />
