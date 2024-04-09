@@ -3,7 +3,7 @@
 @section('title', 'Danh sách Phiếu đánh giá')
 
 @section('heading')
-    Hội đồng TĐKT / Cấp có thẩm quyền quyết định
+    Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt
 @stop
 
 @section('content')

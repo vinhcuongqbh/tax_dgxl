@@ -185,7 +185,7 @@
                                 </li>
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/capqdList" class="nav-link">
-                                        <p>2.3. Hội đồng/Cấp có thẩm quyền quyết định đánh giá</p>
+                                        <p>2.3. Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
@@ -216,7 +216,7 @@
                                 </li> --}}
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/capqddsquy" class="nav-link">
-                                        <p>3.1. Hội đồng/Cấp có thẩm quyền quyết định đánh giá</p>
+                                        <p>3.1. Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">

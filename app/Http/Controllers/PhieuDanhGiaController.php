@@ -110,7 +110,7 @@ class PhieuDanhGiaController extends Controller
             $phieu_danh_gia->tong_diem_tu_cham = $tong_diem_tu_cham;
             $phieu_danh_gia->ca_nhan_tu_xep_loai = $ca_nhan_tu_xep_loai;
             $phieu_danh_gia->ma_trang_thai = 11;
-            if (Auth::user()->ma_chuc_vu = "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
+            if (Auth::user()->ma_chuc_vu == "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
             $phieu_danh_gia->save();
 
             return redirect()->route(
@@ -304,7 +304,7 @@ class PhieuDanhGiaController extends Controller
     public function captrenList()
     {
         // Nếu người dùng không có thẩm quyền tham mưu đánh giá Phiếu đánh giá thì chuyển hướng về trang 404
-        if (Auth::user()->ma_chuc_vu == null) {
+        if (in_array(Auth::user()->ma_chuc_vu, [null, '02', '06', '07', '08', '10'])) {
             return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
         } else {
             if (Auth::user()->ma_chuc_vu == "01") {
@@ -506,7 +506,8 @@ class PhieuDanhGiaController extends Controller
             return redirect()->route('phieudanhgia.captren.list')->with('msg_error', 'Danh sách trống / Có phiếu chưa được cấp tham mưu đánh giá');
 
         foreach ($danh_sach as $list) {
-            $list->ma_trang_thai = 17;
+            if (in_array($list->ma_chuc_vu, ['06', '09', '10'])) $list->ma_trang_thai = 16;
+            else $list->ma_trang_thai = 17;
             $list->save();
         }
 
@@ -565,10 +566,12 @@ class PhieuDanhGiaController extends Controller
                     ->get();
             } elseif (Auth::user()->ma_chuc_vu == "03") {
                 // Nếu Người dùng có chức vụ Chi cục Trưởng
-                // Đánh giá cho Công chức không giữ chức vụ lãnh đạo thuộc Chi cục     
-                $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
-                    ->where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                // Phê duyệt cho Công chức thuộc Chi cục     
+                $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                    ->where('phieu_danh_gia.ma_trang_thai', '17')
                     ->where('phieu_danh_gia.ma_chuc_vu', null)
+                    ->orwhere('phieu_danh_gia.ma_trang_thai', '16')
+                    ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
                     ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                     ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
@@ -632,9 +635,10 @@ class PhieuDanhGiaController extends Controller
         } elseif (Auth::user()->ma_chuc_vu == "03") {
             // Nếu Người dùng có chức vụ Chi cục Trưởng
             // Đánh giá cho Công chức không giữ chức vụ lãnh đạo thuộc Chi cục     
-            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
-                ->where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('phieu_danh_gia.ma_trang_thai', '17')
                 ->where('phieu_danh_gia.ma_chuc_vu', null)
+                ->orwhere('phieu_danh_gia.ma_trang_thai', '16')
                 ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
@@ -656,7 +660,6 @@ class PhieuDanhGiaController extends Controller
             $danh_sach_phe_duyet = null;
         }
 
-
         // if ($danh_sach_phe_duyet != null) $this->kQXLThang($danh_sach_phe_duyet);
 
         if ($danh_sach_phe_duyet != null) {
@@ -666,12 +669,15 @@ class PhieuDanhGiaController extends Controller
                     $ds->ket_qua_xep_loai = $ds->ca_nhan_tu_xep_loai;
                 }
                 $ds->ma_cap_tren_phe_duyet = Auth::user()->so_hieu_cong_chuc;
-                $ds->ma_trang_thai = 19;
+                if (in_array($ds->ma_chuc_vu, ['06', '09', '10'])) {
+                    if ($ds->ma_trang_thai == 16) $ds->ma_trang_thai = 17;
+                    elseif ($ds->ma_trang_thai == 17) $ds->ma_trang_thai = 19;
+                } else $ds->ma_trang_thai = 19;
                 $ds->save();
             }
 
             // Lưu kết quả vào Bảng kết quả xếp loại tháng
-            $this->kQXLThang($danh_sach_phe_duyet);
+            $this->kQXLThang($danh_sach_phe_duyet); //if (!in_array($danh_sach->ma_chuc_vu, ['06', '09', '10'])) {}
 
             return redirect()->route('phieudanhgia.capqd.list')->with('msg_success', 'Đã phê duyệt thành công Danh sách phiếu đánh giá');
         } else {
@@ -816,7 +822,7 @@ class PhieuDanhGiaController extends Controller
             }
 
             $i++;
-            if ($i == 7) $i ="";
+            if ($i == 7) $i = "";
             //Đưa vào danh sách
             $danh_sach->push([
                 'stt' => $i,

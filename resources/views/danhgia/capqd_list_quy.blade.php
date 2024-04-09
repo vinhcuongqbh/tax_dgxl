@@ -6,7 +6,7 @@
     <form action="{{ route('phieudanhgia.capqd.dsquy') }}" method="get">
         <div class="d-flex">
             <div class="col-8">
-                Hội đồng TĐKT / Cấp có thẩm quyền quyết định
+                Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt
             </div>
             <div class="d-flex justify-content-end col-4">
                 <label for="quy_danh_gia" class="h6 mt-2 mx-2">Quý: </label>
