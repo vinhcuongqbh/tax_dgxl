@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ket_qua_muc_b', function (Blueprint $table) {
             $table->id();
             $table->string('ma_phieu_danh_gia');
-            $table->string('noi_dung');
+            $table->text('noi_dung');
             $table->boolean('nhiem_vu_phat_sinh')->nullable();
             $table->string('hoan_thanh_nhiem_vu');
             $table->timestamps();

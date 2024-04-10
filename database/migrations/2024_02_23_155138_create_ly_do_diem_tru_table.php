@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ly_do_diem_tru', function (Blueprint $table) {
             $table->id();
             $table->string('ma_phieu_danh_gia')->unique();;
-            $table->string('noi_dung')->nullable();
+            $table->text('noi_dung')->nullable();
             $table->timestamps();
         });
     }

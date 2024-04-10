@@ -317,7 +317,8 @@ class PhieuDanhGiaController extends Controller
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->orderBy('phieu_danh_gia.created_at', 'DESC')
+                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+                    ->orderBy('phieu_danh_gia.name', 'ASC')
                     ->get();
             } elseif (Auth::user()->ma_chuc_vu == "03") {
                 // Nếu Người dùng có chức vụ Chi cục Trưởng
