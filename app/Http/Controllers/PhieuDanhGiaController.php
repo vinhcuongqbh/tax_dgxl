@@ -563,7 +563,10 @@ class PhieuDanhGiaController extends Controller
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
+                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+                    ->orderBy('users.ma_don_vi', 'ASC')
+                    ->orderBy('users.ma_phong', 'ASC')
+                    ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                     ->get();
             } elseif (Auth::user()->ma_chuc_vu == "03") {
                 // Nếu Người dùng có chức vụ Chi cục Trưởng
@@ -571,14 +574,18 @@ class PhieuDanhGiaController extends Controller
                 $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
                     ->where('phieu_danh_gia.ma_trang_thai', '17')
                     ->where('phieu_danh_gia.ma_chuc_vu', null)
-                    ->orwhere('phieu_danh_gia.ma_trang_thai', '16')
+                    ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                    ->where('phieu_danh_gia.ma_trang_thai', '16')
                     ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
                     ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                     ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->orderBy('phieu_danh_gia.created_at', 'DESC')
+                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+                    ->orderBy('users.ma_don_vi', 'ASC')
+                    ->orderBy('users.ma_phong', 'ASC')
+                    ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                     ->get();
             } else {
                 $danh_sach = Null;
@@ -631,7 +638,10 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                 ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
+                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+                ->orderBy('users.ma_don_vi', 'ASC')
+                ->orderBy('users.ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                 ->get();
         } elseif (Auth::user()->ma_chuc_vu == "03") {
             // Nếu Người dùng có chức vụ Chi cục Trưởng
@@ -639,13 +649,18 @@ class PhieuDanhGiaController extends Controller
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
                 ->where('phieu_danh_gia.ma_trang_thai', '17')
                 ->where('phieu_danh_gia.ma_chuc_vu', null)
-                ->orwhere('phieu_danh_gia.ma_trang_thai', '16')
+                ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('phieu_danh_gia.ma_trang_thai', '16')
+                ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
                 ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                 ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                ->orderBy('phieu_danh_gia.created_at', 'DESC')
+                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+                ->orderBy('users.ma_don_vi', 'ASC')
+                ->orderBy('users.ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                 ->get();
         } else {
             $danh_sach = Null;
