@@ -94,12 +94,14 @@ Route::middleware('auth')->group(function () {
         Route::get('capqdpheduyethang', [PhieuDanhGiaController::class, 'capQDPheDuyetThang'])->name('phieudanhgia.capqd.pheduyetthang');
         Route::get('{id}/capqdSendBack', [PhieuDanhGiaController::class, 'capqdSendBack'])->name('phieudanhgia.capqd.sendback');
         Route::get('thongbaothang', [PhieuDanhGiaController::class, 'thongBaoThang'])->name('phieudanhgia.thongbaothang');
-        Route::get('baocaothang', [PhieuDanhGiaController::class, 'baoCaoThang'])->name('phieudanhgia.baocaothang');
+        Route::get('baocaothang', [PhieuDanhGiaController::class, 'baoCaoThang']);
+        Route::post('baocaothang', [PhieuDanhGiaController::class, 'baoCaoThang'])->name('phieudanhgia.baocaothang');
 
         Route::get('capqddsquy', [PhieuDanhGiaController::class, 'capQDDSQuy'])->name('phieudanhgia.capqd.dsquy');
         Route::get('capqdpheduyetdsquy', [PhieuDanhGiaController::class, 'capQDPheDuyetDSQuy'])->name('phieudanhgia.capqd.pheduyetdsquy');
         Route::get('thongbaoquy', [PhieuDanhGiaController::class, 'thongBaoQuy'])->name('phieudanhgia.thongbaoquy');
-        Route::get('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
+        Route::get('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy']);
+        Route::post('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
     });
 });
 
