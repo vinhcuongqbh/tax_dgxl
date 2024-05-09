@@ -318,7 +318,8 @@ class PhieuDanhGiaController extends Controller
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
                     ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                    ->orderBy('phieu_danh_gia.name', 'ASC')
+					->orderBy('users.ma_don_vi','ASC')
+					->orderBy('users.ma_phong','ASC')
                     ->get();
             } elseif (Auth::user()->ma_chuc_vu == "03") {
                 // Nếu Người dùng có chức vụ Chi cục Trưởng
@@ -331,7 +332,7 @@ class PhieuDanhGiaController extends Controller
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->orderBy('phieu_danh_gia.created_at', 'DESC')
+                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                     ->get();
             } elseif ((Auth::user()->ma_chuc_vu == "04") || (Auth::user()->ma_chuc_vu == "05") || (Auth::user()->ma_chuc_vu == "09")) {
                 //Nếu Người dùng có chức vụ Chánh Văn phòng, Trưởng phòng hoặc Đội trưởng
@@ -344,7 +345,7 @@ class PhieuDanhGiaController extends Controller
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->orderBy('phieu_danh_gia.created_at', 'DESC')
+                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                     ->get();
             } else {
                 $danh_sach_cap_tren_danh_gia = Null;
@@ -725,7 +726,7 @@ class PhieuDanhGiaController extends Controller
             $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
         }
 
-        if ((in_array(Auth::user()->ma_chuc_vu, ['01', '02', '04'])) || ((Auth::user()->ma_chuc_vu == '05') && (Auth::user()->ma_phong == '440103'))) {
+        //if ((in_array(Auth::user()->ma_chuc_vu, ['01', '02', '04'])) || ((Auth::user()->ma_chuc_vu == '05') && (Auth::user()->ma_phong == '440103'))) {
             // Nếu Người dùng có chức vụ Cục Trưởng, Cục Phó, Chánh Văn phòng, Trưởng phòng Tổ chức cán bộ
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
@@ -738,7 +739,7 @@ class PhieuDanhGiaController extends Controller
                 ->orderBy('users.ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                 ->get();
-        } else {
+        /*} else {
             // Những người còn lại            
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
@@ -751,7 +752,7 @@ class PhieuDanhGiaController extends Controller
                 ->orderBy('users.ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
                 ->get();
-        }
+        }*/
 
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
@@ -776,22 +777,22 @@ class PhieuDanhGiaController extends Controller
         $xep_loai = XepLoai::all();
 
         if (!isset($request->ma_don_vi_da_chon)) {
-            if ((in_array(Auth::user()->ma_chuc_vu, ['01', '02', '04'])) || ((Auth::user()->ma_chuc_vu == '05') && (Auth::user()->ma_phong == '440103'))) {
+            /*if ((in_array(Auth::user()->ma_chuc_vu, ['01', '02', '04'])) || ((Auth::user()->ma_chuc_vu == '05') && (Auth::user()->ma_phong == '440103'))) {*/
                 $ds_don_vi = DonVi::all();    
                 $ma_don_vi = 4400;
-            } else {
+            /*} else {
                 $ds_don_vi = DonVi::where('ma_don_vi', Auth::user()->ma_don_vi)->get();
                 $ma_don_vi = Auth::user()->ma_don_vi;
             }
         } else {
             if ((in_array(Auth::user()->ma_chuc_vu, ['01', '02', '04'])) || ((Auth::user()->ma_chuc_vu == '05') && (Auth::user()->ma_phong == '440103'))) {
                 $ds_don_vi = DonVi::all();    
-                $ma_don_vi = $request->ma_don_vi_da_chon;
+                $ma_don_vi = $request->ma_don_vi_da_chon;*/
             } else {
-                $ds_don_vi = DonVi::where('ma_don_vi', Auth::user()->ma_don_vi)->get();
+                $ds_don_vi = DonVi::all();
                 $ma_don_vi = $request->ma_don_vi_da_chon;
             }
-        }
+        //}
 
         // Danh sách phiếu đánh giá trong tháng
         if ($ma_don_vi == 4400) {           
@@ -1695,9 +1696,9 @@ class PhieuDanhGiaController extends Controller
     // Danh sách phê duyệt kết quả đánh giá của Cục trưởng
     public function danhSachCucTruongPheDuyet()
     {
-        $user_list = User::wherein('users.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
-            ->orwhere('users.ma_don_vi', Auth::user()->ma_don_vi)
-            ->where('users.ma_chuc_vu', '<>', '01')
+        $user_list = User::wherein('users.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])			
+			->orwhere('users.ma_don_vi', Auth::user()->ma_don_vi)			
+			->where('users.ma_chuc_vu', null)			
             ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
             ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
             ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
