@@ -4,16 +4,24 @@
 
 @section('heading')
     <form action="{{ route('phieudanhgia.thongbaoquy') }}" method="get" id="mauphieudanhgia">
+        @csrf
         <div class="d-flex">
-            <div class="col-8">
-                Thông báo kết quả xếp loại quý
+            <div class="col-4">
+                Báo cáo KQXL tháng
             </div>
-            <div class="d-flex justify-content-end col-4">
+            <div class="d-flex justify-content-end col-8">
+                <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
+                <select id="ma_don_vi_da_chon" name="ma_don_vi_da_chon" class="form-control custom-select col-6">
+                    @foreach ($ds_don_vi as $ds_don_vi)
+                        <option value="{{ $ds_don_vi->ma_don_vi }}" @if ($ma_don_vi_da_chon == $ds_don_vi->ma_don_vi) selected @endif>
+                            {{ $ds_don_vi->ten_don_vi }}</option>
+                    @endforeach
+                </select>
                 <label for="quy_danh_gia" class="h6 mt-2 mx-2">Quý: </label>
                 <input id="quy_danh_gia" name="quy_danh_gia" type="number" min="1" max="4"
-                    value="{{ $quy_danh_gia }}" class="form-control col-3 text-center"><label class="h6 mt-2 mx-2">/</label><input
+                    value="{{ $quy_danh_gia }}" class="form-control text-center"><label class="h6 mt-2 mx-2">/</label><input
                     type="number" id="nam_danh_gia" name="nam_danh_gia" 
-                    value="{{ $nam_danh_gia }}" class="form-control col-3 text-center">
+                    value="{{ $nam_danh_gia }}" class="form-control text-center">
                 <button type="submit" class="btn bg-olive form-control ml-2">Xem</button>
             </div>
         </div>

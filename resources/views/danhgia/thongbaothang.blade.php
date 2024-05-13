@@ -4,16 +4,24 @@
 
 @section('heading')
     <form action="{{ route('phieudanhgia.thongbaothang') }}" method="get" id="mauphieudanhgia">
+        @csrf
         <div class="d-flex">
-            <div class="col-8">
-                Thông báo kết quả xếp loại tháng
+            <div class="col-4">
+                Báo cáo KQXL tháng
             </div>
-            <div class="d-flex justify-content-end col-4">
+            <div class="d-flex justify-content-end col-8">
+                <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
+                <select id="ma_don_vi_da_chon" name="ma_don_vi_da_chon" class="form-control custom-select col-6">
+                    @foreach ($ds_don_vi as $ds_don_vi)
+                        <option value="{{ $ds_don_vi->ma_don_vi }}" @if ($ma_don_vi_da_chon == $ds_don_vi->ma_don_vi) selected @endif>
+                            {{ $ds_don_vi->ten_don_vi }}</option>
+                    @endforeach
+                </select>
                 <label for="thang_danh_gia" class="h6 mt-2 mx-2">Tháng: </label>
                 <input id="thang_danh_gia" name="thang_danh_gia" type="number" min="1" max="12"
-                    value="{{ $thoi_diem_danh_gia->month }}" class="form-control col-3 text-center"><label
+                    value="{{ $thoi_diem_danh_gia->month }}" class="form-control text-center"><label
                     class="h6 mt-2 mx-2">/</label><input type="number" name="nam_danh_gia"
-                    value="{{ $thoi_diem_danh_gia->year }}" class="form-control col-3 text-center">
+                    value="{{ $thoi_diem_danh_gia->year }}" class="form-control  text-center">
                 <button type="submit" class="btn bg-olive form-control ml-2">Xem</button>
             </div>
         </div>
