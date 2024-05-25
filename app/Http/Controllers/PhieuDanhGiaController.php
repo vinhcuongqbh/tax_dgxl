@@ -856,7 +856,7 @@ class PhieuDanhGiaController extends Controller
                     ${"ti_le_loai_" . $xl->ma_xep_loai} = 0;
                 }
 
-                $so_luong_khong_xep_loai =  $ls->where("ket_qua_xep_loai", null)->count();
+                $so_luong_khong_xep_loai =  $ls->where("ket_qua_xep_loai", "K")->count();
                 if ($so_luong <> 0) {
                     $ti_le_khong_xep_loai = round($so_luong_khong_xep_loai / $so_luong * 100, 2);
                 } else {
@@ -1328,7 +1328,7 @@ class PhieuDanhGiaController extends Controller
                     ${"ti_le_loai_" . $xl->ma_xep_loai} = 0;
                 }
 
-                $so_luong_khong_xep_loai =  $ls->where('kqxl_q' . $quy_danh_gia, null)->count();
+                $so_luong_khong_xep_loai =  $ls->where('kqxl_q' . $quy_danh_gia, "K")->count();
                 if ($so_luong <> 0) {
                     $ti_le_khong_xep_loai = round($so_luong_khong_xep_loai / $so_luong * 100, 2);
                 } else {

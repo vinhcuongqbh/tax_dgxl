@@ -82,23 +82,23 @@
                 pageLength: 20,
                 searching: true,
                 autoWidth: false,
-                // dom: 'Bfrtip',
-                // buttons: [{
-                        // text: 'Tạo mới',
-                        // className: 'bg-olive',
-                        // action: function(e, dt, node, config) {
-                            // window.location = '{{ route('phieudanhgia.canhan.create') }}';
-                        // },
-                    // },
-                    // {
-                        // extend: 'spacer',
-                        // style: 'bar',
-                        // text: 'Xuất:'
-                    // },
-                    // //'csv',
-                    // 'excel',
-                    // 'pdf',
-                // ],
+                dom: 'Bfrtip',
+                buttons: [{
+                        text: 'Tạo mới',
+                        className: 'bg-olive',
+                        action: function(e, dt, node, config) {
+                            window.location = '{{ route('phieudanhgia.canhan.create') }}';
+                        },
+                    },
+                    {
+                        extend: 'spacer',
+                        style: 'bar',
+                        text: 'Xuất:'
+                    },
+                    //'csv',
+                    'excel',
+                    'pdf',
+                ],
                 language: {
                     url: '/plugins/datatables/vi.json'
                 },
