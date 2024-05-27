@@ -209,11 +209,6 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                {{-- <li class="nav-item pl-3">
-                                    <a href="#" class="nav-link">
-                                        <p>3.1. Tổng hợp kết quả đánh giá</p>
-                                    </a>
-                                </li> --}}
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/capqddsquy" class="nav-link">
                                         <p>3.1. Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt</p>
@@ -231,47 +226,51 @@
                                 </li>
                             </ul>
                         </li>
-                        {{-- <li class="nav-item">
-                            <a href="" class="nav-link">
+                        <li class="nav-item">
+                            <a href="/dangxaydung" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
                                     4. Đánh giá, xếp loại cá nhân theo năm
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <p>4.1. Công chức tự đánh giá</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <p>4.2. Cấp có thẩm quyền đánh giá</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <p>4.3. Lấy kiến của Hội đồng</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <p>4.4. Thông báo kết quả đánh giá, xếp loại</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <p>4.5. Danh sách kết quả đánh giá, xếp loại</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <p>4.6. Báo cáo tổng hợp kết quả đánh giá, xếp loại</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li> --}}
+                            </a>                     
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dangxaydung" class="nav-link">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>
+                                    5. Quản lý Không tự đánh giá                                    
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>                            
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>
+                                    6. Đánh giá xếp loại Cục trưởng
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>                            
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>
+                                    7. Báo cáo hỗ trợ
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>                            
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>
+                                    8. Thông tin về Ứng dụng
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>                            
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

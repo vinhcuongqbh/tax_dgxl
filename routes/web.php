@@ -27,6 +27,10 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/dangxaydung', function () {
+        return view('dangxaydung');
+    });
+
     Route::group(['prefix' => 'donvi'], function () {
         Route::get('', [DonViController::class, 'index'])->name('donvi');
         Route::get('create', [DonViController::class, 'create'])->name('donvi.create');
