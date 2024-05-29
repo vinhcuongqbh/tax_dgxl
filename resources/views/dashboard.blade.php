@@ -233,16 +233,28 @@
                                     4. Đánh giá, xếp loại cá nhân theo năm
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>                     
+                            </a>        
                         </li>
                         <li class="nav-item">
-                            <a href="/dangxaydung" class="nav-link">
+                            <a href="" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
                                     5. Quản lý Không tự đánh giá                                    
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>                            
+                            </a>    
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item pl-3">
+                                    <a href="/khongxeploai/nhapdanhsach" class="nav-link">
+                                        <p>5.1. Nhập danh sách</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/khongxeploai/tracuu" class="nav-link">
+                                        <p>5.2. Tra cứu</p>
+                                    </a>
+                                </li>
+                            </ul>                        
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
@@ -251,7 +263,19 @@
                                     6. Đánh giá xếp loại Cục trưởng
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>                            
+                            </a>       
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item pl-3">
+                                    <a href="/cuctruong/hoidongdanhgia" class="nav-link">
+                                        <p>6.1. Hội đồng đánh giá</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/cuctruong/tonghop" class="nav-link">
+                                        <p>6.2. Tổng hợp kết quả đánh giá</p>
+                                    </a>
+                                </li>
+                            </ul>                   
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
@@ -260,7 +284,39 @@
                                     7. Báo cáo hỗ trợ
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>                            
+                            </a>    
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/bctiendo" class="nav-link">
+                                        <p>7.1. Báo cáo tiến độ tháng</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/danhsach1" class="nav-link">
+                                        <p>7.2. Danh sách chưa lập phiếu đánh giá</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/danhsach2" class="nav-link">
+                                        <p>7.3. Danh sách đã lập nhưng chưa gửi phiếu đánh giá</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/danhsach3" class="nav-link">
+                                        <p>7.4. Danh sách chưa trình phê duyệt</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/danhsach4" class="nav-link">
+                                        <p>7.5. Danh sách đang chờ phê duyệt</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/danhsach5" class="nav-link">
+                                        <p>7.6. Danh sách đã phê duyệt</p>
+                                    </a>
+                                </li>
+                            </ul>                          
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
@@ -270,6 +326,18 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>                            
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item pl-3">
+                                    <a href="/ungdung/nangcap" class="nav-link">
+                                        <p>8.1. Nội dung nâng cấp</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/ungdung/huongdansudung" class="nav-link">
+                                        <p>8.2. Hướng dẫn sử dụng</p>
+                                    </a>
+                                </li>
+                            </ul>  
                         </li>
                     </ul>
                 </nav>

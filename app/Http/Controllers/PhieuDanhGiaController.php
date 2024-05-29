@@ -1587,4 +1587,10 @@ class PhieuDanhGiaController extends Controller
 
         return $user_list;
     }
+
+
+    public function dangxaydung()
+    {       
+        return view('dangxaydung');
+    }
 }

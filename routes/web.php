@@ -73,6 +73,14 @@ Route::middleware('auth')->group(function () {
         Route::post('{id}/update', [XeploaiController::class, 'update'])->name('xeploai.update');
         Route::get('{id}/delete', [XeploaiController::class, 'destroy'])->name('xeploai.delete');
         Route::get('{id}/restore', [XeploaiController::class, 'restore'])->name('xeploai.restore');
+    });Route::group(['prefix' => 'xeploai'], function () {
+        Route::get('', [XepLoaiController::class, 'index'])->name('xeploai');
+        Route::get('create', [XeploaiController::class, 'create'])->name('xeploai.create');
+        Route::post('store', [XeploaiController::class, 'store'])->name('xeploai.store');
+        Route::get('{id}/edit', [XeploaiController::class, 'edit'])->name('xeploai.edit');
+        Route::post('{id}/update', [XeploaiController::class, 'update'])->name('xeploai.update');
+        Route::get('{id}/delete', [XeploaiController::class, 'destroy'])->name('xeploai.delete');
+        Route::get('{id}/restore', [XeploaiController::class, 'restore'])->name('xeploai.restore');
     });
 
     Route::group(['prefix' => 'phieudanhgia'], function () {
@@ -83,7 +91,6 @@ Route::middleware('auth')->group(function () {
         Route::post('{id}/canhanUpdate', [PhieuDanhGiaController::class, 'canhanUpdate'])->name('phieudanhgia.canhan.update');
         Route::get('{id}/canhanShow', [PhieuDanhGiaController::class, 'canhanShow'])->name('phieudanhgia.canhan.show');
         Route::get('{id}/canhanSend', [PhieuDanhGiaController::class, 'canhanSend'])->name('phieudanhgia.canhan.send');
-
 
         Route::get('captrenList', [PhieuDanhGiaController::class, 'captrenList'])->name('phieudanhgia.captren.list');
         Route::get('{id}/captrenCreate', [PhieuDanhGiaController::class, 'captrenCreate'])->name('phieudanhgia.captren.create');
@@ -106,6 +113,31 @@ Route::middleware('auth')->group(function () {
         Route::get('thongbaoquy', [PhieuDanhGiaController::class, 'thongBaoQuy'])->name('phieudanhgia.thongbaoquy');
         Route::get('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy']);
         Route::post('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
+    });
+
+
+    Route::group(['prefix' => 'khongxeploai'], function () {
+        Route::get('nhapdanhsach', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('tracuu', [PhieuDanhGiaController::class, 'dangxaydung']);
+    });
+
+    Route::group(['prefix' => 'cuctruong'], function () {
+        Route::get('hoidongdanhgia', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('tonghop', [PhieuDanhGiaController::class, 'dangxaydung']);
+    });
+
+    Route::group(['prefix' => 'baocao'], function () {
+        Route::get('bctiendo', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('danhsach1', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('danhsach2', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('danhsach3', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('danhsach4', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('danhsach5', [PhieuDanhGiaController::class, 'dangxaydung']);
+    });
+
+    Route::group(['prefix' => 'ungdung'], function () {
+        Route::get('nangcap', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('huongdansudung', [PhieuDanhGiaController::class, 'dangxaydung']);
     });
 });
 
