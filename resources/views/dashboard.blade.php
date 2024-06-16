@@ -185,7 +185,7 @@
                                 </li>
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/capqdList" class="nav-link">
-                                        <p>2.3. Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt</p>
+                                        <p>2.3. Cấp có thẩm quyền phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
@@ -211,7 +211,7 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/capqddsquy" class="nav-link">
-                                        <p>3.1. Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt</p>
+                                        <p>3.1. Cấp có thẩm quyền phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
@@ -266,12 +266,12 @@
                             </a>       
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
-                                    <a href="/cuctruong/hoidongdanhgia" class="nav-link">
+                                    <a href="/cuctruong/hoidongList" class="nav-link">
                                         <p>6.1. Hội đồng đánh giá</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/cuctruong/tonghop" class="nav-link">
+                                    <a href="/cuctruong/tonghopdukien" class="nav-link">
                                         <p>6.2. Tổng hợp kết quả đánh giá</p>
                                     </a>
                                 </li>

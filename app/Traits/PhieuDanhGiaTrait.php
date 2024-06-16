@@ -49,6 +49,7 @@ trait PhieuDanhGiaTrait
         return $ket_qua_muc_A;
     }
 
+   
     // Lưu kết quả mục A
     public function ketQuaMucAStore($ma_phieu_danh_gia, $mau_phieu_danh_gia, $request)
     {

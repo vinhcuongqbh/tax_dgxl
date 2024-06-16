@@ -121,9 +121,14 @@ Route::middleware('auth')->group(function () {
         Route::get('tracuu', [PhieuDanhGiaController::class, 'dangxaydung']);
     });
 
-    Route::group(['prefix' => 'cuctruong'], function () {
-        Route::get('hoidongdanhgia', [PhieuDanhGiaController::class, 'dangxaydung']);
-        Route::get('tonghop', [PhieuDanhGiaController::class, 'dangxaydung']);
+    Route::group(['prefix' => 'cuctruong'], function () {        
+        Route::get('hoidongList', [PhieuDanhGiaController::class, 'hoiDongList']);
+        Route::post('hoidongList', [PhieuDanhGiaController::class, 'hoiDongList'])->name('phieudanhgia.hoidong.list');
+        Route::get('{id}/hoidongCreate', [PhieuDanhGiaController::class, 'hoiDongCreate'])->name('phieudanhgia.hoidong.create');
+        Route::post('{id}/hoidongStore', [PhieuDanhGiaController::class, 'hoiDongStore'])->name('phieudanhgia.hoidong.store');
+        Route::get('tonghopdukien', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien']);
+        Route::post('tonghopdukien', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien'])->name('phieudanhgia.hoidong.tonghopdukien');
+        Route::post('tonghopdanhgia', [PhieuDanhGiaController::class, 'hoiDongTongHopDanhGia'])->name('phieudanhgia.hoidong.tonghopdanhgia');
     });
 
     Route::group(['prefix' => 'baocao'], function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DonVi;
 use App\Models\KetQuaMucA;
+use App\Models\KetQuaMucACucTruong;
 use App\Models\KetQuaMucB;
 use App\Models\KQXLQuy;
 use App\Models\LyDoDiemCong;
@@ -19,7 +20,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\KQXLThang;
+use App\Models\PhieuDanhGiaCucTruong;
 use App\Models\Phong;
+use Termwind\Components\Raw;
 
 class PhieuDanhGiaController extends Controller
 {
@@ -28,7 +31,8 @@ class PhieuDanhGiaController extends Controller
     // Tạo Phiếu đánh giá cá nhân tự chấm
     public function canhanCreate()
     {
-        $thoi_diem_danh_gia = Carbon::now()->subMonth();
+        //$thoi_diem_danh_gia = Carbon::now()->subMonth();
+        $thoi_diem_danh_gia = Carbon::now();
         $ngay_thuc_hien_danh_gia = Carbon::now();
         $xep_loai = XepLoai::all();
 
@@ -110,7 +114,7 @@ class PhieuDanhGiaController extends Controller
             $phieu_danh_gia->tong_diem_tu_cham = $tong_diem_tu_cham;
             $phieu_danh_gia->ca_nhan_tu_xep_loai = $ca_nhan_tu_xep_loai;
             $phieu_danh_gia->ma_trang_thai = 11;
-            if (Auth::user()->ma_chuc_vu == "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
+            //if (Auth::user()->ma_chuc_vu == "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
             $phieu_danh_gia->save();
 
             return redirect()->route(
@@ -218,6 +222,7 @@ class PhieuDanhGiaController extends Controller
         $phieu_danh_gia->diem_tru_tu_cham = $diem_tru_tu_cham;
         $phieu_danh_gia->tong_diem_tu_cham = $tong_diem_tu_cham;
         $phieu_danh_gia->ca_nhan_tu_xep_loai = $ca_nhan_tu_xep_loai;
+        //if (Auth::user()->ma_chuc_vu == "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
         $phieu_danh_gia->save();
 
         return redirect()->route(
@@ -411,7 +416,7 @@ class PhieuDanhGiaController extends Controller
         $diem_tru_danh_gia = $request->tc_500;
         $tong_diem_danh_gia = $this->tinhTongDiem($request);
 
-        // Kết quả cá nhân tự xếp loại
+        // Kết quả cấp trên xếp loại
         $ket_qua_xep_loai = $this->xepLoai($tong_diem_danh_gia);
 
         // Cập nhật kết quả cấp trên đánh giá cho Mục A
@@ -532,7 +537,7 @@ class PhieuDanhGiaController extends Controller
     public function capqdList()
     {
         // Nếu người dùng không phải thành viên Hội đồng hoặc Cục trưởng hoặc Chi cục trưởng thì điều hướng về trang 404
-        if ((Auth::user()->hoi_dong_phe_duyet <> 1) and (!in_array(Auth::user()->ma_chuc_vu, ['01', '03']))) {
+        if (!in_array(Auth::user()->ma_chuc_vu, ['01', '03'])) {
             return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
         } else {
             if (Auth::user()->hoi_dong_phe_duyet == 1) {
@@ -1590,7 +1595,250 @@ class PhieuDanhGiaController extends Controller
 
 
     public function dangxaydung()
-    {       
+    {
         return view('dangxaydung');
+    }
+
+
+    public function hoiDongList(Request $request)
+    {
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        if (Auth::user()->hoi_dong_phe_duyet == 1) {
+            // Nếu Người dùng là Hội đồng
+            // Đánh giá cho: 01-Cục trưởng
+            $danh_sach = PhieuDanhGiaCucTruong::where('phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+                ->where('phieu_danh_gia_cuc_truong.ma_trang_thai', 19)
+                ->where('phieu_danh_gia_cuc_truong.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia_cuc_truong.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
+                ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->first();
+
+            if (!$danh_sach) {
+                $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', 13)
+                    ->where('phieu_danh_gia.ma_chuc_vu', '01')
+                    ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                    ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+                    ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+                    ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+                    ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+                    ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+                    ->orderBy('users.ma_don_vi', 'ASC')
+                    ->orderBy('users.ma_phong', 'ASC')
+                    ->first();
+            }
+
+            return view('danhgia.hoidong_list', ['danh_sach' => $danh_sach, 'thoi_diem_danh_gia' => $thoi_diem_danh_gia]);
+        } else {
+            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
+        }
+    }
+
+
+    // Cấp trên đánh giá cho cấp dưới
+    public function hoidongCreate($ma_phieu_danh_gia)
+    {
+        if (Auth::user()->hoi_dong_phe_duyet == 1) {
+            // Nếu Người dùng là Hội đồng
+            // Đánh giá cho: 01-Cục trưởng
+
+            // Tìm Phiếu đánh giá
+            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+            if (!$phieu_danh_gia) $phieu_danh_gia = $this->timPhieuDanhGia($ma_phieu_danh_gia);
+
+            // Lấy dữ liệu mục A
+            $ket_qua_muc_A = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $phieu_danh_gia->ma_phieu_danh_gia)
+                ->leftjoin('mau01A', 'mau01A.ma_tieu_chi', 'ket_qua_muc_A_cuc_truong.ma_tieu_chi')
+                ->select('ket_qua_muc_A_cuc_truong.*', 'mau01A.tieu_chi_me', 'mau01A.loai_tieu_chi', 'mau01A.tt', 'mau01A.noi_dung')
+                ->get();
+            if ($ket_qua_muc_A->isEmpty()) $ket_qua_muc_A = $this->timKetQuaMucA($phieu_danh_gia);
+
+            // Lấy dữ liệu mục B
+            $ket_qua_muc_B = KetQuaMucB::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
+
+            // Lấy dữ liệu Lý do điểm cộng
+            $ly_do_diem_cong = LyDoDiemCong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+
+            // Lấy dữ liệu Lý do điểm trừ
+            $ly_do_diem_tru = LyDoDiemTru::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+
+            // Lấy thông tin Mẫu phiếu đánh giá
+            $thong_tin_mau_phieu = $this->thongTinMauPhieu("mau01A");
+            $thoi_diem_danh_gia = Carbon::create($phieu_danh_gia->thoi_diem_danh_gia);
+            $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
+            $xep_loai = XepLoai::all();
+
+            return view(
+                'danhgia.hoidong_create',
+                [
+                    'phieu_danh_gia' => $phieu_danh_gia,
+                    'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
+                    'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+                    'ngay_thuc_hien_danh_gia' => $ngay_thuc_hien_danh_gia,
+                    'xep_loai' => $xep_loai,
+                    'ket_qua_muc_A' => $ket_qua_muc_A,
+                    'ket_qua_muc_B' => $ket_qua_muc_B,
+                    'ly_do_diem_cong' => $ly_do_diem_cong,
+                    'ly_do_diem_tru' => $ly_do_diem_tru,
+                ]
+            );
+        } else {
+            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
+        }
+    }
+
+
+    // Lưu Kết quả thành viên Hội đồng đánh giá
+    public function hoiDongStore($ma_phieu_danh_gia, Request $request)
+    {
+        if (Auth::user()->hoi_dong_phe_duyet == 1) {
+            // Tính Tổng điểm thành viên Hội đồng đánh giá
+            $diem_danh_gia = $request->tc_300;
+            $diem_cong_danh_gia = $request->tc_400;
+            $diem_tru_danh_gia = $request->tc_500;
+            $tong_diem_danh_gia = $this->tinhTongDiem($request);
+
+            // Kết quả thành viên Hội đồng xếp loại
+            $ket_qua_xep_loai = $this->xepLoai($tong_diem_danh_gia);
+
+            // Kiểm tra đã có Phiếu đánh giá thành viên Hội đồng đánh giá  
+            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
+                ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+                ->first();
+            $phieu = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+
+            // Lưu kết quả thành viên Hội đồng đánh giá cho Mục A
+            $ket_qua_muc_A = KetQuaMucA::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
+
+            if (!isset($phieu_danh_gia)) {
+                foreach ($ket_qua_muc_A as $ket_qua) {
+                    $data = new KetQuaMucACucTruong();
+                    $data->ma_phieu_danh_gia = $ma_phieu_danh_gia;
+                    $data->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+                    $data->ma_tieu_chi = $ket_qua->ma_tieu_chi;
+                    $data->diem_toi_da = $ket_qua->diem_toi_da;
+                    $data->diem_tu_cham = $ket_qua->diem_tu_cham;
+                    $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
+                    $data->save();
+                }
+            } else {
+                foreach ($ket_qua_muc_A as $ket_qua) {
+                    $data = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
+                        ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+                        ->where('ma_tieu_chi', $ket_qua->ma_tieu_chi)
+                        ->first();
+                    $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
+                    $data->save();
+                }
+            }
+
+            if (!isset($phieu_danh_gia)) {
+                $phieu_danh_gia = new PhieuDanhGiaCucTruong();
+            }
+
+            $phieu_danh_gia->so_hieu_cong_chuc = $phieu->so_hieu_cong_chuc;
+            $phieu_danh_gia->thoi_diem_danh_gia = $phieu->thoi_diem_danh_gia;
+            $phieu_danh_gia->ma_phieu_danh_gia = $phieu->ma_phieu_danh_gia;
+            $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+            $phieu_danh_gia->ma_chuc_vu_cap_tren = Auth::user()->ma_chuc_vu;
+            $phieu_danh_gia->ma_phong_cap_tren = Auth::user()->ma_phong;
+            $phieu_danh_gia->ma_don_vi_cap_tren = Auth::user()->ma_don_vi;
+            $phieu_danh_gia->diem_tu_cham = $phieu->diem_tu_cham;
+            $phieu_danh_gia->diem_cong_tu_cham = $phieu->diem_cong_tu_cham;
+            $phieu_danh_gia->diem_tru_tu_cham = $phieu->diem_tru_tu_cham;
+            $phieu_danh_gia->tong_diem_tu_cham = $phieu->tong_diem_tu_cham;
+            $phieu_danh_gia->diem_danh_gia = $diem_danh_gia;
+            $phieu_danh_gia->diem_cong_danh_gia = $diem_cong_danh_gia;
+            $phieu_danh_gia->diem_tru_danh_gia = $diem_tru_danh_gia;
+            $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
+            $phieu_danh_gia->ca_nhan_tu_xep_loai = $phieu->ca_nhan_tu_xep_loai;
+            $phieu_danh_gia->ket_qua_xep_loai = $ket_qua_xep_loai;
+            $phieu_danh_gia->ma_trang_thai = 19;
+            $phieu_danh_gia->save();
+
+            return redirect()->route(
+                'phieudanhgia.hoidong.create',
+                ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
+            )->with('msg_success', 'Thành viên Hội đồng đã thực hiện đánh giá thành công');
+        } else {
+            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
+        }
+    }
+
+    public function hoiDongTongHopDuKien(Request $request)
+    {
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        if (Auth::user()->ma_phong == '440103') {
+            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia_cuc_truong.ma_chuc_vu_cap_tren')
+                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia_cuc_truong.ma_phong_cap_tren')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia_cuc_truong.ma_don_vi_cap_tren')
+                ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->get();
+
+            $tong_diem = 0;
+            $diem_trung_binh = NULL;
+            $xep_loai_trung_binh = NULL;
+            $xep_loai = XepLoai::all();
+
+            if (!$phieu_danh_gia->isEmpty()) {
+                foreach ($phieu_danh_gia as $phieu) {
+                    $tong_diem = $tong_diem + $phieu->tong_diem_danh_gia;
+                }
+
+                $diem_trung_binh = floor($tong_diem / $phieu_danh_gia->count());
+                $xep_loai_trung_binh = $this->xepLoai($diem_trung_binh);
+            }
+
+            return view(
+                'danhgia.hoidong_tonghop',
+                [
+                    'danh_sach' => $phieu_danh_gia,
+                    'diem_trung_binh' => $diem_trung_binh,
+                    'xep_loai_trung_binh' => $xep_loai_trung_binh,
+                    'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+                    'xep_loai' => $xep_loai
+                ]
+            );
+        } else {
+            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
+        }
+    }
+
+
+    public function hoiDongTongHopDanhGia(Request $request)
+    {
+        if (Auth::user()->ma_phong == '440103') {
+            $tong_diem_danh_gia = $request->diem_trung_binh;
+            $xep_loai = $this->xepLoai($tong_diem_danh_gia);
+
+            $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $request->ma_phieu_danh_gia)->first();
+            if ($phieu_danh_gia->ma_trang_thai <> 21) {
+                $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
+                $phieu_danh_gia->ket_qua_xep_loai = $xep_loai;
+                $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+                $phieu_danh_gia->ma_trang_thai = 19;
+                $phieu_danh_gia->save();
+                return redirect()->back()->with('msg_success', 'Đánh giá, xếp loại Cục trưởng thành công');
+            } else {
+                return redirect()->back()->with('msg_error', 'Phiếu đánh giá đã được phê duyệt quý');
+            }
+        } else {
+            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
+        }
     }
 }

@@ -1,16 +1,16 @@
 @extends('dashboard')
 
-@section('title', 'Cấp trên Đánh giá, xếp loại')
+@section('title', 'Hội đồng đánh giá, xếp loại Cục trưởng')
 
 @section('heading')
-    Cấp trên Đánh giá, xếp loại
+    Hội đồng đánh giá, xếp loại Cục trưởng
 @stop
 
 @section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <form action="{{ route('phieudanhgia.captren.store', $phieu_danh_gia->ma_phieu_danh_gia) }}" method="post"
+                <form action="{{ route('phieudanhgia.hoidong.store', $phieu_danh_gia->ma_phieu_danh_gia) }}" method="post"
                     id="maudanhgia-captrendanhgia">
                     @csrf
                     <div class="card card-default">
@@ -150,13 +150,11 @@
                                                     <input class="m-0" type="radio" name="{{ $ket_qua->tieu_chi_me }}"
                                                         value="{{ $ket_qua->diem_toi_da }}"
                                                         id="{{ $ket_qua->ma_tieu_chi }}"
-                                                        @php
-                                                            if (isset($diem_danh_gia)) {
+                                                        @php if (isset($diem_danh_gia)) {
                                                                 if ($ket_qua->diem_toi_da == $diem_danh_gia) echo "checked";
                                                             } else {
                                                                 if ($ket_qua->diem_toi_da == $diem_tu_cham) echo "checked";
-                                                            } 
-                                                        @endphp
+                                                            } @endphp
                                                         onchange="tong_{{ $ket_qua->tieu_chi_me }}(); tong_100(); tong_200(); tong_300(); tong_cong(); tu_xep_loai()"></label>
                                                 </td>
                                             @endif
@@ -241,7 +239,7 @@
                                 <textarea class="form-control" id="ly_do_diem_tru" name="ly_do_diem_tru" rows="7" readonly>{{ $ly_do_diem_tru->noi_dung }}</textarea>
                             </div>
 
-                            {{-- Mục Cá nhân tự xếp loại --}}
+                            {{-- Cá nhân tự xếp loại --}}
                             <h6 class="text-bold">&emsp;&emsp;&emsp;C. Cá nhân tự xếp loại: <i>(Chọn 01 trong 04
                                     ô tương ứng dưới đây)</i></h6>
                             <table class="table table-borderless">
@@ -295,7 +293,7 @@
                             </table>
                             <br>
 
-                            {{-- Mục Cấp trên xếp loại --}}
+                            {{-- Cấp trên xếp loại --}}
                             <h6 class="text-bold">&emsp;&emsp;&emsp;D. Cấp trên xếp loại: <i>(Chọn 01 trong 04
                                     ô tương ứng dưới đây)</i></h6>
                             <table class="table table-borderless">
@@ -383,12 +381,8 @@
                     </div>
                     <!-- /.card -->
                     <div class="text-right">
-                        <a href="{{ route('phieudanhgia.captren.sendback', $phieu_danh_gia->ma_phieu_danh_gia) }}">
-                            <button type="button" class="btn bg-warning text-nowrap mb-2" id="sendBack">GỬI
-                                TRẢ</button>
-                        </a>
-                        <button type="submit" class="btn bg-olive text-nowrap mb-2 ml-2" id="submitForm">ĐÁNH GIÁ</button>
-
+                        <button type="submit" class="btn bg-olive text-nowrap mb-2 ml-2" id="submitForm">ĐÁNH
+                            GIÁ</button>
                     </div>
                     <input type="hidden" name="mau_phieu_danh_gia" value="{{ $phieu_danh_gia->ma_phieu_danh_gia }}">
                 </form>
