@@ -1630,9 +1630,6 @@ class PhieuDanhGiaController extends Controller
                     ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                     ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                     ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                    ->orderBy('users.ma_don_vi', 'ASC')
-                    ->orderBy('users.ma_phong', 'ASC')
                     ->first();
             }
 
@@ -1643,7 +1640,7 @@ class PhieuDanhGiaController extends Controller
     }
 
 
-    // Cấp trên đánh giá cho cấp dưới
+    // Hội đồng đánh giá, xếp loại cho Cục trưởng
     public function hoidongCreate($ma_phieu_danh_gia)
     {
         if (Auth::user()->hoi_dong_phe_duyet == 1) {
@@ -1651,7 +1648,14 @@ class PhieuDanhGiaController extends Controller
             // Đánh giá cho: 01-Cục trưởng
 
             // Tìm Phiếu đánh giá
-            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('phieu_danh_gia_cuc_truong.ma_phieu_danh_gia', $ma_phieu_danh_gia)
+                ->leftjoin('phieu_danh_gia', 'phieu_danh_gia.ma_phieu_danh_gia', 'phieu_danh_gia_cuc_truong.ma_phieu_danh_gia')
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+                ->select('phieu_danh_gia_cuc_truong.*', 'phieu_danh_gia.mau_phieu_danh_gia', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->first();
             if (!$phieu_danh_gia) $phieu_danh_gia = $this->timPhieuDanhGia($ma_phieu_danh_gia);
 
             // Lấy dữ liệu mục A
@@ -1714,60 +1718,67 @@ class PhieuDanhGiaController extends Controller
                 ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
                 ->first();
             $phieu = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+            if ($phieu->ma_trang_thai == 13) {
 
-            // Lưu kết quả thành viên Hội đồng đánh giá cho Mục A
-            $ket_qua_muc_A = KetQuaMucA::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
+                // Lưu kết quả thành viên Hội đồng đánh giá cho Mục A
+                $ket_qua_muc_A = KetQuaMucA::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
 
-            if (!isset($phieu_danh_gia)) {
-                foreach ($ket_qua_muc_A as $ket_qua) {
-                    $data = new KetQuaMucACucTruong();
-                    $data->ma_phieu_danh_gia = $ma_phieu_danh_gia;
-                    $data->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
-                    $data->ma_tieu_chi = $ket_qua->ma_tieu_chi;
-                    $data->diem_toi_da = $ket_qua->diem_toi_da;
-                    $data->diem_tu_cham = $ket_qua->diem_tu_cham;
-                    $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
-                    $data->save();
+                if (!isset($phieu_danh_gia)) {
+                    foreach ($ket_qua_muc_A as $ket_qua) {
+                        $data = new KetQuaMucACucTruong();
+                        $data->ma_phieu_danh_gia = $ma_phieu_danh_gia;
+                        $data->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+                        $data->ma_tieu_chi = $ket_qua->ma_tieu_chi;
+                        $data->diem_toi_da = $ket_qua->diem_toi_da;
+                        $data->diem_tu_cham = $ket_qua->diem_tu_cham;
+                        $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
+                        $data->save();
+                    }
+                } else {
+                    foreach ($ket_qua_muc_A as $ket_qua) {
+                        $data = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
+                            ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+                            ->where('ma_tieu_chi', $ket_qua->ma_tieu_chi)
+                            ->first();
+                        $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
+                        $data->save();
+                    }
                 }
+
+                if (!isset($phieu_danh_gia)) {
+                    $phieu_danh_gia = new PhieuDanhGiaCucTruong();
+                }
+
+                $phieu_danh_gia->so_hieu_cong_chuc = $phieu->so_hieu_cong_chuc;
+                $phieu_danh_gia->thoi_diem_danh_gia = $phieu->thoi_diem_danh_gia;
+                $phieu_danh_gia->ma_phieu_danh_gia = $phieu->ma_phieu_danh_gia;
+                $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+                $phieu_danh_gia->ma_chuc_vu_cap_tren = Auth::user()->ma_chuc_vu;
+                $phieu_danh_gia->ma_phong_cap_tren = Auth::user()->ma_phong;
+                $phieu_danh_gia->ma_don_vi_cap_tren = Auth::user()->ma_don_vi;
+                $phieu_danh_gia->diem_tu_cham = $phieu->diem_tu_cham;
+                $phieu_danh_gia->diem_cong_tu_cham = $phieu->diem_cong_tu_cham;
+                $phieu_danh_gia->diem_tru_tu_cham = $phieu->diem_tru_tu_cham;
+                $phieu_danh_gia->tong_diem_tu_cham = $phieu->tong_diem_tu_cham;
+                $phieu_danh_gia->diem_danh_gia = $diem_danh_gia;
+                $phieu_danh_gia->diem_cong_danh_gia = $diem_cong_danh_gia;
+                $phieu_danh_gia->diem_tru_danh_gia = $diem_tru_danh_gia;
+                $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
+                $phieu_danh_gia->ca_nhan_tu_xep_loai = $phieu->ca_nhan_tu_xep_loai;
+                $phieu_danh_gia->ket_qua_xep_loai = $ket_qua_xep_loai;
+                $phieu_danh_gia->ma_trang_thai = 19;
+                $phieu_danh_gia->save();
+
+                return redirect()->route(
+                    'phieudanhgia.hoidong.create',
+                    ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
+                )->with('msg_success', 'Thành viên Hội đồng đã thực hiện đánh giá thành công');
             } else {
-                foreach ($ket_qua_muc_A as $ket_qua) {
-                    $data = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
-                        ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
-                        ->where('ma_tieu_chi', $ket_qua->ma_tieu_chi)
-                        ->first();
-                    $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
-                    $data->save();
-                }
+                return redirect()->route(
+                    'phieudanhgia.hoidong.create',
+                    ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
+                )->with('msg_error', 'Đã tổng hợp đánh giá, xếp loại cho Cục trưởng. Không thể thay đổi điểm, xếp loại đã chấm.');
             }
-
-            if (!isset($phieu_danh_gia)) {
-                $phieu_danh_gia = new PhieuDanhGiaCucTruong();
-            }
-
-            $phieu_danh_gia->so_hieu_cong_chuc = $phieu->so_hieu_cong_chuc;
-            $phieu_danh_gia->thoi_diem_danh_gia = $phieu->thoi_diem_danh_gia;
-            $phieu_danh_gia->ma_phieu_danh_gia = $phieu->ma_phieu_danh_gia;
-            $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
-            $phieu_danh_gia->ma_chuc_vu_cap_tren = Auth::user()->ma_chuc_vu;
-            $phieu_danh_gia->ma_phong_cap_tren = Auth::user()->ma_phong;
-            $phieu_danh_gia->ma_don_vi_cap_tren = Auth::user()->ma_don_vi;
-            $phieu_danh_gia->diem_tu_cham = $phieu->diem_tu_cham;
-            $phieu_danh_gia->diem_cong_tu_cham = $phieu->diem_cong_tu_cham;
-            $phieu_danh_gia->diem_tru_tu_cham = $phieu->diem_tru_tu_cham;
-            $phieu_danh_gia->tong_diem_tu_cham = $phieu->tong_diem_tu_cham;
-            $phieu_danh_gia->diem_danh_gia = $diem_danh_gia;
-            $phieu_danh_gia->diem_cong_danh_gia = $diem_cong_danh_gia;
-            $phieu_danh_gia->diem_tru_danh_gia = $diem_tru_danh_gia;
-            $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
-            $phieu_danh_gia->ca_nhan_tu_xep_loai = $phieu->ca_nhan_tu_xep_loai;
-            $phieu_danh_gia->ket_qua_xep_loai = $ket_qua_xep_loai;
-            $phieu_danh_gia->ma_trang_thai = 19;
-            $phieu_danh_gia->save();
-
-            return redirect()->route(
-                'phieudanhgia.hoidong.create',
-                ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
-            )->with('msg_success', 'Thành viên Hội đồng đã thực hiện đánh giá thành công');
         } else {
             return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
         }
@@ -1827,15 +1838,15 @@ class PhieuDanhGiaController extends Controller
             $xep_loai = $this->xepLoai($tong_diem_danh_gia);
 
             $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $request->ma_phieu_danh_gia)->first();
-            if ($phieu_danh_gia->ma_trang_thai <> 21) {
+            if ($phieu_danh_gia->ma_trang_thai == 13) {
                 $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
                 $phieu_danh_gia->ket_qua_xep_loai = $xep_loai;
                 $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
                 $phieu_danh_gia->ma_trang_thai = 19;
                 $phieu_danh_gia->save();
-                return redirect()->back()->with('msg_success', 'Đánh giá, xếp loại Cục trưởng thành công');
+                return redirect()->back()->with('msg_success', 'Tổng hợp đánh giá, xếp loại Cục trưởng thành công');
             } else {
-                return redirect()->back()->with('msg_error', 'Phiếu đánh giá đã được phê duyệt quý');
+                return redirect()->back()->with('msg_error', 'Đã có kết quả đánh giá, xếp loại Cục trưởng');
             }
         } else {
             return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
