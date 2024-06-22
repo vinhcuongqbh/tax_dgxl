@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\DonViController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PhieuDanhGiaController;
 use App\Http\Controllers\PhongController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XepLoaiController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +21,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
+    Route::group(['middleware' => 'auth'], function () {
+
+        Route::resource('permissions', PermissionController::class);
+        Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
+
+        Route::resource('roles', RoleController::class);
+        Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);
+        Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole']);
+        Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole']);
+    });
+
     Route::get('/', function () {
         return view('dashboard');
     });
@@ -73,7 +86,8 @@ Route::middleware('auth')->group(function () {
         Route::post('{id}/update', [XeploaiController::class, 'update'])->name('xeploai.update');
         Route::get('{id}/delete', [XeploaiController::class, 'destroy'])->name('xeploai.delete');
         Route::get('{id}/restore', [XeploaiController::class, 'restore'])->name('xeploai.restore');
-    });Route::group(['prefix' => 'xeploai'], function () {
+    });
+    Route::group(['prefix' => 'xeploai'], function () {
         Route::get('', [XepLoaiController::class, 'index'])->name('xeploai');
         Route::get('create', [XeploaiController::class, 'create'])->name('xeploai.create');
         Route::post('store', [XeploaiController::class, 'store'])->name('xeploai.store');
@@ -121,7 +135,7 @@ Route::middleware('auth')->group(function () {
         Route::get('tracuu', [PhieuDanhGiaController::class, 'dangxaydung']);
     });
 
-    Route::group(['prefix' => 'cuctruong'], function () {        
+    Route::group(['prefix' => 'cuctruong'], function () {
         Route::get('hoidongList', [PhieuDanhGiaController::class, 'hoiDongList']);
         Route::post('hoidongList', [PhieuDanhGiaController::class, 'hoiDongList'])->name('phieudanhgia.hoidong.list');
         Route::get('{id}/hoidongCreate', [PhieuDanhGiaController::class, 'hoiDongCreate'])->name('phieudanhgia.hoidong.create');
@@ -146,4 +160,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
