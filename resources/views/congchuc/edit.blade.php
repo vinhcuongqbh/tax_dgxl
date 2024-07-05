@@ -130,6 +130,30 @@
                                         class="form-control">
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="role">Vai trò</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check">
+                                        @foreach ($roles as $role)
+                                            <input type="checkbox" id="{{ $role }}" class="form-check-input" name="roles[]"
+                                                value="{{ $role }}" {{ in_array($role, $userRoles) ? 'checked':'' }}>
+                                            <label class="form-check-label" for="{{ $role }}">{{ $role }}</label><br>
+                                        @endforeach
+                                    </div>
+                                    {{-- <select name="roles[]" class="form-control custom-select" multiple>
+                                        <option value="">---</option>
+                                        @foreach ($roles as $role)
+                                        <option
+                                            value="{{ $role }}"
+                                            {{ in_array($role, $userRoles) ? 'selected':'' }}
+                                        >
+                                            {{ $role }}
+                                        </option>
+                                        @endforeach
+                                    </select> --}}
+                                    @error('roles') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer d-flex justify-content-end">

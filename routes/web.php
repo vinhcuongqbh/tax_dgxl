@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('permissions', PermissionController::class);
-        Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
+        Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy'])->name('permissions.delete');
 
         Route::resource('roles', RoleController::class);
         Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);

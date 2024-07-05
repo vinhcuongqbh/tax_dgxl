@@ -44,6 +44,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected $primaryKey = 'so_hieu_cong_chuc';
-    public $incrementing = false;
+    //protected $primaryKey = 'so_hieu_cong_chuc';
+    //public $incrementing = false;
 }

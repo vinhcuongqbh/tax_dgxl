@@ -9,127 +9,106 @@ use Illuminate\Support\Facades\Auth;
 
 class PhongController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:xem danh sách phòng/đội', ['only' => ['index']]);
+        $this->middleware('permission:tạo phòng/đội', ['only' => ['create', 'store']]);
+        $this->middleware('permission:cập nhật phòng/đội', ['only' => ['update', 'edit']]);
+        $this->middleware('permission:xem phòng/đội', ['only' => ['show']]);
+        $this->middleware('permission:khóa phòng/đội', ['only' => ['destroy']]);
+        $this->middleware('permission:mở khóa phòng/đội', ['only' => ['restore']]);
+    }
+
     //Hiển thị danh sách Phòng/Đội
     public function index()
     {
-        if (Auth::user()->isAdmin == 1) {
-            $phong = Phong::leftjoin('don_vi', 'don_vi.ma_don_vi', 'phong.ma_don_vi_cap_tren')
-                ->select('phong.id', 'phong.ma_phong', 'phong.ten_phong', 'don_vi.ten_don_vi', 'phong.ma_trang_thai')
-                ->get();
+        $phong = Phong::leftjoin('don_vi', 'don_vi.ma_don_vi', 'phong.ma_don_vi_cap_tren')
+            ->select('phong.id', 'phong.ma_phong', 'phong.ten_phong', 'don_vi.ten_don_vi', 'phong.ma_trang_thai')
+            ->get();
 
-            return view('phong.index', ['phong' => $phong]);
-        } else {
-            return view('404');
-        }
+        return view('phong.index', ['phong' => $phong]);
     }
 
 
     //Tạo mới Phòng/Đội
     public function create()
     {
-        if (Auth::user()->isAdmin == 1) {
-            $don_vi = DonVi::where('ma_trang_thai', 1)->get();
+        $don_vi = DonVi::where('ma_trang_thai', 1)->get();
 
-            return view('phong.create', ['don_vi' => $don_vi]);
-        } else {
-            return view('404');
-        }
+        return view('phong.create', ['don_vi' => $don_vi]);
     }
 
 
     //Lưu trữ thông tin Phòng/Đội
     public function store(Request $request)
     {
-        if (Auth::user()->isAdmin == 1) {
-            //Kiểm tra thông tin đầu vào
-            $validated = $request->validate([
-                'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
-                'ten_phong' => 'required',
-            ]);
+        //Kiểm tra thông tin đầu vào
+        $validated = $request->validate([
+            'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
+            'ten_phong' => 'required',
+        ]);
 
-            $phong = new Phong();
-            $phong->ma_phong = $request->ma_phong;
-            $phong->ten_phong = $request->ten_phong;
-            $phong->ma_don_vi_cap_tren = $request->ma_don_vi_cap_tren;
-            $phong->ma_trang_thai = 1;
-            $phong->save();
+        $phong = new Phong();
+        $phong->ma_phong = $request->ma_phong;
+        $phong->ten_phong = $request->ten_phong;
+        $phong->ma_don_vi_cap_tren = $request->ma_don_vi_cap_tren;
+        $phong->ma_trang_thai = 1;
+        $phong->save();
 
-            return redirect()->route(
-                'phong.edit',
-                ['id' => $request->ma_phong]
-            )->with('message', 'Đã tạo mới Phòng/Đội thành công');
-        } else {
-            return view('404');
-        }
+        return redirect()->route('phong.edit', ['id' => $request->ma_phong])->with('message', 'Đã tạo mới Phòng/Đội thành công');
     }
 
 
     //Sửa thông tin Phòng/Đội
     public function edit($id)
     {
-        if (Auth::user()->isAdmin == 1) {
-            $phong = Phong::where('ma_phong', $id)->first();
-            $don_vi = DonVi::all();
+        $phong = Phong::where('ma_phong', $id)->first();
+        $don_vi = DonVi::all();
 
-
-            return view('phong.edit', [
-                'phong' => $phong,
-                'don_vi' => $don_vi
-            ]);
-        } else {
-            return view('404');
-        }
+        return view('phong.edit', [
+            'phong' => $phong,
+            'don_vi' => $don_vi
+        ]);
     }
 
 
     //Cập nhật thông tin Phòng/Đội
     public function update(Request $request, $id)
     {
-        if (Auth::user()->isAdmin == 1) {
-            //Kiểm tra thông tin đầu vào
-            $validated = $request->validate([
-                //'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
-                'ten_phong' => 'required',
-            ]);
+        //Kiểm tra thông tin đầu vào
+        $validated = $request->validate([
+            //'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
+            'ten_phong' => 'required',
+        ]);
 
-            $phong = Phong::where('ma_phong', $id)->first();
-            $phong->ten_phong = $request->ten_phong;
-            $phong->ma_don_vi_cap_tren = $request->ma_don_vi_cap_tren;
-            $phong->save();
-            return redirect()->route('phong.edit', ['id' => $phong->ma_phong])->with('message', 'Đã cập nhật Phòng/Đội thành công');
-        } else {
-            return view('404');
-        }
+        $phong = Phong::where('ma_phong', $id)->first();
+        $phong->ten_phong = $request->ten_phong;
+        $phong->ma_don_vi_cap_tren = $request->ma_don_vi_cap_tren;
+        $phong->save();
+        
+        return redirect()->route('phong.edit', ['id' => $phong->ma_phong])->with('message', 'Đã cập nhật Phòng/Đội thành công');
     }
 
 
     //Khóa Phòng/Đội
     public function destroy($id)
     {
-        if (Auth::user()->isAdmin == 1) {
-            $phong = Phong::where('ma_phong', $id)->first();
-            $phong->ma_trang_thai = 0;
-            $phong->save();
+        $phong = Phong::where('ma_phong', $id)->first();
+        $phong->ma_trang_thai = 0;
+        $phong->save();
 
-            return back()->with('message', 'Đã khóa Phòng/Đội');
-        } else {
-            return view('404');
-        }
+        return back()->with('message', 'Đã khóa Phòng/Đội');
     }
 
 
     //Mở khóa Phòng/Đội
     public function restore($id)
     {
-        if (Auth::user()->isAdmin == 1) {
-            $phong = Phong::where('ma_phong', $id)->first();
-            $phong->ma_trang_thai = 1;
-            $phong->save();
+        $phong = Phong::where('ma_phong', $id)->first();
+        $phong->ma_trang_thai = 1;
+        $phong->save();
 
-            return back()->with('message', 'Đã mở khóa Phòng/Đội');
-        } else {
-            return view('404');
-        }
+        return back()->with('message', 'Đã mở khóa Phòng/Đội');
     }
 
 

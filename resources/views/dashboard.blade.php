@@ -157,11 +157,16 @@
                                         <p>1.4. Danh mục xếp loại</p>
                                     </a>
                                 </li>
-                                {{-- <li class="nav-item pl-3">
-                                    <a href="/" class="nav-link">
-                                        <p>1.5. Phân quyền sử dụng</p>
+                                <li class="nav-item pl-3">
+                                    <a href="/roles" class="nav-link">
+                                        <p>1.5. Danh sách Role</p>
                                     </a>
-                                </li> --}}
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/permissions" class="nav-link">
+                                        <p>1.6. Danh sách Permission</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -233,16 +238,16 @@
                                     4. Đánh giá, xếp loại cá nhân theo năm
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>        
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
-                                    5. Quản lý Không tự đánh giá                                    
+                                    5. Quản lý Không tự đánh giá
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>    
+                            </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
                                     <a href="/khongxeploai/nhapdanhsach" class="nav-link">
@@ -254,7 +259,7 @@
                                         <p>5.2. Tra cứu</p>
                                     </a>
                                 </li>
-                            </ul>                        
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
@@ -263,7 +268,7 @@
                                     6. Đánh giá xếp loại Cục trưởng
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>       
+                            </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
                                     <a href="/cuctruong/hoidongList" class="nav-link">
@@ -275,7 +280,7 @@
                                         <p>6.2. Tổng hợp kết quả đánh giá</p>
                                     </a>
                                 </li>
-                            </ul>                   
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
@@ -284,7 +289,7 @@
                                     7. Báo cáo hỗ trợ
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>    
+                            </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
                                     <a href="/baocao/bctiendo" class="nav-link">
@@ -316,7 +321,7 @@
                                         <p>7.6. Danh sách đã phê duyệt</p>
                                     </a>
                                 </li>
-                            </ul>                          
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="" class="nav-link">
@@ -325,7 +330,7 @@
                                     8. Thông tin về Ứng dụng
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a>                            
+                            </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
                                     <a href="/ungdung/nangcap" class="nav-link">
@@ -337,7 +342,7 @@
                                         <p>8.2. Hướng dẫn sử dụng</p>
                                     </a>
                                 </li>
-                            </ul>  
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -403,7 +408,7 @@
             if (this.href) {
                 return this.href == url || url.href.indexOf(this.href) == 0;
             }
-        })//.addClass('active');
+        }) //.addClass('active');
 
         // for the treeview
         $('ul.nav-treeview a').filter(function() {

@@ -2,63 +2,95 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PermissionGroup;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('permission:xem danh sách permission', ['only' => ['index']]);
+        $this->middleware('permission:tạo permission', ['only' => ['create', 'store']]);
+        $this->middleware('permission:cập nhật permission', ['only' => ['update', 'edit']]);
+        $this->middleware('permission:xem permission', ['only' => ['show']]);
+        $this->middleware('permission:xóa permission', ['only' => ['destroy']]);        
+    }
+
+
     public function index()
     {
-        //
+        $permission_groups = PermissionGroup::get();
+        $permissions = Permission::orderby('permission_group', 'asc')
+            ->orderby('id', 'asc')
+            ->get();
+
+        return view(
+            'role-permission.permission.index',
+            [
+                'permissions' => $permissions,
+                'permission_groups' => $permission_groups
+            ]
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $permission_groups = PermissionGroup::get();
+        return view('role-permission.permission.create', ['permission_groups' => $permission_groups]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'unique:permissions,name'
+            ]
+        ]);
+
+        Permission::create([
+            'name' => $request->name,
+            'permission_group' => $request->permission_group
+        ]);
+
+        return redirect('permissions')->with('msg_success', 'Tạo mới permission thành công');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Permission $permission)
     {
-        //
+        $permission_groups = PermissionGroup::get();
+        return view(
+            'role-permission.permission.edit',
+            [
+                'permission' => $permission,
+                'permission_groups' => $permission_groups
+            ]
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'unique:permissions,name,' . $permission->id
+            ]
+        ]);
+
+        $permission->update([
+            'name' => $request->name
+        ]);
+
+        return redirect('permissions')->with('msg_success', 'Cập nhật permission thành công');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($permissionId)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $permission = Permission::find($permissionId);
+        $permission->delete();
+        return redirect('permissions')->with('msg_success', 'Xóa Permission thành công');
     }
 }

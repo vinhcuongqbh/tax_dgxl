@@ -103,6 +103,24 @@
                                         class="form-control">
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="role">Vai trò</label>
+                                <div class="col-sm-9 ">
+                                    {{-- <select id="multiple" name="roles[]" class="form-control custom-select" multiple>
+                                        <option value="">---</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role }}">{{ $role }}</option>
+                                        @endforeach
+                                    </select> --}}
+                                    <div class="form-check">
+                                        @foreach ($roles as $role)
+                                            <input type="checkbox" id="{{ $role }}" class="form-check-input" name="roles[]"
+                                                value="{{ $role }}">
+                                            <label class="form-check-label" for="{{ $role }}">{{ $role }}</label><br>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer d-flex justify-content-center">
@@ -117,6 +135,10 @@
     </div>
     <!-- /.container-fluid -->
 @stop
+
+@section('css')
+
+@endsection
 
 @section('js')
     <!-- jquery-validation -->
@@ -147,10 +169,10 @@
                     },
                     email: {
                         required: true,
-                    }
+                    },
                 },
                 messages: {
-                    so_hieu_cong_chuc:{
+                    so_hieu_cong_chuc: {
                         required: "Vui lòng nhập thông tin",
                     },
                     name: {
@@ -170,7 +192,7 @@
                     },
                     email: {
                         required: "Vui lòng nhập thông tin",
-                    }
+                    },
                 },
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
