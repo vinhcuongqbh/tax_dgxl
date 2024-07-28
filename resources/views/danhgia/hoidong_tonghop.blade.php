@@ -51,7 +51,7 @@
                                         <th class="text-center align-middle">Đơn vị</th>
                                         <th class="text-center align-middle">Điểm Cục trưởng tự chấm</th>
                                         <th class="text-center align-middle">Điểm đánh giá cho Cục trưởng</th>
-                                        <th class="text-center align-middle">Kết quả xếp loại</th>
+                                        <th class="text-center align-middle">Kết quả xếp loại cho Cục trưởng</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,9 +65,7 @@
                                                 <td class="text-center">
                                                     {{ date('m', strtotime($danh_sach->thoi_diem_danh_gia)) }}/{{ date('Y', strtotime($danh_sach->thoi_diem_danh_gia)) }}
                                                 </td>
-                                                <td><a
-                                                        href="{{ route('phieudanhgia.hoidong.create', $danh_sach->ma_phieu_danh_gia) }}">
-                                                        {{ $danh_sach->name }}</a></td>
+                                                <td>{{ $danh_sach->name }}</td>
                                                 <td class="text-center">{{ $danh_sach->ten_chuc_vu }}</td>
                                                 <td class="text-center">{{ $danh_sach->ten_phong }}</td>
                                                 <td class="text-center">{{ $danh_sach->ten_don_vi }}</td>

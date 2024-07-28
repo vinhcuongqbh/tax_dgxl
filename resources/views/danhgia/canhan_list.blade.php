@@ -53,7 +53,7 @@
                                         <td class="text-center">{{ $danh_sach->ten_phong }}</td>
                                         <td class="text-center">{{ $danh_sach->ten_don_vi }}</td>
                                         <td class="text-center">{{ $danh_sach->tong_diem_tu_cham }}</td>
-                                        <td class="text-center">{{ $danh_sach->ca_nhan_tu_xep_loai }}</td>
+                                        <td class="text-center">{{ $danh_sach->ca_nhan_tu_xep_loai }} <br> {{ $danh_sach->ly_do }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

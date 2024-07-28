@@ -31,7 +31,7 @@ class UserController extends Controller
     //Hiển thị danh sách User
     public function index()
     {
-        $users = User::wherein('users.ma_trang_thai',[0,1])
+        $users = User::wherein('users.ma_trang_thai', [0, 1])
             ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
             ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
             ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
@@ -124,7 +124,7 @@ class UserController extends Controller
                 'phong' => $phong
             ]);
         } else {
-            return view('404');
+            abort('403');
         }
     }
 
@@ -167,7 +167,7 @@ class UserController extends Controller
             'gioi_tinh' => 'required',
             'don_vi' => 'required',
             'phong' => 'required',
-            'email' => 'required',            
+            'email' => 'required',
         ]);
 
         $user = User::where('so_hieu_cong_chuc', $id)->first();
@@ -222,7 +222,7 @@ class UserController extends Controller
                 return back()->with('msg_success', 'Đổi mật mã thành công');
             }
         } else {
-            return view('404');
+            abort('404');
         }
     }
 
@@ -235,5 +235,18 @@ class UserController extends Controller
         $user->password = Hash::make($password);
         $user->save();
         return back()->with('msg_success', 'Reset mật mã thành công. Mật mã mặc định là: ' . $password);
+    }
+
+
+    //Lấy danh sách cán bộ dựa trên Phòng
+    public function userList(Request $request)
+    {
+        $data['user'] = User::where('ma_phong', $request->ma_phong)
+            ->where('ma_trang_thai', 1)
+            ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
+            ->get(['so_hieu_cong_chuc', 'name']);
+
+
+        return response()->json($data);
     }
 }

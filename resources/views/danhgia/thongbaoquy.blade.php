@@ -7,7 +7,7 @@
         @csrf
         <div class="d-flex">
             <div class="col-4">
-                Báo cáo KQXL tháng
+                Thông báo KQXL quý
             </div>
             <div class="d-flex justify-content-end col-8">
                 <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>

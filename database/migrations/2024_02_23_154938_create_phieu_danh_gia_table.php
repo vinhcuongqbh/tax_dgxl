@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('ma_cap_tren_phe_duyet')->nullable(); 
             $table->string('ca_nhan_tu_xep_loai')->nullable();
             $table->string('ket_qua_xep_loai')->nullable();
+            //$table->tinyInteger('ly_do_khong_tu_danh_gia')->nullable();
             $table->tinyInteger('ma_trang_thai')->default(1);
             $table->timestamps();
         });

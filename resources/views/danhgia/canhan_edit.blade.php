@@ -221,12 +221,12 @@
                             <h6>&emsp;&emsp;&emsp;- Các nhiệm vụ có sáng kiến, đổi mới, sáng tạo, mang lại hiệu quả được áp
                                 dụng điểm thưởng: <i>(mô tả tóm tắt cách thức, hiệu quả mang lại)</i></h6>
                             <div class="form-group">
-                                <textarea class="form-control" id="ly_do_diem_cong" name="ly_do_diem_cong" rows="7">{{ $ly_do_diem_cong->noi_dung }}</textarea>
+                                <textarea class="form-control" id="ly_do_diem_cong" name="ly_do_diem_cong" rows="7">@if ($ly_do_diem_cong) {{ $ly_do_diem_cong->noi_dung }} @endif</textarea>
                             </div>
                             {{-- Mục Lý do Điểm trừ --}}
                             <h6>&emsp;&emsp;&emsp;- Lý do áp dụng điểm trừ: <i>(mô tả tóm tắt)</i></h6>
                             <div class="form-group">
-                                <textarea class="form-control" id="ly_do_diem_tru" name="ly_do_diem_tru" rows="7">{{ $ly_do_diem_tru->noi_dung }}</textarea>
+                                <textarea class="form-control" id="ly_do_diem_tru" name="ly_do_diem_tru" rows="7">@if ($ly_do_diem_tru) {{ $ly_do_diem_tru->noi_dung }} @endif</textarea>
                             </div>
                             {{-- Mục Cá nhân tự xếp loại --}}
                             <h6 class="text-bold">&emsp;&emsp;&emsp;C. Cá nhân tự xếp loại: <i>(Chọn 01 trong 04 ô

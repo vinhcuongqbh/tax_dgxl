@@ -20,15 +20,17 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\KQXLThang;
+use App\Models\LyDoKhongTuDanhGia;
 use App\Models\PhieuDanhGiaCucTruong;
 use App\Models\Phong;
+use Carbon\CarbonPeriod;
 use Termwind\Components\Raw;
 
 class PhieuDanhGiaController extends Controller
 {
     use PhieuDanhGiaTrait;
-    ///////////////////// Cá nhân tự đánh giá, xếp loại ////////////////////
 
+    ///////////////////// Cá nhân tự đánh giá, xếp loại ////////////////////
     public function __construct()
     {
         // Cấp tự đánh giá
@@ -52,16 +54,20 @@ class PhieuDanhGiaController extends Controller
         $this->middleware('permission:xem danh sách phê duyệt quý', ['only' => ['capQDDSQuy']]);
         $this->middleware('permission:phê duyệt kết quả xếp loại quý', ['only' => ['capQDPheDuyetDSQuy']]);
 
-        // Cấp có thẩm quyền phê duyệt
+        // Hội đồng TĐKT
         $this->middleware('permission:xem danh sách phiếu Cục trưởng', ['only' => ['hoiDongList']]);
         $this->middleware('permission:đánh giá cho Cục trưởng', ['only' => ['hoidongCreate', 'hoiDongStore']]);
-        $this->middleware('permission:tổng hợp kết quả cho Cục trưởng', ['only' => ['hoiDongTongHopDuKien', 'hoiDongTongHopDanhGia']]);        
+        $this->middleware('permission:tổng hợp kết quả cho Cục trưởng', ['only' => ['hoiDongTongHopDuKien', 'hoiDongTongHopDanhGia']]);
 
         // Báo cáo
         $this->middleware('permission:xem thông báo kết quả tháng', ['only' => ['thongBaoThang']]);
         $this->middleware('permission:xem báo cáo kết quả tháng', ['only' => ['baoCaoThang']]);
         $this->middleware('permission:xem thông báo kết quả quý', ['only' => ['thongBaoQuy']]);
-        $this->middleware('permission:xem báo cáo kết quả quý', ['only' => ['baoCaoQuy']]);        
+        $this->middleware('permission:xem báo cáo kết quả quý', ['only' => ['baoCaoQuy']]);
+
+        // Phiếu không tự đánh giá
+        $this->middleware('permission:tạo phiếu không tự đánh giá', ['only' => ['phieuKTDGCreate', 'phieuKTDGStore']]);
+        $this->middleware('permission:tra cứu phiếu không tự đánh giá', ['only' => ['phieuKTDGList']]);
     }
 
 
@@ -332,7 +338,8 @@ class PhieuDanhGiaController extends Controller
             ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
             ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
             ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-            ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+            ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+            ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
             ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
             ->get();
 
@@ -353,7 +360,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->orderBy('users.ma_don_vi', 'ASC')
                 ->orderBy('users.ma_phong', 'ASC')
@@ -368,7 +376,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->get();
         } elseif ((Auth::user()->ma_chuc_vu == "04") || (Auth::user()->ma_chuc_vu == "05") || (Auth::user()->ma_chuc_vu == "09")) {
@@ -381,7 +390,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->get();
         } else {
@@ -567,6 +577,7 @@ class PhieuDanhGiaController extends Controller
             // Phê duyệt đánh giá cho: 02-Phó Cục trưởng; 03-Chi cục trưởng; 04-Chánh Văn phòng; 05-Trưởng phòng; 06-Phó Chi cục Trưởng; 
             // 07-Phó Chánh Văn phòng; 08-Phó Trưởng phòng; 09-Đội trưởng; 10-Phó Đội Trưởng; Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế            
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where(function ($query) {
                     $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
                         ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi);
@@ -575,7 +586,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->orderBy('users.ma_don_vi', 'ASC')
                 ->orderBy('users.ma_phong', 'ASC')
@@ -585,16 +597,19 @@ class PhieuDanhGiaController extends Controller
             // Nếu Người dùng có chức vụ Chi cục Trưởng
             // Phê duyệt cho Công chức thuộc Chi cục     
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where('phieu_danh_gia.ma_trang_thai', '17')
                 ->where('phieu_danh_gia.ma_chuc_vu', null)
                 ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where('phieu_danh_gia.ma_trang_thai', '16')
                 ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
                 ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->orderBy('users.ma_don_vi', 'ASC')
                 ->orderBy('users.ma_phong', 'ASC')
@@ -615,6 +630,7 @@ class PhieuDanhGiaController extends Controller
             // Phê duyệt đánh giá cho: 02-Phó Cục trưởng; 03-Chi cục trưởng; 04-Chánh Văn phòng; 05-Trưởng phòng; 06-Phó Chi cục Trưởng; 
             // 07-Phó Chánh Văn phòng; 08-Phó Trưởng phòng; 09-Đội trưởng; 10-Phó Đội Trưởng; Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế            
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where(function ($query) {
                     $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
                         ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi);
@@ -623,7 +639,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->orderBy('users.ma_don_vi', 'ASC')
                 ->orderBy('users.ma_phong', 'ASC')
@@ -633,16 +650,19 @@ class PhieuDanhGiaController extends Controller
             // Nếu Người dùng có chức vụ Chi cục Trưởng
             // Đánh giá cho Công chức không giữ chức vụ lãnh đạo thuộc Chi cục     
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where('phieu_danh_gia.ma_trang_thai', '17')
                 ->where('phieu_danh_gia.ma_chuc_vu', null)
                 ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where('phieu_danh_gia.ma_trang_thai', '16')
                 ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
                 ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->orderBy('users.ma_don_vi', 'ASC')
                 ->orderBy('users.ma_phong', 'ASC')
@@ -716,7 +736,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
                 ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
@@ -729,7 +750,8 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
                 ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
                 ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
@@ -874,178 +896,134 @@ class PhieuDanhGiaController extends Controller
     // Danh sách kết quả xếp loại theo quý
     public function capQDDSQuy(Request $request)
     {
-        // Nếu người dùng không phải thành viên Hội đồng hoặc Cục trưởng hoặc Chi cục trưởng thì điều hướng về trang 404
-        if ((Auth::user()->hoi_dong_phe_duyet <> 1) and (!in_array(Auth::user()->ma_chuc_vu, ['01', '03']))) {
-            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
+        // Lấy danh sách Cục trưởng/Chi cục trưởng phê duyệt
+        if (Auth::user()->ma_chuc_vu == "01") {
+            // Nếu Người dùng có chức vụ Cục Trưởng 
+            $user_list = $this->danhSachCucTruongPheDuyet();
+        } elseif (Auth::user()->ma_chuc_vu == "03") {
+            // Nếu Người dùng có chức vụ Chi cục Trưởng 
+            $user_list = $this->danhSachChiCucTruongPheDuyet();
         } else {
-            // Lấy danh sách Hội đồng phê duyệt
-            // if (Auth::user()->hoi_dong_phe_duyet == 1) {
-            //     // Nếu Người dùng có chức năng phê duyệt của Hội đồng TĐKT
-            //     $user_list_hd = $this->danhSachHoiDongPheDuyet();
-            // } else {
-            //     $user_list_hd = null;
-            // }
+            $user_list = null;
+        }
 
-            $user_list_hd = null;
+        // Xác định tháng đánh giá, quý đánh giá
+        if (isset($request->quy_danh_gia)) {
+            $thang_dau_tien = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = $request->quy_danh_gia;
+            $nam_danh_gia = $request->nam_danh_gia;
+        } else {
+            $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+            $nam_danh_gia = Carbon::now()->subQuarter()->year;
+        }
 
-            // Lấy danh sách Cục trưởng/Chi cục trưởng phê duyệt
-            if (Auth::user()->ma_chuc_vu == "01") {
-                // Nếu Người dùng có chức vụ Cục Trưởng 
-                $user_list_cm = $this->danhSachCucTruongPheDuyet();
-            } elseif (Auth::user()->ma_chuc_vu == "03") {
-                // Nếu Người dùng có chức vụ Chi cục Trưởng 
-                $user_list_cm = $this->danhSachChiCucTruongPheDuyet();
-            } else {
-                $user_list_cm = null;
-            }
-
-            // Nối 2 danh sách Hội đồng + Cục trưởng/Chi cục trưởng
-            if (($user_list_hd != null) && ($user_list_cm != null)) {
-                $user_list = $user_list_hd->merge($user_list_cm);
-            } elseif (($user_list_hd != null) && ($user_list_cm == null)) {
-                $user_list = $user_list_hd;
-            } elseif (($user_list_hd == null) && ($user_list_cm != null)) {
-                $user_list = $user_list_cm;
-            } else {
-                $user_list = null;
-            }
-
-            // Xác định tháng đánh giá, quý đánh giá
-            if (isset($request->quy_danh_gia)) {
-                $thang_dau_tien = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->endOfMonth();
-                $thang_thu_hai = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->addMonth()->endOfMonth();
-                $thang_cuoi_cung = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->lastOfQuarter()->endOfMonth();
-                $quy_danh_gia = $request->quy_danh_gia;
-                $nam_danh_gia = $request->nam_danh_gia;
-            } else {
-                $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
-                $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
-                $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
-                $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
-                $nam_danh_gia = Carbon::now()->subQuarter()->year;
-            }
-
-            if ($quy_danh_gia == "1") {
-                $list_thang = ["1", "2", "3"];
-            } elseif ($quy_danh_gia == "2") {
-                $list_thang = ["4", "5", "6"];
-            } elseif ($quy_danh_gia == "3") {
-                $list_thang = ["7", "8", "9"];
-            } elseif ($quy_danh_gia == "4") {
-                $list_thang = ["10", "11", "12"];
-            }
+        if ($quy_danh_gia == "1") {
+            $list_thang = ["1", "2", "3"];
+        } elseif ($quy_danh_gia == "2") {
+            $list_thang = ["4", "5", "6"];
+        } elseif ($quy_danh_gia == "3") {
+            $list_thang = ["7", "8", "9"];
+        } elseif ($quy_danh_gia == "4") {
+            $list_thang = ["10", "11", "12"];
+        }
 
 
-            // Thực hiện xếp loại theo quý
-            $collection = collect();
-            $xep_loai_1 = null;
-            $xep_loai_2 = null;
-            $xep_loai_3 = null;
+        // Thực hiện xếp loại theo quý
+        $collection = collect();
+        $xep_loai_1 = null;
+        $xep_loai_2 = null;
+        $xep_loai_3 = null;
 
-            if (isset($user_list)) {
-                foreach ($user_list as $user) {
-                    // Tìm kết quả xếp loại các tháng trong quý
-                    $xep_loai_1 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
-                        ->where('thoi_diem_danh_gia', $thang_dau_tien->toDateString())
-                        ->where('ma_trang_thai', 19)
-                        ->first();
-                    if (isset($xep_loai_1)) $xep_loai_1 = $xep_loai_1->ket_qua_xep_loai;
-
-
-                    $xep_loai_2 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
-                        ->where('thoi_diem_danh_gia', $thang_thu_hai->toDateString())
-                        ->where('ma_trang_thai', 19)
-                        ->first();
-                    if (isset($xep_loai_2)) $xep_loai_2 = $xep_loai_2->ket_qua_xep_loai;
-
-                    $xep_loai_3 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
-                        ->where('thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
-                        ->where('ma_trang_thai', 19)
-                        ->first();
-                    if (isset($xep_loai_3)) $xep_loai_3 = $xep_loai_3->ket_qua_xep_loai;
-
-                    // Tính toán xếp loại quý
-                    $countA = 0;
-                    $countB = 0;
-                    $countC = 0;
-                    $countD = 0;
-
-                    for ($i = 1; $i <= 3; $i++) {
-                        if (${"xep_loai_" . $i} == "A") $countA++;
-                        elseif (${"xep_loai_" . $i} == "B") $countB++;
-                        elseif (${"xep_loai_" . $i} == "C") $countC++;
-                        elseif (${"xep_loai_" . $i} == "D")  $countD++;
-                    }
-
-                    $ket_qua_xep_loai = null;
-                    if (($xep_loai_1 == null) || ($xep_loai_2 == null) || ($xep_loai_3 == null)) $ket_qua_xep_loai = null;
-                    elseif (($countA >= 2) && ($countC == 0) && ($countD == 0)) $ket_qua_xep_loai = "A";
-                    elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
-                    elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
-                    elseif ($countD > 0) $ket_qua_xep_loai = "D";
-                    else $ket_qua_xep_loai = null;
+        if (isset($user_list)) {
+            foreach ($user_list as $user) {
+                // Tìm kết quả xếp loại các tháng trong quý
+                $xep_loai_1 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                    ->where('thoi_diem_danh_gia', $thang_dau_tien->toDateString())
+                    ->where('ma_trang_thai', 19)
+                    ->first();
+                if (isset($xep_loai_1)) $xep_loai_1 = $xep_loai_1->ket_qua_xep_loai;
 
 
-                    // Đưa vào danh sách
-                    if ($ket_qua_xep_loai != null) {
-                        $collection->push([
-                            'name' => $user->name,
-                            'ten_chuc_vu' => $user->ten_chuc_vu,
-                            'ten_phong' => $user->ten_phong,
-                            'ten_don_vi' => $user->ten_don_vi,
-                            'xep_loai_1' => $xep_loai_1,
-                            'xep_loai_2' => $xep_loai_2,
-                            'xep_loai_3' => $xep_loai_3,
-                            'ket_qua_xep_loai' => $ket_qua_xep_loai,
-                        ]);
-                    }
+                $xep_loai_2 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                    ->where('thoi_diem_danh_gia', $thang_thu_hai->toDateString())
+                    ->where('ma_trang_thai', 19)
+                    ->first();
+                if (isset($xep_loai_2)) $xep_loai_2 = $xep_loai_2->ket_qua_xep_loai;
+
+                $xep_loai_3 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                    ->where('thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
+                    ->where('ma_trang_thai', 19)
+                    ->first();
+                if (isset($xep_loai_3)) $xep_loai_3 = $xep_loai_3->ket_qua_xep_loai;
+
+                // Tính toán xếp loại quý
+                $countA = 0;
+                $countB = 0;
+                $countC = 0;
+                $countD = 0;
+                $countK = 0;
+
+                for ($i = 1; $i <= 3; $i++) {
+                    if (${"xep_loai_" . $i} == "A") $countA++;
+                    elseif (${"xep_loai_" . $i} == "B") $countB++;
+                    elseif (${"xep_loai_" . $i} == "C") $countC++;
+                    elseif (${"xep_loai_" . $i} == "D")  $countD++;
+                    elseif (${"xep_loai_" . $i} == "K")  $countK++;
+                }
+
+                $ket_qua_xep_loai = null;
+                if (($xep_loai_1 == null) || ($xep_loai_2 == null) || ($xep_loai_3 == null)) $ket_qua_xep_loai = null;
+                elseif ($countK > 0) $ket_qua_xep_loai = "K";
+                elseif ($countD > 0) $ket_qua_xep_loai = "D";
+                elseif (($countA >= 2) && ($countC == 0) && ($countD == 0)) $ket_qua_xep_loai = "A";
+                elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
+                elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
+                else $ket_qua_xep_loai = null;
+
+
+                // Đưa vào danh sách
+                if ($ket_qua_xep_loai != null) {
+                    $collection->push([
+                        'name' => $user->name,
+                        'ten_chuc_vu' => $user->ten_chuc_vu,
+                        'ten_phong' => $user->ten_phong,
+                        'ten_don_vi' => $user->ten_don_vi,
+                        'xep_loai_1' => $xep_loai_1,
+                        'xep_loai_2' => $xep_loai_2,
+                        'xep_loai_3' => $xep_loai_3,
+                        'ket_qua_xep_loai' => $ket_qua_xep_loai,
+                    ]);
                 }
             }
-
-            return view(
-                'danhgia.capqd_list_quy',
-                [
-                    'danh_sach' => $collection,
-                    'thang' => $list_thang,
-                    'quy_danh_gia' => $quy_danh_gia,
-                    'nam_danh_gia' => $nam_danh_gia,
-                ]
-            );
         }
+
+        return view(
+            'danhgia.capqd_list_quy',
+            [
+                'danh_sach' => $collection,
+                'thang' => $list_thang,
+                'quy_danh_gia' => $quy_danh_gia,
+                'nam_danh_gia' => $nam_danh_gia,
+            ]
+        );
     }
 
 
     // Phê duyệt Danh sách kết quả xếp loại theo quý
     public function capQDPheDuyetDSQuy(Request $request)
     {
-        // Lấy danh sách Hội đồng phê duyệt
-        // if (Auth::user()->hoi_dong_phe_duyet == 1) {
-        //     // Nếu Người dùng có chức năng phê duyệt của Hội đồng TĐKT
-        //     $user_list_hd = $this->danhSachHoiDongPheDuyet();
-        // } else {
-        //     $user_list_hd = null;
-        // }
-
-        $user_list_hd = null;
-
         // Lấy danh sách Cục trưởng/Chi cục trưởng phê duyệt
         if (Auth::user()->ma_chuc_vu == "01") {
             // Nếu Người dùng có chức vụ Cục Trưởng 
-            $user_list_cm = $this->danhSachCucTruongPheDuyet();
+            $user_list = $this->danhSachCucTruongPheDuyet();
         } elseif (Auth::user()->ma_chuc_vu == "03") {
             // Nếu Người dùng có chức vụ Chi cục Trưởng 
-            $user_list_cm = $this->danhSachChiCucTruongPheDuyet();
-        } else {
-            $user_list_cm = null;
-        }
-
-        // Nối 2 danh sách Hội đồng + Cục trưởng/Chi cục trưởng
-        if (($user_list_hd != null) && ($user_list_cm != null)) {
-            $user_list = $user_list_hd->merge($user_list_cm);
-        } elseif (($user_list_hd != null) && ($user_list_cm == null)) {
-            $user_list = $user_list_hd;
-        } elseif (($user_list_hd == null) && ($user_list_cm != null)) {
-            $user_list = $user_list_cm;
+            $user_list = $this->danhSachChiCucTruongPheDuyet();
         } else {
             $user_list = null;
         }
@@ -1117,20 +1095,23 @@ class PhieuDanhGiaController extends Controller
             $countB = 0;
             $countC = 0;
             $countD = 0;
+            $countK = 0;
 
             for ($i = 1; $i <= 3; $i++) {
                 if (${"xep_loai_" . $i} == "A") $countA++;
                 elseif (${"xep_loai_" . $i} == "B") $countB++;
                 elseif (${"xep_loai_" . $i} == "C") $countC++;
-                elseif (${"xep_loai_" . $i} == "D")  $countD++;
+                elseif (${"xep_loai_" . $i} == "D") $countD++;
+                elseif (${"xep_loai_" . $i} == "K") $countK++;
             }
 
             $ket_qua_xep_loai = null;
             if (($xep_loai_1 == null) || ($xep_loai_2 == null) || ($xep_loai_3 == null)) $ket_qua_xep_loai = null;
+            elseif ($countK > 0) $ket_qua_xep_loai = "K";
+            elseif ($countD > 0) $ket_qua_xep_loai = "D";
             elseif (($countA >= 2) && ($countC == 0) && ($countD == 0)) $ket_qua_xep_loai = "A";
             elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
             elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
-            elseif ($countD > 0) $ket_qua_xep_loai = "D";
 
             if ($ket_qua_xep_loai != null) {
                 $this->kQXLQuy($user, $ket_qua_xep_loai, $nam_danh_gia, $quy_danh_gia);
@@ -1344,6 +1325,313 @@ class PhieuDanhGiaController extends Controller
             'ma_don_vi_da_chon' => $request->ma_don_vi_da_chon
         ]);
     }
+
+
+    public function hoiDongList(Request $request)
+    {
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        $danh_sach = PhieuDanhGiaCucTruong::where('phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+            ->where('phieu_danh_gia_cuc_truong.ma_trang_thai', 19)
+            ->where('phieu_danh_gia_cuc_truong.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+            ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia_cuc_truong.so_hieu_cong_chuc')
+            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
+            ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
+            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
+            ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+            ->first();
+
+        if (!$danh_sach) {
+            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', 13)
+                ->where('phieu_danh_gia.ma_chuc_vu', '01')
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+                ->first();
+        }
+
+        return view('danhgia.hoidong_list', ['danh_sach' => $danh_sach, 'thoi_diem_danh_gia' => $thoi_diem_danh_gia]);
+    }
+
+
+    // Hội đồng đánh giá, xếp loại cho Cục trưởng
+    public function hoidongCreate($ma_phieu_danh_gia)
+    {
+        // Tìm Phiếu đánh giá
+        $phieu_danh_gia = PhieuDanhGiaCucTruong::where('phieu_danh_gia_cuc_truong.ma_phieu_danh_gia', $ma_phieu_danh_gia)
+            ->where('phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+            ->leftjoin('phieu_danh_gia', 'phieu_danh_gia.ma_phieu_danh_gia', 'phieu_danh_gia_cuc_truong.ma_phieu_danh_gia')
+            ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+            ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+            ->select('phieu_danh_gia_cuc_truong.*', 'phieu_danh_gia.mau_phieu_danh_gia', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+            ->first();
+        if (!$phieu_danh_gia) $phieu_danh_gia = $this->timPhieuDanhGia($ma_phieu_danh_gia);
+
+        // Lấy dữ liệu mục A
+        $ket_qua_muc_A = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $phieu_danh_gia->ma_phieu_danh_gia)
+            ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+            ->leftjoin('mau01A', 'mau01A.ma_tieu_chi', 'ket_qua_muc_A_cuc_truong.ma_tieu_chi')
+            ->select('ket_qua_muc_A_cuc_truong.*', 'mau01A.tieu_chi_me', 'mau01A.loai_tieu_chi', 'mau01A.tt', 'mau01A.noi_dung')
+            ->get();
+        if ($ket_qua_muc_A->isEmpty()) $ket_qua_muc_A = $this->timKetQuaMucA($phieu_danh_gia);
+
+        // Lấy dữ liệu mục B
+        $ket_qua_muc_B = KetQuaMucB::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
+
+        // Lấy dữ liệu Lý do điểm cộng
+        $ly_do_diem_cong = LyDoDiemCong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+
+        // Lấy dữ liệu Lý do điểm trừ
+        $ly_do_diem_tru = LyDoDiemTru::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+
+        // Lấy thông tin Mẫu phiếu đánh giá
+        $thong_tin_mau_phieu = $this->thongTinMauPhieu("mau01A");
+        $thoi_diem_danh_gia = Carbon::create($phieu_danh_gia->thoi_diem_danh_gia);
+        $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
+        $xep_loai = XepLoai::all();
+
+        return view(
+            'danhgia.hoidong_create',
+            [
+                'phieu_danh_gia' => $phieu_danh_gia,
+                'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
+                'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+                'ngay_thuc_hien_danh_gia' => $ngay_thuc_hien_danh_gia,
+                'xep_loai' => $xep_loai,
+                'ket_qua_muc_A' => $ket_qua_muc_A,
+                'ket_qua_muc_B' => $ket_qua_muc_B,
+                'ly_do_diem_cong' => $ly_do_diem_cong,
+                'ly_do_diem_tru' => $ly_do_diem_tru,
+            ]
+        );
+    }
+
+
+    // Lưu Kết quả thành viên Hội đồng đánh giá
+    public function hoiDongStore($ma_phieu_danh_gia, Request $request)
+    {
+        // Tính Tổng điểm thành viên Hội đồng đánh giá
+        $diem_danh_gia = $request->tc_300;
+        $diem_cong_danh_gia = $request->tc_400;
+        $diem_tru_danh_gia = $request->tc_500;
+        $tong_diem_danh_gia = $this->tinhTongDiem($request);
+
+        // Kết quả thành viên Hội đồng xếp loại
+        $ket_qua_xep_loai = $this->xepLoai($tong_diem_danh_gia);
+
+        // Kiểm tra đã có Phiếu đánh giá thành viên Hội đồng đánh giá  
+        $phieu_danh_gia = PhieuDanhGiaCucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
+            ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+            ->first();
+        $phieu = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
+        if ($phieu->ma_trang_thai == 13) {
+
+            // Lưu kết quả thành viên Hội đồng đánh giá cho Mục A
+            $ket_qua_muc_A = KetQuaMucA::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
+
+            if (!isset($phieu_danh_gia)) {
+                foreach ($ket_qua_muc_A as $ket_qua) {
+                    $data = new KetQuaMucACucTruong();
+                    $data->ma_phieu_danh_gia = $ma_phieu_danh_gia;
+                    $data->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+                    $data->ma_tieu_chi = $ket_qua->ma_tieu_chi;
+                    $data->diem_toi_da = $ket_qua->diem_toi_da;
+                    $data->diem_tu_cham = $ket_qua->diem_tu_cham;
+                    $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
+                    $data->save();
+                }
+            } else {
+                foreach ($ket_qua_muc_A as $ket_qua) {
+                    $data = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
+                        ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
+                        ->where('ma_tieu_chi', $ket_qua->ma_tieu_chi)
+                        ->first();
+                    $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
+                    $data->save();
+                }
+            }
+
+            if (!isset($phieu_danh_gia)) {
+                $phieu_danh_gia = new PhieuDanhGiaCucTruong();
+            }
+
+            $phieu_danh_gia->so_hieu_cong_chuc = $phieu->so_hieu_cong_chuc;
+            $phieu_danh_gia->thoi_diem_danh_gia = $phieu->thoi_diem_danh_gia;
+            $phieu_danh_gia->ma_phieu_danh_gia = $phieu->ma_phieu_danh_gia;
+            $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+            $phieu_danh_gia->ma_chuc_vu_cap_tren = Auth::user()->ma_chuc_vu;
+            $phieu_danh_gia->ma_phong_cap_tren = Auth::user()->ma_phong;
+            $phieu_danh_gia->ma_don_vi_cap_tren = Auth::user()->ma_don_vi;
+            $phieu_danh_gia->diem_tu_cham = $phieu->diem_tu_cham;
+            $phieu_danh_gia->diem_cong_tu_cham = $phieu->diem_cong_tu_cham;
+            $phieu_danh_gia->diem_tru_tu_cham = $phieu->diem_tru_tu_cham;
+            $phieu_danh_gia->tong_diem_tu_cham = $phieu->tong_diem_tu_cham;
+            $phieu_danh_gia->diem_danh_gia = $diem_danh_gia;
+            $phieu_danh_gia->diem_cong_danh_gia = $diem_cong_danh_gia;
+            $phieu_danh_gia->diem_tru_danh_gia = $diem_tru_danh_gia;
+            $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
+            $phieu_danh_gia->ca_nhan_tu_xep_loai = $phieu->ca_nhan_tu_xep_loai;
+            $phieu_danh_gia->ket_qua_xep_loai = $ket_qua_xep_loai;
+            $phieu_danh_gia->ma_trang_thai = 19;
+            $phieu_danh_gia->save();
+
+            return redirect()->route(
+                'phieudanhgia.hoidong.create',
+                ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
+            )->with('msg_success', 'Thành viên Hội đồng đã thực hiện đánh giá thành công');
+        } else {
+            return redirect()->route(
+                'phieudanhgia.hoidong.create',
+                ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
+            )->with('msg_error', 'Đã tổng hợp đánh giá, xếp loại cho Cục trưởng. Không thể thay đổi điểm, xếp loại đã chấm.');
+        }
+    }
+
+    public function hoiDongTongHopDuKien(Request $request)
+    {
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        $phieu_danh_gia = PhieuDanhGiaCucTruong::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+            ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia')
+            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia_cuc_truong.ma_chuc_vu_cap_tren')
+            ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia_cuc_truong.ma_phong_cap_tren')
+            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia_cuc_truong.ma_don_vi_cap_tren')
+            ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+            ->get();
+
+        $tong_diem = 0;
+        $diem_trung_binh = NULL;
+        $xep_loai_trung_binh = NULL;
+        $xep_loai = XepLoai::all();
+
+        if (!$phieu_danh_gia->isEmpty()) {
+            foreach ($phieu_danh_gia as $phieu) {
+                $tong_diem = $tong_diem + $phieu->tong_diem_danh_gia;
+            }
+
+            $diem_trung_binh = floor($tong_diem / $phieu_danh_gia->count());
+            $xep_loai_trung_binh = $this->xepLoai($diem_trung_binh);
+        }
+
+        return view(
+            'danhgia.hoidong_tonghop',
+            [
+                'danh_sach' => $phieu_danh_gia,
+                'diem_trung_binh' => $diem_trung_binh,
+                'xep_loai_trung_binh' => $xep_loai_trung_binh,
+                'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+                'xep_loai' => $xep_loai
+            ]
+        );
+    }
+
+
+    public function hoiDongTongHopDanhGia(Request $request)
+    {
+        $tong_diem_danh_gia = $request->diem_trung_binh;
+        $xep_loai = $this->xepLoai($tong_diem_danh_gia);
+
+        $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $request->ma_phieu_danh_gia)->first();
+        if ($phieu_danh_gia->ma_trang_thai == 13) {
+            $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
+            $phieu_danh_gia->ket_qua_xep_loai = $xep_loai;
+            $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+            $phieu_danh_gia->ma_trang_thai = 19;
+            $phieu_danh_gia->save();
+            return redirect()->back()->with('msg_success', 'Tổng hợp đánh giá, xếp loại Cục trưởng thành công');
+        } else {
+            return redirect()->back()->with('msg_error', 'Đã có kết quả đánh giá, xếp loại Cục trưởng');
+        }
+    }
+
+
+    public function phieuKTDGCreate()
+    {
+        $don_vi = DonVi::where('ma_trang_thai', 1)->get();
+        return view(
+            'danhgia.phieuKTDGCreate',
+            [
+                'don_vi' => $don_vi
+            ]
+        );
+    }
+
+    public function phieuKTDGStore(Request $request)
+    {
+        $months = CarbonPeriod::create($request->start_date, '1 month', $request->end_date);
+
+        $exists_month = "";
+        foreach ($months as $month) {
+            // Tạo Mã phiếu đánh giá             
+            $thoi_diem_danh_gia = Carbon::createFromDate($month->format("Y"), $month->format("m"),)->endOfMonth();
+            $ma_phieu_danh_gia = $thoi_diem_danh_gia->format("Y") . $thoi_diem_danh_gia->format("m") . "_" . $request->user;
+
+            // Kiểm tra Mã phiếu đánh giá đã tồn tại            
+            if (PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->exists()) $exists_month = $exists_month . $month->format("m/Y") . ";";
+        }
+
+        if ($exists_month <> "") return redirect()->back()->with('msg_error', 'Đã có kết quả đánh giá, xếp loại các tháng: ' . $exists_month);
+        else {
+            foreach ($months as $month) {
+                // Tạo Mã phiếu đánh giá             
+                $thoi_diem_danh_gia = Carbon::createFromDate($month->format("Y"), $month->format("m"),)->endOfMonth();
+                $ma_phieu_danh_gia = $thoi_diem_danh_gia->format("Y") . $thoi_diem_danh_gia->format("m") . "_" . $request->user;
+
+                // Tính Tổng điểm cá nhân tự chấm
+                $ly_do = LyDoKhongTuDanhGia::find($request->ly_do);
+                $tong_diem_tu_cham = $tong_diem_danh_gia = $ly_do->diem;
+                $ca_nhan_tu_xep_loai = $ket_qua_xep_loai = $ly_do->xep_loai;
+
+                // Xác định mẫu phiếu và thông tin về mẫu phiếu
+                list($mau_phieu_danh_gia, $thong_tin_mau_phieu) = $this->xacDinhMauPhieu();
+
+                // Lưu kết quả tự chấm Mục A   
+                foreach ($mau_phieu_danh_gia as $mau_phieu_danh_gia) {
+                    $this->ketQuaMucAStore($ma_phieu_danh_gia, $mau_phieu_danh_gia, $request);
+                }
+
+                $user = User::where('so_hieu_cong_chuc', $request->user)->first();
+                // Lưu kết quả Phiếu đánh giá cá nhân tự đánh giá
+                $phieu_danh_gia = new PhieuDanhGia();
+                $phieu_danh_gia->mau_phieu_danh_gia = $thong_tin_mau_phieu['mau'];
+                $phieu_danh_gia->ma_phieu_danh_gia = $ma_phieu_danh_gia;
+                $phieu_danh_gia->thoi_diem_danh_gia = $thoi_diem_danh_gia;
+                $phieu_danh_gia->so_hieu_cong_chuc = $user->so_hieu_cong_chuc;
+                $phieu_danh_gia->ma_chuc_vu = $user->ma_chuc_vu;
+                $phieu_danh_gia->ma_phong = $user->ma_phong;
+                $phieu_danh_gia->ma_don_vi = $user->ma_don_vi;
+                $phieu_danh_gia->tong_diem_tu_cham = $tong_diem_tu_cham;
+                $phieu_danh_gia->ca_nhan_tu_xep_loai = $ca_nhan_tu_xep_loai;
+                $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
+                $phieu_danh_gia->ket_qua_xep_loai = $ket_qua_xep_loai;
+                $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
+                $phieu_danh_gia->ly_do_khong_tu_danh_gia = $request->ly_do;
+                if (in_array($user->ma_chuc_vu, ['06', '09', '10'])) $phieu_danh_gia->ma_trang_thai = 16;
+                else $phieu_danh_gia->ma_trang_thai = 17;
+                $phieu_danh_gia->save();
+            }
+        }
+
+        return redirect()->back()->with('msg_success', 'Đã tạo Phiếu không tự đánh giá thành công');
+    }
+
+    public function phieuKTDGList()
+    {
+    }
+
 
     ////////////////////////////////// Hàm dùng chung ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1571,259 +1859,5 @@ class PhieuDanhGiaController extends Controller
     public function dangxaydung()
     {
         return view('dangxaydung');
-    }
-
-
-    public function hoiDongList(Request $request)
-    {
-        if (!isset($request->nam_danh_gia)) {
-            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
-        } else {
-            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
-        }
-
-        if (Auth::user()->hoi_dong_phe_duyet == 1) {
-            // Nếu Người dùng là Hội đồng
-            // Đánh giá cho: 01-Cục trưởng
-            $danh_sach = PhieuDanhGiaCucTruong::where('phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
-                ->where('phieu_danh_gia_cuc_truong.ma_trang_thai', 19)
-                ->where('phieu_danh_gia_cuc_truong.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia_cuc_truong.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
-                ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                ->first();
-
-            if (!$danh_sach) {
-                $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', 13)
-                    ->where('phieu_danh_gia.ma_chuc_vu', '01')
-                    ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                    ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                    ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                    ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                    ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                    ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                    ->first();
-            }
-
-            return view('danhgia.hoidong_list', ['danh_sach' => $danh_sach, 'thoi_diem_danh_gia' => $thoi_diem_danh_gia]);
-        } else {
-            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
-        }
-    }
-
-
-    // Hội đồng đánh giá, xếp loại cho Cục trưởng
-    public function hoidongCreate($ma_phieu_danh_gia)
-    {
-        if (Auth::user()->hoi_dong_phe_duyet == 1) {
-            // Nếu Người dùng là Hội đồng
-            // Đánh giá cho: 01-Cục trưởng
-
-            // Tìm Phiếu đánh giá
-            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('phieu_danh_gia_cuc_truong.ma_phieu_danh_gia', $ma_phieu_danh_gia)
-                ->leftjoin('phieu_danh_gia', 'phieu_danh_gia.ma_phieu_danh_gia', 'phieu_danh_gia_cuc_truong.ma_phieu_danh_gia')
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->select('phieu_danh_gia_cuc_truong.*', 'phieu_danh_gia.mau_phieu_danh_gia', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                ->first();
-            if (!$phieu_danh_gia) $phieu_danh_gia = $this->timPhieuDanhGia($ma_phieu_danh_gia);
-
-            // Lấy dữ liệu mục A
-            $ket_qua_muc_A = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $phieu_danh_gia->ma_phieu_danh_gia)
-                ->leftjoin('mau01A', 'mau01A.ma_tieu_chi', 'ket_qua_muc_A_cuc_truong.ma_tieu_chi')
-                ->select('ket_qua_muc_A_cuc_truong.*', 'mau01A.tieu_chi_me', 'mau01A.loai_tieu_chi', 'mau01A.tt', 'mau01A.noi_dung')
-                ->get();
-            if ($ket_qua_muc_A->isEmpty()) $ket_qua_muc_A = $this->timKetQuaMucA($phieu_danh_gia);
-
-            // Lấy dữ liệu mục B
-            $ket_qua_muc_B = KetQuaMucB::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
-
-            // Lấy dữ liệu Lý do điểm cộng
-            $ly_do_diem_cong = LyDoDiemCong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
-
-            // Lấy dữ liệu Lý do điểm trừ
-            $ly_do_diem_tru = LyDoDiemTru::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
-
-            // Lấy thông tin Mẫu phiếu đánh giá
-            $thong_tin_mau_phieu = $this->thongTinMauPhieu("mau01A");
-            $thoi_diem_danh_gia = Carbon::create($phieu_danh_gia->thoi_diem_danh_gia);
-            $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
-            $xep_loai = XepLoai::all();
-
-            return view(
-                'danhgia.hoidong_create',
-                [
-                    'phieu_danh_gia' => $phieu_danh_gia,
-                    'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
-                    'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
-                    'ngay_thuc_hien_danh_gia' => $ngay_thuc_hien_danh_gia,
-                    'xep_loai' => $xep_loai,
-                    'ket_qua_muc_A' => $ket_qua_muc_A,
-                    'ket_qua_muc_B' => $ket_qua_muc_B,
-                    'ly_do_diem_cong' => $ly_do_diem_cong,
-                    'ly_do_diem_tru' => $ly_do_diem_tru,
-                ]
-            );
-        } else {
-            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
-        }
-    }
-
-
-    // Lưu Kết quả thành viên Hội đồng đánh giá
-    public function hoiDongStore($ma_phieu_danh_gia, Request $request)
-    {
-        if (Auth::user()->hoi_dong_phe_duyet == 1) {
-            // Tính Tổng điểm thành viên Hội đồng đánh giá
-            $diem_danh_gia = $request->tc_300;
-            $diem_cong_danh_gia = $request->tc_400;
-            $diem_tru_danh_gia = $request->tc_500;
-            $tong_diem_danh_gia = $this->tinhTongDiem($request);
-
-            // Kết quả thành viên Hội đồng xếp loại
-            $ket_qua_xep_loai = $this->xepLoai($tong_diem_danh_gia);
-
-            // Kiểm tra đã có Phiếu đánh giá thành viên Hội đồng đánh giá  
-            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
-                ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
-                ->first();
-            $phieu = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->first();
-            if ($phieu->ma_trang_thai == 13) {
-
-                // Lưu kết quả thành viên Hội đồng đánh giá cho Mục A
-                $ket_qua_muc_A = KetQuaMucA::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)->get();
-
-                if (!isset($phieu_danh_gia)) {
-                    foreach ($ket_qua_muc_A as $ket_qua) {
-                        $data = new KetQuaMucACucTruong();
-                        $data->ma_phieu_danh_gia = $ma_phieu_danh_gia;
-                        $data->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
-                        $data->ma_tieu_chi = $ket_qua->ma_tieu_chi;
-                        $data->diem_toi_da = $ket_qua->diem_toi_da;
-                        $data->diem_tu_cham = $ket_qua->diem_tu_cham;
-                        $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
-                        $data->save();
-                    }
-                } else {
-                    foreach ($ket_qua_muc_A as $ket_qua) {
-                        $data = KetQuaMucACucTruong::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
-                            ->where('ma_cap_tren_danh_gia', Auth::user()->so_hieu_cong_chuc)
-                            ->where('ma_tieu_chi', $ket_qua->ma_tieu_chi)
-                            ->first();
-                        $data->diem_danh_gia = $request->input($ket_qua->ma_tieu_chi);
-                        $data->save();
-                    }
-                }
-
-                if (!isset($phieu_danh_gia)) {
-                    $phieu_danh_gia = new PhieuDanhGiaCucTruong();
-                }
-
-                $phieu_danh_gia->so_hieu_cong_chuc = $phieu->so_hieu_cong_chuc;
-                $phieu_danh_gia->thoi_diem_danh_gia = $phieu->thoi_diem_danh_gia;
-                $phieu_danh_gia->ma_phieu_danh_gia = $phieu->ma_phieu_danh_gia;
-                $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
-                $phieu_danh_gia->ma_chuc_vu_cap_tren = Auth::user()->ma_chuc_vu;
-                $phieu_danh_gia->ma_phong_cap_tren = Auth::user()->ma_phong;
-                $phieu_danh_gia->ma_don_vi_cap_tren = Auth::user()->ma_don_vi;
-                $phieu_danh_gia->diem_tu_cham = $phieu->diem_tu_cham;
-                $phieu_danh_gia->diem_cong_tu_cham = $phieu->diem_cong_tu_cham;
-                $phieu_danh_gia->diem_tru_tu_cham = $phieu->diem_tru_tu_cham;
-                $phieu_danh_gia->tong_diem_tu_cham = $phieu->tong_diem_tu_cham;
-                $phieu_danh_gia->diem_danh_gia = $diem_danh_gia;
-                $phieu_danh_gia->diem_cong_danh_gia = $diem_cong_danh_gia;
-                $phieu_danh_gia->diem_tru_danh_gia = $diem_tru_danh_gia;
-                $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
-                $phieu_danh_gia->ca_nhan_tu_xep_loai = $phieu->ca_nhan_tu_xep_loai;
-                $phieu_danh_gia->ket_qua_xep_loai = $ket_qua_xep_loai;
-                $phieu_danh_gia->ma_trang_thai = 19;
-                $phieu_danh_gia->save();
-
-                return redirect()->route(
-                    'phieudanhgia.hoidong.create',
-                    ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
-                )->with('msg_success', 'Thành viên Hội đồng đã thực hiện đánh giá thành công');
-            } else {
-                return redirect()->route(
-                    'phieudanhgia.hoidong.create',
-                    ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
-                )->with('msg_error', 'Đã tổng hợp đánh giá, xếp loại cho Cục trưởng. Không thể thay đổi điểm, xếp loại đã chấm.');
-            }
-        } else {
-            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
-        }
-    }
-
-    public function hoiDongTongHopDuKien(Request $request)
-    {
-        if (!isset($request->nam_danh_gia)) {
-            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
-        } else {
-            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
-        }
-
-        if (Auth::user()->ma_phong == '440103') {
-            $phieu_danh_gia = PhieuDanhGiaCucTruong::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia_cuc_truong.ma_cap_tren_danh_gia')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia_cuc_truong.ma_chuc_vu_cap_tren')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia_cuc_truong.ma_phong_cap_tren')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia_cuc_truong.ma_don_vi_cap_tren')
-                ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-                ->get();
-
-            $tong_diem = 0;
-            $diem_trung_binh = NULL;
-            $xep_loai_trung_binh = NULL;
-            $xep_loai = XepLoai::all();
-
-            if (!$phieu_danh_gia->isEmpty()) {
-                foreach ($phieu_danh_gia as $phieu) {
-                    $tong_diem = $tong_diem + $phieu->tong_diem_danh_gia;
-                }
-
-                $diem_trung_binh = floor($tong_diem / $phieu_danh_gia->count());
-                $xep_loai_trung_binh = $this->xepLoai($diem_trung_binh);
-            }
-
-            return view(
-                'danhgia.hoidong_tonghop',
-                [
-                    'danh_sach' => $phieu_danh_gia,
-                    'diem_trung_binh' => $diem_trung_binh,
-                    'xep_loai_trung_binh' => $xep_loai_trung_binh,
-                    'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
-                    'xep_loai' => $xep_loai
-                ]
-            );
-        } else {
-            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
-        }
-    }
-
-
-    public function hoiDongTongHopDanhGia(Request $request)
-    {
-        if (Auth::user()->ma_phong == '440103') {
-            $tong_diem_danh_gia = $request->diem_trung_binh;
-            $xep_loai = $this->xepLoai($tong_diem_danh_gia);
-
-            $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $request->ma_phieu_danh_gia)->first();
-            if ($phieu_danh_gia->ma_trang_thai == 13) {
-                $phieu_danh_gia->tong_diem_danh_gia = $tong_diem_danh_gia;
-                $phieu_danh_gia->ket_qua_xep_loai = $xep_loai;
-                $phieu_danh_gia->ma_cap_tren_danh_gia = Auth::user()->so_hieu_cong_chuc;
-                $phieu_danh_gia->ma_trang_thai = 19;
-                $phieu_danh_gia->save();
-                return redirect()->back()->with('msg_success', 'Tổng hợp đánh giá, xếp loại Cục trưởng thành công');
-            } else {
-                return redirect()->back()->with('msg_error', 'Đã có kết quả đánh giá, xếp loại Cục trưởng');
-            }
-        } else {
-            return view("404")->with('msg_error', 'Bạn không có thẩm quyền xem Trang này');
-        }
     }
 }

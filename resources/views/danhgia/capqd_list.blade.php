@@ -3,7 +3,7 @@
 @section('title', 'Danh sách Phiếu đánh giá')
 
 @section('heading')
-    Hội đồng TĐKT/ Cấp có thẩm quyền phê duyệt
+    Cấp có thẩm quyền phê duyệt
 @stop
 
 @section('content')
@@ -54,7 +54,7 @@
                                             <td class="text-center">{{ $danh_sach->ten_don_vi }}</td>
                                             <td class="text-center">{{ $danh_sach->tong_diem_tu_cham }}</td>
                                             <td class="text-center">{{ $danh_sach->tong_diem_danh_gia }}</td>
-                                            <td class="text-center">{{ $danh_sach->ket_qua_xep_loai }}</td>
+                                            <td class="text-center">{{ $danh_sach->ket_qua_xep_loai }} <br> {{ $danh_sach->ly_do }}</td>
                                         </tr>
                                     @endforeach
                                 @endif

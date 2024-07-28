@@ -23,9 +23,7 @@ return new class extends Migration
             $table->string('ma_don_vi');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->boolean('hoi_dong_phe_duyet')->nullable();
-            $table->boolean('isAdmin')->nullable();
+            $table->string('password');            
             $table->string('ma_trang_thai');
             $table->rememberToken();            
             $table->timestamps();

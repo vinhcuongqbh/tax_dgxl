@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::get('{id}/restore', [UserController::class, 'restore'])->name('congchuc.restore');
         Route::post('{id}/changePass', [UserController::class, 'changePass'])->name('congchuc.changePass');
         Route::get('{id}/resetPass', [UserController::class, 'resetPass'])->name('congchuc.resetPass');
+        Route::post('userList', [UserController::class, 'userList'])->name('congchuc.userList');
     });
 
     Route::group(['prefix' => 'xeploai'], function () {
@@ -130,9 +131,10 @@ Route::middleware('auth')->group(function () {
     });
 
 
-    Route::group(['prefix' => 'khongxeploai'], function () {
-        Route::get('nhapdanhsach', [PhieuDanhGiaController::class, 'dangxaydung']);
-        Route::get('tracuu', [PhieuDanhGiaController::class, 'dangxaydung']);
+    Route::group(['prefix' => 'phieuKTDG'], function () {
+        Route::get('create', [PhieuDanhGiaController::class, 'phieuKTDGCreate'])->name('phieuKTDG.create');
+        Route::post('store', [PhieuDanhGiaController::class, 'phieuKTDGStore'])->name('phieuKTDG.store');
+        Route::get('list', [PhieuDanhGiaController::class, 'phieuKTDGList'])->name('phieuKTDG.list');
     });
 
     Route::group(['prefix' => 'cuctruong'], function () {

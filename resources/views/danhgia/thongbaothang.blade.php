@@ -7,7 +7,7 @@
         @csrf
         <div class="d-flex">
             <div class="col-4">
-                Báo cáo KQXL tháng
+                Thông báo KQXL tháng
             </div>
             <div class="d-flex justify-content-end col-8">
                 <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
@@ -91,7 +91,7 @@
                                                 <td class="text-center">{{ $phieu->ten_chuc_vu }}</td>
                                                 <td class="text-center">{{ $phieu->tong_diem_danh_gia }}</td>
                                                 <td class="text-center">{{ $phieu->ket_qua_xep_loai }}</td>
-                                                <td></td>
+                                                <td class="text-center">{{ $phieu->ly_do }}</td>
                                                 <td style="display: none;">{{ $phieu->ten_phong }}</td>
                                                 <td style="display: none;">{{ $phieu->ten_don_vi }}</td>
                                             </tr>

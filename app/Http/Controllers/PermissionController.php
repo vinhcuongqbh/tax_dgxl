@@ -47,7 +47,8 @@ class PermissionController extends Controller
                 'required',
                 'string',
                 'unique:permissions,name'
-            ]
+            ],
+            'permission_group' => 'required'
         ]);
 
         Permission::create([
@@ -77,12 +78,18 @@ class PermissionController extends Controller
                 'required',
                 'string',
                 'unique:permissions,name,' . $permission->id
-            ]
+            ],
+            'permission_group' => 'required'
         ]);
 
-        $permission->update([
-            'name' => $request->name
-        ]);
+        $permission->name = $request->name;
+        $permission->permission_group = $request->permission_group;
+        $permission->save();
+
+        // $permission->update([
+        //     'name' => $request->name,
+        //     'permisson_group' => $request->permission_group
+        // ]);
 
         return redirect('permissions')->with('msg_success', 'Cập nhật permission thành công');
     }

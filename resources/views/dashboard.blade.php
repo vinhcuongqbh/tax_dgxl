@@ -250,12 +250,12 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
-                                    <a href="/khongxeploai/nhapdanhsach" class="nav-link">
+                                    <a href="/phieuKTDG/create" class="nav-link">
                                         <p>5.1. Nhập danh sách</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/khongxeploai/tracuu" class="nav-link">
+                                    <a href="/phieuKTDG/list" class="nav-link">
                                         <p>5.2. Tra cứu</p>
                                     </a>
                                 </li>
