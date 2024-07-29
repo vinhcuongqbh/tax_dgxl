@@ -312,13 +312,18 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_capthamquyen_pheduyet" class="nav-link">
-                                        <p>7.5. Danh sách chờ cấp thẩm quyền phê duyệt</p>
+                                    <a href="/baocao/ds_chicuctruong_pheduyet" class="nav-link">
+                                        <p>7.5. Danh sách chờ Chi cục trưởng phê duyệt</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/baocao/ds_cuctruong_pheduyet" class="nav-link">
+                                        <p>7.6. Danh sách chờ Cục trưởng phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
                                     <a href="/baocao/ds_dapheduyet" class="nav-link">
-                                        <p>7.6. Danh sách đã phê duyệt</p>
+                                        <p>7.7. Danh sách đã phê duyệt</p>
                                     </a>
                                 </li>
                             </ul>

@@ -190,7 +190,7 @@ class BaocaoController extends Controller
     }
 
 
-    // Danh sách chờ Chi cục trưởng phê duyệt
+    // Danh sách chờ Cục trưởng phê duyệt
     public function ds_cuctruong_pheduyet(Request $request)
     {
         // Trường hợp không chọn năm đánh giá
@@ -235,7 +235,7 @@ class BaocaoController extends Controller
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
 
-        return view('baocao.ds_captren_danhgia', [
+        return view('baocao.ds_cuctruong_pheduyet', [
             'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
             'phieu_danh_gia' => $danh_sach,
             'don_vi' => $don_vi,

@@ -1510,6 +1510,9 @@ class PhieuDanhGiaController extends Controller
             ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia_cuc_truong.ma_phong_cap_tren')
             ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia_cuc_truong.ma_don_vi_cap_tren')
             ->select('phieu_danh_gia_cuc_truong.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
+            ->orderBy('phieu_danh_gia_cuc_truong.ma_don_vi_cap_tren', 'ASC')
+            //->orderBy('phieu_danh_gia_cuc_truong.ma_phong_cap_tren', 'ASC')
+            ->orderByRaw('ISNULL(phieu_danh_gia_cuc_truong.ma_chuc_vu_cap_tren), phieu_danh_gia_cuc_truong.ma_chuc_vu_cap_tren ASC')
             ->get();
 
         $tong_diem = 0;
