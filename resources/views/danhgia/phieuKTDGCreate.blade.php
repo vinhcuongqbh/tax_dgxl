@@ -114,6 +114,7 @@
                     },
                     end_date: {
                         required: true,
+                        greaterThan: "#start_date",
                     },
                 },
                 messages: {                    
@@ -134,6 +135,7 @@
                     },
                     end_date: {
                         required: "Vui lòng chọn thông tin",
+                        greaterThan: "Ngày kết thúc phải lớn hơn Ngày bắt đầu",
                     },
                 },
                 errorElement: 'span',

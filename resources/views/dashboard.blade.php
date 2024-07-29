@@ -302,22 +302,22 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/danhsach2" class="nav-link">
+                                    <a href="/baocao/ds_dalap_chuagui" class="nav-link">
                                         <p>7.3. Danh sách đã lập nhưng chưa gửi phiếu đánh giá</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/danhsach3" class="nav-link">
-                                        <p>7.4. Danh sách chưa trình phê duyệt</p>
+                                    <a href="/baocao/ds_captren_danhgia" class="nav-link">
+                                        <p>7.4. Danh sách chờ cấp trên đánh giá</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/danhsach4" class="nav-link">
-                                        <p>7.5. Danh sách đang chờ phê duyệt</p>
+                                    <a href="/baocao/ds_capthamquyen_pheduyet" class="nav-link">
+                                        <p>7.5. Danh sách chờ cấp thẩm quyền phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/danhsach5" class="nav-link">
+                                    <a href="/baocao/ds_dapheduyet" class="nav-link">
                                         <p>7.6. Danh sách đã phê duyệt</p>
                                     </a>
                                 </li>

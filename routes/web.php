@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BaocaoController;
 use App\Http\Controllers\DonViController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PhieuDanhGiaController;
@@ -150,10 +151,16 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'baocao'], function () {
         Route::get('bctiendo', [PhieuDanhGiaController::class, 'dangxaydung']);
         Route::get('danhsach1', [PhieuDanhGiaController::class, 'dangxaydung']);
-        Route::get('danhsach2', [PhieuDanhGiaController::class, 'dangxaydung']);
-        Route::get('danhsach3', [PhieuDanhGiaController::class, 'dangxaydung']);
-        Route::get('danhsach4', [PhieuDanhGiaController::class, 'dangxaydung']);
-        Route::get('danhsach5', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('ds_dalap_chuagui', [BaocaoController::class, 'ds_dalap_chuagui']);
+        Route::post('ds_dalap_chuagui', [BaocaoController::class, 'ds_dalap_chuagui'])->name('baocao.ds_dalap_chuagui');
+        Route::get('ds_captren_danhgia', [BaocaoController::class, 'ds_captren_danhgia']);
+        Route::post('ds_captren_danhgia', [BaocaoController::class, 'ds_captren_danhgia'])->name('baocao.ds_captren_danhgia');
+        Route::get('ds_chicuctruong_pheduyet', [BaocaoController::class, 'ds_chicuctruong_pheduyet']);
+        Route::post('ds_chicuctruong_pheduyet', [BaocaoController::class, 'ds_chicuctruong_pheduyet'])->name('baocao.ds_chicuctruong_pheduyet');
+        Route::get('ds_cuctruong_pheduyet', [BaocaoController::class, 'ds_cuctruong_pheduyet']);
+        Route::post('ds_cuctruong_pheduyet', [BaocaoController::class, 'ds_cuctruong_pheduyet'])->name('baocao.ds_cuctruong_pheduyet');
+        Route::get('ds_dapheduyet', [BaocaoController::class, 'ds_dapheduyet']);
+        Route::post('ds_dapheduyet', [BaocaoController::class, 'ds_dapheduyet'])->name('baocao.ds_dapheduyet');
     });
 
     Route::group(['prefix' => 'ungdung'], function () {
