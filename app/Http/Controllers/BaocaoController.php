@@ -208,16 +208,31 @@ class BaocaoController extends Controller
         }
 
         if ($ma_don_vi == 4400) {
-            $danh_sach = NULL;
+            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
+            ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+            ->where(function ($query) use ($ma_don_vi) {
+                $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])                    
+                    ->orwhere('phieu_danh_gia.ma_don_vi', '4401');
+            })
+            ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+            ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+            ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+            ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
+            ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            ->orderBy('users.ma_don_vi', 'ASC')
+            ->orderBy('users.ma_phong', 'ASC')
+            ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+            ->get();
         } else {
-            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
+            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
             ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
-            ->where('phieu_danh_gia.ma_trang_thai', '17')
-            ->where('phieu_danh_gia.ma_chuc_vu', null)
-            ->orwhere('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-            ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
-            ->where('phieu_danh_gia.ma_trang_thai', '16')
-            ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
+            ->where(function ($query) use ($ma_don_vi) {
+                $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
+                    ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
+                    ->orwhere('phieu_danh_gia.ma_don_vi', '4401');
+            })
             ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
             ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
             ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
@@ -235,6 +250,7 @@ class BaocaoController extends Controller
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
 
+        
         return view('baocao.ds_cuctruong_pheduyet', [
             'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
             'phieu_danh_gia' => $danh_sach,
