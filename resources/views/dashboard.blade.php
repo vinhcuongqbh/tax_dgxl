@@ -297,7 +297,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/danhsach1" class="nav-link">
+                                    <a href="/baocao/ds_chualapphieu" class="nav-link">
                                         <p>7.2. Danh sách chưa lập phiếu đánh giá</p>
                                     </a>
                                 </li>
