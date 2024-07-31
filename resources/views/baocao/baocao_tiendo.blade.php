@@ -58,9 +58,9 @@
                                     <th class="text-center align-middle">Đi học, nghỉ sinh</th>
                                     <th class="text-center align-middle">Cá nhân tự đánh giá</th>
                                     <th class="text-center align-middle">Cá nhân chưa lập phiếu</th>
-                                    <th class="text-center align-middle">Cá nhân đã lập phiếu</th>
+                                    {{-- <th class="text-center align-middle">Cá nhân đã lập phiếu</th> --}}
                                     <th class="text-center align-middle">Cá nhân chưa gửi phiếu</th>
-                                    <th class="text-center align-middle">Cá nhân đã gửi phiếu</th>
+                                    {{-- <th class="text-center align-middle">Cá nhân đã gửi phiếu</th> --}}
                                     <th class="text-center align-middle">Chờ cấp trên đánh giá</th>
                                     <th class="text-center align-middle">Chờ cấp thẩm quyền phê duyệt</th>
                                     <th class="text-center align-middle">Chờ Chi cục trưởng phê duyệt</th>
@@ -76,9 +76,9 @@
                                         <td class="text-center">{{ $ds['ca_nhan_khong_tu_danh_gia'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_tu_danh_gia'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_chua_lap_phieu_danh_gia'] }} </td>
-                                        <td class="text-center">{{ $ds['ca_nhan_da_lap_phieu_danh_gia'] }} </td>
+                                        {{-- <td class="text-center">{{ $ds['ca_nhan_da_lap_phieu_danh_gia'] }} </td> --}}
                                         <td class="text-center">{{ $ds['ca_nhan_chua_gui_phieu_danh_gia'] }} </td>
-                                        <td class="text-center">{{ $ds['ca_nhan_da_gui_phieu_danh_gia'] }} </td>
+                                        {{-- <td class="text-center">{{ $ds['ca_nhan_da_gui_phieu_danh_gia'] }} </td> --}}
                                         <td class="text-center">{{ $ds['ca_nhan_cho_cap_tren_danh_gia'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_chi_cuc_truong_phe_duyet'] }} </td>
