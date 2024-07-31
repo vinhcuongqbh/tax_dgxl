@@ -292,7 +292,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/bctiendo" class="nav-link">
+                                    <a href="/baocao/baocao_tiendo" class="nav-link">
                                         <p>7.1. Báo cáo tiến độ tháng</p>
                                     </a>
                                 </li>
@@ -313,7 +313,7 @@
                                 </li>
                                 <li class="nav-item pl-3">
                                     <a href="/baocao/ds_chicuctruong_pheduyet" class="nav-link">
-                                        <p>7.5. Danh sách chờ Chi cục trưởng phê duyệt</p>
+                                        <p>7.5. Danh sách chờ Chi cục trưởng duyệt/phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">

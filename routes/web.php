@@ -149,7 +149,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'baocao'], function () {
-        Route::get('bctiendo', [PhieuDanhGiaController::class, 'dangxaydung']);
+        Route::get('baocao_tiendo', [BaocaoController::class, 'baocao_tiendo']);
+        Route::post('baocao_tiendo', [BaocaoController::class, 'baocao_tiendo'])->name('baocao.baocao_tiendo');
         Route::get('ds_chualapphieu', [BaocaoController::class, 'ds_chualapphieu']);
         Route::post('ds_chualapphieu', [BaocaoController::class, 'ds_chualapphieu'])->name('baocao.ds_chualapphieu');
         Route::get('ds_dalap_chuagui', [BaocaoController::class, 'ds_dalap_chuagui']);

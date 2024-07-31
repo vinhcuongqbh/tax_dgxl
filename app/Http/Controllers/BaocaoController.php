@@ -11,6 +11,106 @@ use Illuminate\Http\Request;
 
 class BaocaoController extends Controller
 {
+    // Báo cáo tiến độ trong tháng
+    public function baocao_tiendo(Request $request)
+    {
+        // Trường hợp không chọn năm đánh giá
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        // Trường hợp không chọn đơn vị
+        if (!isset($request->ma_don_vi_da_chon)) {
+            $ma_don_vi = 4400;
+        } else {
+            $ma_don_vi = $request->ma_don_vi_da_chon;
+        }
+
+
+        $dm_don_vi = DonVi::where('ma_don_vi', '<>', '4400')->get();
+        $danh_sach = collect();
+        $i = 0;
+        foreach ($dm_don_vi as $don_vi) {
+            $i++;
+            $ten_don_vi = $don_vi->ten_don_vi;
+            $dv = $don_vi->ma_don_vi;
+            $tong_so_cong_chuc = User::where('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('ma_trang_thai', 1)
+                ->where('created_at', '<', $thoi_diem_danh_gia)
+                ->count();
+            $ca_nhan_khong_tu_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('ly_do_khong_tu_danh_gia', '<>', NULL)
+                ->count();
+            $ca_nhan_tu_danh_gia = $tong_so_cong_chuc - $ca_nhan_khong_tu_danh_gia;
+            $ca_nhan_da_lap_phieu_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('ly_do_khong_tu_danh_gia', NULL)
+                ->count();
+            $ca_nhan_chua_lap_phieu_danh_gia = $ca_nhan_tu_danh_gia - $ca_nhan_da_lap_phieu_danh_gia;
+            $ca_nhan_chua_gui_phieu_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('ma_trang_thai', 11)
+                ->count();
+            $ca_nhan_da_gui_phieu_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('ma_trang_thai', '>=', 13)
+                ->count();
+            $ca_nhan_cho_cap_tren_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_don_vi', $don_vi->ma_don_vi)
+                ->wherein('ma_trang_thai', [13, 15])
+                ->count();
+            $ca_nhan_cho_chi_cuc_truong_phe_duyet = PhieuDanhGia::where('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('ma_trang_thai', '17')
+                ->where('ma_chuc_vu', null)
+                ->orwhere('ma_don_vi', $don_vi->ma_don_vi)
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('ma_trang_thai', '16')
+                ->where('ma_chuc_vu', '<>', null)
+                ->count();
+            $ca_nhan_cho_cuc_truong_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '17')
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where(function ($query) use ($dv) {
+                    $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
+                        ->where('ma_don_vi', $dv)
+                        ->orwhere('ma_don_vi', '4401');
+                })
+                ->count();
+            $ca_nhan_cho_phe_duyet =  $ca_nhan_cho_chi_cuc_truong_phe_duyet +  $ca_nhan_cho_cuc_truong_phe_duyet;
+            $danh_sach->push([
+                'stt' => $i,
+                'ten_don_vi' => $ten_don_vi,
+                'tong_so_cong_chuc' => $tong_so_cong_chuc,
+                'ca_nhan_khong_tu_danh_gia' => $ca_nhan_khong_tu_danh_gia,
+                'ca_nhan_tu_danh_gia' => $ca_nhan_tu_danh_gia,
+                'ca_nhan_chua_lap_phieu_danh_gia' => $ca_nhan_chua_lap_phieu_danh_gia,
+                'ca_nhan_da_lap_phieu_danh_gia' => $ca_nhan_da_lap_phieu_danh_gia,
+                'ca_nhan_chua_gui_phieu_danh_gia' => $ca_nhan_chua_gui_phieu_danh_gia,
+                'ca_nhan_da_gui_phieu_danh_gia' => $ca_nhan_da_gui_phieu_danh_gia,
+                'ca_nhan_cho_cap_tren_danh_gia' => $ca_nhan_cho_cap_tren_danh_gia,
+                'ca_nhan_cho_chi_cuc_truong_phe_duyet' => $ca_nhan_cho_chi_cuc_truong_phe_duyet,
+                'ca_nhan_cho_cuc_truong_phe_duyet' => $ca_nhan_cho_cuc_truong_phe_duyet,
+                'ca_nhan_cho_phe_duyet' => $ca_nhan_cho_phe_duyet,
+            ]);
+
+            $ds_don_vi = DonVi::where('ma_trang_thai', 1)->get();
+            $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
+            $phong = Phong::where('ma_trang_thai', 1)->get();
+        }
+
+        return view('baocao.baocao_tiendo', [
+            'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+            'danh_sach' => $danh_sach,
+            'don_vi' => $don_vi,
+            'phong' => $phong,
+            'ds_don_vi' => $ds_don_vi,
+            'ma_don_vi_da_chon' => $request->ma_don_vi_da_chon,
+        ]);
+    }
+
     // Danh sách chưa lập phiếu đánh giá
     public function ds_chualapphieu(Request $request)
     {
@@ -28,9 +128,9 @@ class BaocaoController extends Controller
             $ma_don_vi = $request->ma_don_vi_da_chon;
         }
 
-
         if ($ma_don_vi == 4400) {
             $ds_canbo = User::where('users.ma_trang_thai', 1)
+                ->where('users.created_at', '<', $thoi_diem_danh_gia)
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
@@ -45,8 +145,9 @@ class BaocaoController extends Controller
                 ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
                 ->get();
         } else {
-            $ds_canbo = User::where('users.ma_trang_thai', 1)
+            $ds_canbo = User::where('users.ma_trang_thai', 1)                
                 ->where('users.ma_don_vi', $ma_don_vi)
+                ->where('users.created_at', '<', $thoi_diem_danh_gia)
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
