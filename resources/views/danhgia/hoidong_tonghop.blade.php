@@ -96,7 +96,7 @@
                             </table>
                             @if ($danh_sach->count() != 0)
                                 <input type="hidden" name="ma_phieu_danh_gia" id="ma_phieu_danh_gia"
-                                    value="{{ $danh_sach->first()->ma_phieu_danh_gia }}">
+                                    value="{{ $danh_sach->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())->first()->ma_phieu_danh_gia }}">
                             @endif
                         </div>
                         <!-- /.card-body -->

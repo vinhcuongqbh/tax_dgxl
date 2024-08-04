@@ -251,7 +251,7 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
                                     <a href="/phieuKTDG/create" class="nav-link">
-                                        <p>5.1. Nhập danh sách</p>
+                                        <p>5.1. Tạo phiếu KTĐG</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
@@ -319,11 +319,6 @@
                                 <li class="nav-item pl-3">
                                     <a href="/baocao/ds_cuctruong_pheduyet" class="nav-link">
                                         <p>7.6. Danh sách chờ Cục trưởng phê duyệt</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_dapheduyet" class="nav-link">
-                                        <p>7.7. Danh sách đã phê duyệt</p>
                                     </a>
                                 </li>
                             </ul>

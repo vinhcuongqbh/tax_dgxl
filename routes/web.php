@@ -135,7 +135,8 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'phieuKTDG'], function () {
         Route::get('create', [PhieuDanhGiaController::class, 'phieuKTDGCreate'])->name('phieuKTDG.create');
         Route::post('store', [PhieuDanhGiaController::class, 'phieuKTDGStore'])->name('phieuKTDG.store');
-        Route::get('list', [PhieuDanhGiaController::class, 'phieuKTDGList'])->name('phieuKTDG.list');
+        Route::get('list', [PhieuDanhGiaController::class, 'phieuKTDGList']);
+        Route::post('list', [PhieuDanhGiaController::class, 'phieuKTDGList'])->name('phieuKTDG.list');
     });
 
     Route::group(['prefix' => 'cuctruong'], function () {

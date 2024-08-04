@@ -52,20 +52,27 @@
                             </colgroup> --}}
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">STT</th>
-                                    <th class="text-center align-middle">Tên đơn vị</th>
-                                    <th class="text-center align-middle">Tổng số công chức</th>
+                                    <th class="text-center align-middle" rowspan="2">STT</th>
+                                    <th class="text-center align-middle" rowspan="2">Tên đơn vị</th>
+                                    <th class="text-center align-middle" colspan="3">Công chức</th>
+                                    <th class="text-center align-middle" colspan="2">Cá nhân tự đánh giá</th>
+                                    <th class="text-center align-middle" colspan="2">Cấp trên đánh giá</th>
+                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng <br>duyệt/phê duyệt</th>
+                                    <th class="text-center align-middle" colspan="2">Cục trưởng <br>phê duyệt</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center align-middle">Tổng số</th>
                                     <th class="text-center align-middle">Đi học, nghỉ sinh</th>
                                     <th class="text-center align-middle">Cá nhân tự đánh giá</th>
-                                    <th class="text-center align-middle">Cá nhân chưa lập phiếu</th>
-                                    {{-- <th class="text-center align-middle">Cá nhân đã lập phiếu</th> --}}
-                                    <th class="text-center align-middle">Cá nhân chưa gửi phiếu</th>
-                                    {{-- <th class="text-center align-middle">Cá nhân đã gửi phiếu</th> --}}
-                                    <th class="text-center align-middle">Chờ cấp trên đánh giá</th>
-                                    <th class="text-center align-middle">Chờ cấp thẩm quyền phê duyệt</th>
-                                    <th class="text-center align-middle">Chờ Chi cục trưởng phê duyệt</th>
-                                    <th class="text-center align-middle">Chờ Cục trưởng phê duyệt</th>
-                                </tr>                                
+                                    <th class="text-center align-middle">Chưa lập phiếu</th>
+                                    <th class="text-center align-middle">Chưa gửi phiếu</th>
+                                    <th class="text-center align-middle">Chưa đánh giá</th>
+                                    <th class="text-center align-middle">Đã đánh giá</th>
+                                    <th class="text-center align-middle">Chưa duyệt/PD</th>
+                                    <th class="text-center align-middle">Đã duyệt/PD</th>
+                                    <th class="text-center align-middle">Chưa duyệt</th>
+                                    <th class="text-center align-middle">Đã duyệt</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 @foreach ($danh_sach as $ds)
@@ -76,13 +83,13 @@
                                         <td class="text-center">{{ $ds['ca_nhan_khong_tu_danh_gia'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_tu_danh_gia'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_chua_lap_phieu_danh_gia'] }} </td>
-                                        {{-- <td class="text-center">{{ $ds['ca_nhan_da_lap_phieu_danh_gia'] }} </td> --}}
                                         <td class="text-center">{{ $ds['ca_nhan_chua_gui_phieu_danh_gia'] }} </td>
-                                        {{-- <td class="text-center">{{ $ds['ca_nhan_da_gui_phieu_danh_gia'] }} </td> --}}
                                         <td class="text-center">{{ $ds['ca_nhan_cho_cap_tren_danh_gia'] }} </td>
-                                        <td class="text-center">{{ $ds['ca_nhan_cho_phe_duyet'] }} </td>
+                                        <td class="text-center">{{ $ds['cap_tren_da_danh_gia'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_chi_cuc_truong_phe_duyet'] }} </td>
+                                        <td class="text-center">{{ $ds['chi_cuc_truong_da_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_cuc_truong_phe_duyet'] }} </td>
+                                        <td class="text-center">{{ $ds['cuc_truong_da_phe_duyet'] }} </td>                                        
                                     </tr>
                                 @endforeach
                             </tbody>
