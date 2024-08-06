@@ -1575,6 +1575,223 @@ class PhieuDanhGiaController extends Controller
     }
 
 
+    public function hoiDongTongHopDuKienQuy(Request $request)
+    {
+        // Lấy danh sách Hội đồng phê duyệt
+        $user_list = $this->danhSachHoiDongPheDuyet();
+
+        // Xác định tháng đánh giá, quý đánh giá
+        if (isset($request->quy_danh_gia)) {
+            $thang_dau_tien = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = $request->quy_danh_gia;
+            $nam_danh_gia = $request->nam_danh_gia;
+        } else {
+            $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+            $nam_danh_gia = Carbon::now()->subQuarter()->year;
+        }
+
+        if ($quy_danh_gia == "1") {
+            $list_thang = ["1", "2", "3"];
+        } elseif ($quy_danh_gia == "2") {
+            $list_thang = ["4", "5", "6"];
+        } elseif ($quy_danh_gia == "3") {
+            $list_thang = ["7", "8", "9"];
+        } elseif ($quy_danh_gia == "4") {
+            $list_thang = ["10", "11", "12"];
+        }
+
+
+        // Thực hiện xếp loại theo quý
+        $collection = collect();
+        $xep_loai_1 = null;
+        $xep_loai_2 = null;
+        $xep_loai_3 = null;
+
+        if (isset($user_list)) {
+            foreach ($user_list as $user) {
+                // Tìm kết quả xếp loại các tháng trong quý
+                $xep_loai_1 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                    ->where('thoi_diem_danh_gia', $thang_dau_tien->toDateString())
+                    ->where('ma_trang_thai', 19)
+                    ->first();
+                if (isset($xep_loai_1)) $xep_loai_1 = $xep_loai_1->ket_qua_xep_loai;
+
+
+                $xep_loai_2 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                    ->where('thoi_diem_danh_gia', $thang_thu_hai->toDateString())
+                    ->where('ma_trang_thai', 19)
+                    ->first();
+                if (isset($xep_loai_2)) $xep_loai_2 = $xep_loai_2->ket_qua_xep_loai;
+
+                $xep_loai_3 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                    ->where('thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
+                    ->where('ma_trang_thai', 19)
+                    ->first();
+                if (isset($xep_loai_3)) $xep_loai_3 = $xep_loai_3->ket_qua_xep_loai;
+
+                // Tính toán xếp loại quý
+                $countA = 0;
+                $countB = 0;
+                $countC = 0;
+                $countD = 0;
+                $countK = 0;
+
+                for ($i = 1; $i <= 3; $i++) {
+                    if (${"xep_loai_" . $i} == "A") $countA++;
+                    elseif (${"xep_loai_" . $i} == "B") $countB++;
+                    elseif (${"xep_loai_" . $i} == "C") $countC++;
+                    elseif (${"xep_loai_" . $i} == "D")  $countD++;
+                    elseif (${"xep_loai_" . $i} == "K")  $countK++;
+                }
+
+                $ket_qua_xep_loai = null;
+                if (($xep_loai_1 == null) || ($xep_loai_2 == null) || ($xep_loai_3 == null)) $ket_qua_xep_loai = null;
+                elseif ($countK > 0) $ket_qua_xep_loai = "K";
+                elseif ($countD > 0) $ket_qua_xep_loai = "D";
+                elseif (($countA >= 2) && ($countC == 0) && ($countD == 0)) $ket_qua_xep_loai = "A";
+                elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
+                elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
+                else $ket_qua_xep_loai = null;
+
+
+                // Đưa vào danh sách
+                if ($ket_qua_xep_loai != null) {
+                    $collection->push([
+                        'name' => $user->name,
+                        'ten_chuc_vu' => $user->ten_chuc_vu,
+                        'ten_phong' => $user->ten_phong,
+                        'ten_don_vi' => $user->ten_don_vi,
+                        'xep_loai_1' => $xep_loai_1,
+                        'xep_loai_2' => $xep_loai_2,
+                        'xep_loai_3' => $xep_loai_3,
+                        'ket_qua_xep_loai' => $ket_qua_xep_loai,
+                    ]);
+                }
+            }
+        }
+
+        return view(
+            'danhgia.hoidong_tonghop_quy',
+            [
+                'danh_sach' => $collection,
+                'thang' => $list_thang,
+                'quy_danh_gia' => $quy_danh_gia,
+                'nam_danh_gia' => $nam_danh_gia,
+            ]
+        );
+    }
+
+    public function hoiDongPheDuyetQuy(Request $request)
+    {
+        // Lấy danh sách Cục trưởng/Chi cục trưởng phê duyệt
+        $user_list = $this->danhSachHoiDongPheDuyet();
+
+        // Xác định tháng đánh giá, quý đánh giá
+        if (isset($request->quy_danh_gia)) {
+            $thang_dau_tien = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::createFromDate($request->nam_danh_gia, $request->quy_danh_gia * 3)->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = $request->quy_danh_gia;
+            $nam_danh_gia = $request->nam_danh_gia;
+        } else {
+            $thang_dau_tien = Carbon::now()->subQuarter()->firstOfQuarter()->endOfMonth();
+            $thang_thu_hai = Carbon::now()->subQuarter()->firstOfQuarter()->addMonth()->endOfMonth();
+            $thang_cuoi_cung = Carbon::now()->subQuarter()->lastOfQuarter()->endOfMonth();
+            $quy_danh_gia = Carbon::now()->subQuarter()->quarter;
+            $nam_danh_gia = Carbon::now()->subQuarter()->year;
+        }
+
+        if ($quy_danh_gia == "1") {
+            $list_thang = ["1", "2", "3"];
+        } elseif ($quy_danh_gia == "2") {
+            $list_thang = ["4", "5", "6"];
+        } elseif ($quy_danh_gia == "3") {
+            $list_thang = ["7", "8", "9"];
+        } elseif ($quy_danh_gia == "4") {
+            $list_thang = ["10", "11", "12"];
+        }
+
+        // Thực hiện xếp loại theo quý
+        $xep_loai_1 = null;
+        $xep_loai_2 = null;
+        $xep_loai_3 = null;
+
+        foreach ($user_list as $user) {
+            // Tìm kết quả xếp loại các tháng trong quý
+            $xep_loai_1 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                ->where('thoi_diem_danh_gia', $thang_dau_tien->toDateString())
+                ->where('ma_trang_thai', 19)
+                ->first();
+            if (isset($xep_loai_1)) {
+                $xep_loai_1->ma_trang_thai = 21;
+                $xep_loai_1->save();
+                $xep_loai_1 = $xep_loai_1->ket_qua_xep_loai;
+            }
+
+            $xep_loai_2 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                ->where('thoi_diem_danh_gia', $thang_thu_hai->toDateString())
+                ->where('ma_trang_thai', 19)
+                ->first();
+            if (isset($xep_loai_2)) {
+                $xep_loai_2->ma_trang_thai = 21;
+                $xep_loai_2->save();
+                $xep_loai_2 = $xep_loai_2->ket_qua_xep_loai;
+            }
+
+            $xep_loai_3 = PhieuDanhGia::where('so_hieu_cong_chuc', $user->so_hieu_cong_chuc)
+                ->where('thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
+                ->where('ma_trang_thai', 19)
+                ->first();
+            if (isset($xep_loai_3)) {
+                $xep_loai_3->ma_trang_thai = 21;
+                $xep_loai_3->save();
+                $xep_loai_3 = $xep_loai_3->ket_qua_xep_loai;
+            }
+
+            // Tính toán xếp loại quý
+            $countA = 0;
+            $countB = 0;
+            $countC = 0;
+            $countD = 0;
+            $countK = 0;
+
+            for ($i = 1; $i <= 3; $i++) {
+                if (${"xep_loai_" . $i} == "A") $countA++;
+                elseif (${"xep_loai_" . $i} == "B") $countB++;
+                elseif (${"xep_loai_" . $i} == "C") $countC++;
+                elseif (${"xep_loai_" . $i} == "D") $countD++;
+                elseif (${"xep_loai_" . $i} == "K") $countK++;
+            }
+
+            $ket_qua_xep_loai = null;
+            if (($xep_loai_1 == null) || ($xep_loai_2 == null) || ($xep_loai_3 == null)) $ket_qua_xep_loai = null;
+            elseif ($countK > 0) $ket_qua_xep_loai = "K";
+            elseif ($countD > 0) $ket_qua_xep_loai = "D";
+            elseif (($countA >= 2) && ($countC == 0) && ($countD == 0)) $ket_qua_xep_loai = "A";
+            elseif (((($countA >= 2) || ($countB >= 2)) || (($countA >= 1) && ($countB >= 1))) && ($countD == 0)) $ket_qua_xep_loai = "B";
+            elseif ((($countA > 0) || ($countB > 0) || ($countC > 0)) && ($countD == 0)) $ket_qua_xep_loai = "C";
+
+            if ($ket_qua_xep_loai != null) {
+                $this->kQXLQuy($user, $ket_qua_xep_loai, $nam_danh_gia, $quy_danh_gia);
+            }
+        }
+
+        return view(
+            'danhgia.hoidong_tonghop_quy',
+            [
+                'thang' => $list_thang,
+                'quy_danh_gia' => $quy_danh_gia,
+                'nam_danh_gia' => $nam_danh_gia,
+            ]
+        )->with('msg_success', 'Đã phê duyệt thành công Danh sách phiếu đánh giá');
+    }
+
+
     public function phieuKTDGList(Request $request)
     {
         // Trường hợp không chọn năm đánh giá

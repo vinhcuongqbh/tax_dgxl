@@ -40,5 +40,8 @@ class UserSeeder extends Seeder
         $superAdminRole->givePermissionTo($allPermissionNames);
 
         $user->assignRole($superAdminRole);
+
+
+        $danh_sach = User::where('ma_trang_thai', 1)->get();
     }
 }

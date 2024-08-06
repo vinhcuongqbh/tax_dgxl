@@ -147,6 +147,9 @@ Route::middleware('auth')->group(function () {
         Route::get('tonghopdukien', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien']);
         Route::post('tonghopdukien', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien'])->name('phieudanhgia.hoidong.tonghopdukien');
         Route::post('tonghopdanhgia', [PhieuDanhGiaController::class, 'hoiDongTongHopDanhGia'])->name('phieudanhgia.hoidong.tonghopdanhgia');
+        Route::get('tonghopdukienquy', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKienQuy']);
+        Route::post('tonghopdukienquy', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKienQuy'])->name('phieudanhgia.hoidong.tonghopdukienquy');
+        Route::post('pheduyetquy', [PhieuDanhGiaController::class, 'hoiDongPheDuyetQuy'])->name('phieudanhgia.hoidong.pheduyetquy');
     });
 
     Route::group(['prefix' => 'baocao'], function () {

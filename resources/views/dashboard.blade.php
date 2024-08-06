@@ -277,7 +277,12 @@
                                 </li>
                                 <li class="nav-item pl-3">
                                     <a href="/cuctruong/tonghopdukien" class="nav-link">
-                                        <p>6.2. Tổng hợp kết quả đánh giá</p>
+                                        <p>6.2. Tổng hợp kết quả đánh giá tháng</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/cuctruong/tonghopdukienquy" class="nav-link">
+                                        <p>6.3. Tổng hợp kết quả đánh giá quý</p>
                                     </a>
                                 </li>
                             </ul>
