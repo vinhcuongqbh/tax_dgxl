@@ -57,8 +57,9 @@
                                     <th class="text-center align-middle" colspan="3">Công chức</th>
                                     <th class="text-center align-middle" colspan="2">Cá nhân tự đánh giá</th>
                                     <th class="text-center align-middle" colspan="2">Cấp trên đánh giá</th>
-                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng <br>duyệt/phê duyệt</th>
-                                    <th class="text-center align-middle" colspan="2">Cục trưởng <br>phê duyệt</th>
+                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng<br>duyệt/phê duyệt</th>
+                                    <th class="text-center align-middle" colspan="2">Cục trưởng<br>phê duyệt</th>
+                                    <th class="text-center align-middle" colspan="2">Hội đồng TĐKT<br>phê duyệt</th>
                                 </tr>
                                 <tr>
                                     <th class="text-center align-middle">Tổng số</th>
@@ -70,6 +71,8 @@
                                     <th class="text-center align-middle">Đã đánh giá</th>
                                     <th class="text-center align-middle">Chưa duyệt/PD</th>
                                     <th class="text-center align-middle">Đã duyệt/PD</th>
+                                    <th class="text-center align-middle">Chưa duyệt</th>
+                                    <th class="text-center align-middle">Đã duyệt</th>
                                     <th class="text-center align-middle">Chưa duyệt</th>
                                     <th class="text-center align-middle">Đã duyệt</th>
                                 </tr>
@@ -89,7 +92,9 @@
                                         <td class="text-center">{{ $ds['ca_nhan_cho_chi_cuc_truong_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['chi_cuc_truong_da_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_cuc_truong_phe_duyet'] }} </td>
-                                        <td class="text-center">{{ $ds['cuc_truong_da_phe_duyet'] }} </td>                                        
+                                        <td class="text-center">{{ $ds['cuc_truong_da_phe_duyet'] }} </td>  
+                                        <td class="text-center">{{ $ds['ca_nhan_cho_hoi_dong_phe_duyet'] }} </td>
+                                        <td class="text-center">{{ $ds['hoi_dong_da_phe_duyet'] }} </td>                                        
                                     </tr>
                                 @endforeach
                             </tbody>

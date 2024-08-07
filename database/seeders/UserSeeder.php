@@ -16,9 +16,18 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    
+
     public function run(): void
     {
+        // Gán quyền cho danh sách người dùng
+        $danh_sach = User::where('ma_trang_thai', 1)->get();
+        foreach ($danh_sach as $ds) {
+            $ds->assignRole('Cấp tự đánh giá');
+            if (in_array($ds->ma_chuc_vu, ['01', '03', '04', '05', '09'])) $ds->assignRole('Cấp đánh giá');
+            if (in_array($ds->ma_chuc_vu, ['01', '03'])) $ds->assignRole('Cấp phê duyệt');
+        }
+
+        // Tạo user Super Admin
         $user = User::create([
             'so_hieu_cong_chuc' => 'sadmin',
             'name' => 'Super Admin',
@@ -33,15 +42,11 @@ class UserSeeder extends Seeder
             'ma_trang_thai' => 2,
         ]);
 
+        // Gán quyền cho user Super Admin
         $user = User::where('so_hieu_cong_chuc', 'sadmin')->first();
         $superAdminRole = Role::where('name' , 'Super Admin')->first();
-
         $allPermissionNames = Permission::pluck('name')->toArray();
         $superAdminRole->givePermissionTo($allPermissionNames);
-
         $user->assignRole($superAdminRole);
-
-
-        $danh_sach = User::where('ma_trang_thai', 1)->get();
     }
 }

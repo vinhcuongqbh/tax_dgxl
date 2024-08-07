@@ -72,7 +72,7 @@
                                                 <td class="text-center">{{ $ds['xep_loai_1'] }}</td>
                                                 <td class="text-center">{{ $ds['xep_loai_2'] }}</td>
                                                 <td class="text-center">{{ $ds['xep_loai_3'] }}</td>
-                                                <td class="text-center">{{ $ds['ket_qua_xep_loai'] }}</td>
+                                                <td class="text-center text-bold">{{ $ds['ket_qua_xep_loai'] }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -109,7 +109,7 @@
                 scrollY: 1000,
                 dom: 'Bfrtip',
                 buttons: [{
-                        text: 'Phê duyệt',
+                        text: 'Tổng hợp',
                         className: 'bg-olive',
                         action: function(e, dt, node, config) {
                             document.getElementById("formSubmit").submit();

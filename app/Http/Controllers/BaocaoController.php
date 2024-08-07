@@ -11,6 +11,15 @@ use Illuminate\Http\Request;
 
 class BaocaoController extends Controller
 {
+    public function __construct()
+    {
+        // Xem Báo cáo hỗ trợ
+        $this->middleware('permission:xem báo cáo hỗ trợ', ['only' =>
+        [
+            'baocao_tiendo', 'ds_chualapphieu', 'ds_dalap_chuagui', 'ds_captren_danhgia', 'ds_chicuctruong_pheduyet', 'ds_cuctruong_pheduyet'
+        ]]);
+    }
+
     // Báo cáo tiến độ trong tháng
     public function baocao_tiendo(Request $request)
     {
@@ -27,8 +36,10 @@ class BaocaoController extends Controller
         } else {
             $ma_don_vi = $request->ma_don_vi_da_chon;
         }
-       
-        $dm_don_vi = DonVi::where('ma_don_vi', '<>', '4400')->get();
+
+        if ($ma_don_vi == 4400) $dm_don_vi = DonVi::where('ma_don_vi', '<>', '4400')->get();
+        else $dm_don_vi = DonVi::where('ma_don_vi', $ma_don_vi)->get();
+
         $danh_sach = collect();
         $i = 0;
         foreach ($dm_don_vi as $don_vi) {
@@ -95,14 +106,14 @@ class BaocaoController extends Controller
                     })
                     ->count();
                 $cuc_truong_da_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '>=', '19')
-                ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->where(function ($query) use ($dv) {
-                    $query->wherein('ma_chuc_vu', ['02', '04', '05', '07', '08'])
-                        ->where('ma_don_vi', $dv)
-                        ->orwhere('ma_don_vi', '4401')
-                        ->where('ma_chuc_vu', null);
-                })
-                ->count();
+                    ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                    ->where(function ($query) use ($dv) {
+                        $query->wherein('ma_chuc_vu', ['02', '04', '05', '07', '08'])
+                            ->where('ma_don_vi', $dv)
+                            ->orwhere('ma_don_vi', '4401')
+                            ->where('ma_chuc_vu', null);
+                    })
+                    ->count();
             } else {
                 $ca_nhan_cho_cuc_truong_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '17')
                     ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
@@ -111,13 +122,27 @@ class BaocaoController extends Controller
                             ->where('ma_don_vi', $dv);
                     })
                     ->count();
-                    $cuc_truong_da_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '>=', '19')
+                $cuc_truong_da_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '>=', '19')
                     ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                     ->where(function ($query) use ($dv) {
                         $query->wherein('ma_chuc_vu', ['03', '06', '09', '10'])
                             ->where('ma_don_vi', $dv);
                     })
                     ->count();
+            }
+
+            if ($don_vi->ma_don_vi == '4401') {
+                $ca_nhan_cho_hoi_dong_phe_duyet = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                    ->where('ma_chuc_vu', '01')
+                    ->where('ma_trang_thai', '17')
+                    ->count();
+                $hoi_dong_da_phe_duyet = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                    ->where('ma_chuc_vu', '01')
+                    ->where('ma_trang_thai', '>=', '19')
+                    ->count();
+            } else {
+                $ca_nhan_cho_hoi_dong_phe_duyet = 0;
+                $hoi_dong_da_phe_duyet = 0;
             }
 
             $ca_nhan_cho_phe_duyet =  $ca_nhan_cho_chi_cuc_truong_phe_duyet +  $ca_nhan_cho_cuc_truong_phe_duyet;
@@ -137,7 +162,8 @@ class BaocaoController extends Controller
                 'chi_cuc_truong_da_phe_duyet' => $chi_cuc_truong_da_phe_duyet,
                 'ca_nhan_cho_cuc_truong_phe_duyet' => $ca_nhan_cho_cuc_truong_phe_duyet,
                 'cuc_truong_da_phe_duyet' => $cuc_truong_da_phe_duyet,
-                'ca_nhan_cho_phe_duyet' => $ca_nhan_cho_phe_duyet,
+                'ca_nhan_cho_hoi_dong_phe_duyet' => $ca_nhan_cho_hoi_dong_phe_duyet,
+                'hoi_dong_da_phe_duyet' => $hoi_dong_da_phe_duyet
             ]);
 
             $ds_don_vi = DonVi::where('ma_trang_thai', 1)->get();
@@ -325,9 +351,9 @@ class BaocaoController extends Controller
                 ->get();
         } else {
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
                 ->where('phieu_danh_gia.ma_trang_thai', 13)
                 ->orwhere('phieu_danh_gia.ma_trang_thai', 15)
-                ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
                 ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
                 ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
                 ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')

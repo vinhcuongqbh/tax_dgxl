@@ -58,7 +58,8 @@ class PhieuDanhGiaController extends Controller
         // Hội đồng TĐKT
         $this->middleware('permission:xem danh sách phiếu Cục trưởng', ['only' => ['hoiDongList']]);
         $this->middleware('permission:đánh giá cho Cục trưởng', ['only' => ['hoidongCreate', 'hoiDongStore']]);
-        $this->middleware('permission:tổng hợp kết quả cho Cục trưởng', ['only' => ['hoiDongTongHopDuKien', 'hoiDongTongHopDanhGia']]);
+        $this->middleware('permission:tổng hợp kết quả tháng cho Cục trưởng', ['only' => ['hoiDongTongHopDuKien', 'hoiDongTongHopDanhGia']]);
+        $this->middleware('permission:tổng hợp kết quả quý cho Cục trưởng', ['only' => ['hoiDongTongHopDuKienQuy']]);
 
         // Báo cáo
         $this->middleware('permission:xem thông báo kết quả tháng', ['only' => ['thongBaoThang']]);
@@ -1121,6 +1122,8 @@ class PhieuDanhGiaController extends Controller
             }
         }
 
+        session()->now('msg_success', 'Đã phê duyệt thành công');
+
         return view(
             'danhgia.capqd_list_quy',
             [
@@ -1128,7 +1131,7 @@ class PhieuDanhGiaController extends Controller
                 'quy_danh_gia' => $quy_danh_gia,
                 'nam_danh_gia' => $nam_danh_gia,
             ]
-        )->with('msg_success', 'Đã phê duyệt thành công Danh sách phiếu đánh giá');
+        );
     }
 
 
@@ -1781,6 +1784,8 @@ class PhieuDanhGiaController extends Controller
             }
         }
 
+        session()->now('msg_success', 'Đã phê duyệt thành công Phiếu đánh giá');
+
         return view(
             'danhgia.hoidong_tonghop_quy',
             [
@@ -1788,7 +1793,7 @@ class PhieuDanhGiaController extends Controller
                 'quy_danh_gia' => $quy_danh_gia,
                 'nam_danh_gia' => $nam_danh_gia,
             ]
-        )->with('msg_success', 'Đã phê duyệt thành công Danh sách phiếu đánh giá');
+        );
     }
 
 
