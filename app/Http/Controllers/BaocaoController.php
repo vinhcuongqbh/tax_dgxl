@@ -402,11 +402,11 @@ class BaocaoController extends Controller
             $danh_sach = NULL;
         } else {
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('phieu_danh_gia.ma_trang_thai', '17')
                 ->where('phieu_danh_gia.ma_chuc_vu', null)
                 ->orwhere('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('phieu_danh_gia.ma_trang_thai', '16')
                 ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
                 ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
@@ -456,7 +456,7 @@ class BaocaoController extends Controller
 
         if ($ma_don_vi == 4400) {
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where(function ($query) use ($ma_don_vi) {
                     $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
                         ->orwhere('phieu_danh_gia.ma_don_vi', '4401');
@@ -474,7 +474,7 @@ class BaocaoController extends Controller
                 ->get();
         } else {
             $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where(function ($query) use ($ma_don_vi) {
                     $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10'])
                         ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)

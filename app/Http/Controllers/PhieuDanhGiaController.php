@@ -324,7 +324,7 @@ class PhieuDanhGiaController extends Controller
         $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
             ->first();
 
-        if ($phieu_danh_gia->ma_chuc_vu = '01') $phieu_danh_gia->ma_trang_thai = 17;
+        if ($phieu_danh_gia->ma_chuc_vu == '01') $phieu_danh_gia->ma_trang_thai = 17;
         else $phieu_danh_gia->ma_trang_thai = 13;
         $phieu_danh_gia->save();
 
