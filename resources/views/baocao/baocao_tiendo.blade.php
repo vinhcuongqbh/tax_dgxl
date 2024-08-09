@@ -35,46 +35,48 @@
                 <div class="card card-default">
                     <div class="card-body">
                         <table id="table" class="table table-bordered table-striped">
-                            {{-- <colgroup>
+                            <colgroup>
                                 <col style="width:5%;">
-                                <col style="width:18%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                                <col style="width:7%;">
-                            </colgroup> --}}
+                                <col style="width:30%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle" rowspan="2">STT</th>
                                     <th class="text-center align-middle" rowspan="2">Tên đơn vị</th>
                                     <th class="text-center align-middle" colspan="3">Công chức</th>
-                                    <th class="text-center align-middle" colspan="2">Cá nhân tự đánh giá</th>
-                                    <th class="text-center align-middle" colspan="2">Cấp trên đánh giá</th>
-                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng<br>duyệt/phê duyệt</th>
+                                    <th class="text-center align-middle" colspan="2">Cá nhân <br>đánh giá</th>
+                                    <th class="text-center align-middle" colspan="2">Cấp trên <br>đánh giá</th>
+                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng duyệt/<br>phê duyệt</th>
                                     <th class="text-center align-middle" colspan="2">Cục trưởng<br>phê duyệt</th>
                                     <th class="text-center align-middle" colspan="2">Hội đồng TĐKT<br>phê duyệt</th>
                                 </tr>
                                 <tr>
                                     <th class="text-center align-middle">Tổng số</th>
                                     <th class="text-center align-middle">Đi học, nghỉ sinh</th>
-                                    <th class="text-center align-middle">Cá nhân tự đánh giá</th>
+                                    <th class="text-center align-middle">Tự đánh giá</th>
                                     <th class="text-center align-middle">Chưa lập phiếu</th>
                                     <th class="text-center align-middle">Chưa gửi phiếu</th>
                                     <th class="text-center align-middle">Chưa đánh giá</th>
                                     <th class="text-center align-middle">Đã đánh giá</th>
-                                    <th class="text-center align-middle">Chưa duyệt/PD</th>
-                                    <th class="text-center align-middle">Đã duyệt/PD</th>
-                                    <th class="text-center align-middle">Chưa duyệt</th>
-                                    <th class="text-center align-middle">Đã duyệt</th>
-                                    <th class="text-center align-middle">Chưa duyệt</th>
-                                    <th class="text-center align-middle">Đã duyệt</th>
+                                    <th class="text-center align-middle">Chưa Duyệt<br>/phê duyệt</th>
+                                    <th class="text-center align-middle">Đã phê duyệt</th>
+                                    <th class="text-center align-middle">Chưa phê duyệt</th>
+                                    <th class="text-center align-middle">Đã phê duyệt</th>
+                                    <th class="text-center align-middle">Chưa phê duyệt</th>
+                                    <th class="text-center align-middle">Đã phê duyệt</th>
                                 </tr>
                             </thead>
                             <tbody>
