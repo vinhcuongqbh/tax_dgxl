@@ -153,20 +153,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'baocao'], function () {
-        Route::get('baocao_tiendo', [BaocaoController::class, 'baocao_tiendo']);
-        Route::post('baocao_tiendo', [BaocaoController::class, 'baocao_tiendo'])->name('baocao.baocao_tiendo');
-        Route::get('ds_chualapphieu', [BaocaoController::class, 'ds_chualapphieu']);
-        Route::post('ds_chualapphieu', [BaocaoController::class, 'ds_chualapphieu'])->name('baocao.ds_chualapphieu');
-        Route::get('ds_dalap_chuagui', [BaocaoController::class, 'ds_dalap_chuagui']);
-        Route::post('ds_dalap_chuagui', [BaocaoController::class, 'ds_dalap_chuagui'])->name('baocao.ds_dalap_chuagui');
-        Route::get('ds_captren_danhgia', [BaocaoController::class, 'ds_captren_danhgia']);
-        Route::post('ds_captren_danhgia', [BaocaoController::class, 'ds_captren_danhgia'])->name('baocao.ds_captren_danhgia');
-        Route::get('ds_chicuctruong_pheduyet', [BaocaoController::class, 'ds_chicuctruong_pheduyet']);
-        Route::post('ds_chicuctruong_pheduyet', [BaocaoController::class, 'ds_chicuctruong_pheduyet'])->name('baocao.ds_chicuctruong_pheduyet');
-        Route::get('ds_cuctruong_pheduyet', [BaocaoController::class, 'ds_cuctruong_pheduyet']);
-        Route::post('ds_cuctruong_pheduyet', [BaocaoController::class, 'ds_cuctruong_pheduyet'])->name('baocao.ds_cuctruong_pheduyet');
-        Route::get('ds_dapheduyet', [BaocaoController::class, 'ds_dapheduyet']);
-        Route::post('ds_dapheduyet', [BaocaoController::class, 'ds_dapheduyet'])->name('baocao.ds_dapheduyet');
+        Route::get('tonghop', [BaocaoController::class, 'tonghop']);
+        Route::post('tonghop', [BaocaoController::class, 'tonghop'])->name('baocao.tonghop');
+        Route::get('chitiet/{chuc_nang}', [BaocaoController::class, 'chitiet']);
+        Route::post('chitiet/{chuc_nang}', [BaocaoController::class, 'chitiet'])->name('baocao.chitiet');
     });
 
     Route::group(['prefix' => 'ungdung'], function () {

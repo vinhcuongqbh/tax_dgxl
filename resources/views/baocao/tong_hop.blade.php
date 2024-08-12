@@ -3,7 +3,7 @@
 @section('title', 'Báo cáo tiến độ tháng')
 
 @section('heading')
-    <form action="{{ route('baocao.baocao_tiendo') }}" method="post" id="form">
+    <form action="{{ route('baocao.tonghop') }}" method="post" id="form">
         @csrf
         <div class="d-flex">
             <div class="col-4">
@@ -59,7 +59,8 @@
                                     <th class="text-center align-middle" colspan="3">Công chức</th>
                                     <th class="text-center align-middle" colspan="2">Cá nhân <br>đánh giá</th>
                                     <th class="text-center align-middle" colspan="2">Cấp trên <br>đánh giá</th>
-                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng duyệt/<br>phê duyệt</th>
+                                    <th class="text-center align-middle" colspan="2">Chi cục trưởng duyệt/<br>phê duyệt
+                                    </th>
                                     <th class="text-center align-middle" colspan="2">Cục trưởng<br>phê duyệt</th>
                                     <th class="text-center align-middle" colspan="2">Hội đồng TĐKT<br>phê duyệt</th>
                                 </tr>
@@ -94,9 +95,9 @@
                                         <td class="text-center">{{ $ds['ca_nhan_cho_chi_cuc_truong_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['chi_cuc_truong_da_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_cuc_truong_phe_duyet'] }} </td>
-                                        <td class="text-center">{{ $ds['cuc_truong_da_phe_duyet'] }} </td>  
+                                        <td class="text-center">{{ $ds['cuc_truong_da_phe_duyet'] }} </td>
                                         <td class="text-center">{{ $ds['ca_nhan_cho_hoi_dong_phe_duyet'] }} </td>
-                                        <td class="text-center">{{ $ds['hoi_dong_da_phe_duyet'] }} </td>                                        
+                                        <td class="text-center">{{ $ds['hoi_dong_da_phe_duyet'] }} </td>
                                     </tr>
                                 @endforeach
                             </tbody>

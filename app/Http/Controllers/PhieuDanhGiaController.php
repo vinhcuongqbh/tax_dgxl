@@ -19,17 +19,17 @@ use App\Traits\PhieuDanhGiaTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\KQXLThang;
 use App\Models\LyDoKhongTuDanhGia;
 use App\Models\PhieuDanhGiaCucTruong;
 use App\Models\Phong;
+use App\Traits\DungChungTrait;
 use Carbon\CarbonPeriod;
-use Illuminate\Support\Facades\Date;
-use Termwind\Components\Raw;
+
 
 class PhieuDanhGiaController extends Controller
 {
     use PhieuDanhGiaTrait;
+    use DungChungTrait;
 
     ///////////////////// Cá nhân tự đánh giá, xếp loại ////////////////////
     public function __construct()

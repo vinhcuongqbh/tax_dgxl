@@ -297,32 +297,32 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/baocao_tiendo" class="nav-link">
+                                    <a href="/baocao/tonghop" class="nav-link">
                                         <p>7.1. Báo cáo tiến độ tháng</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_chualapphieu" class="nav-link">
+                                    <a href="/baocao/chitiet/ds_chualapphieu" class="nav-link">
                                         <p>7.2. Danh sách chưa lập phiếu đánh giá</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_dalap_chuagui" class="nav-link">
+                                    <a href="/baocao/chitiet/ds_dalap_chuagui" class="nav-link">
                                         <p>7.3. Danh sách đã lập nhưng chưa gửi phiếu đánh giá</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_captren_danhgia" class="nav-link">
+                                    <a href="/baocao/chitiet/ds_captren_danhgia" class="nav-link">
                                         <p>7.4. Danh sách chờ cấp trên đánh giá</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_chicuctruong_pheduyet" class="nav-link">
+                                    <a href="/baocao/chitiet/ds_chicuctruong_pheduyet" class="nav-link">
                                         <p>7.5. Danh sách chờ Chi cục trưởng duyệt/phê duyệt</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/baocao/ds_cuctruong_pheduyet" class="nav-link">
+                                    <a href="/baocao/chitiet/ds_cuctruong_pheduyet" class="nav-link">
                                         <p>7.6. Danh sách chờ Cục trưởng phê duyệt</p>
                                     </a>
                                 </li>
