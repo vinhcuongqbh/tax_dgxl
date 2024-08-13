@@ -18,7 +18,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <form action="{{ url('roles/' . $role->id . '/give-permissions') }}" method="post" id="form">
+        <form action="{{ route('roles.give-permissions', $role->id) }}" method="post" id="form">
             @csrf
             @method('PUT')
             <div class="row">

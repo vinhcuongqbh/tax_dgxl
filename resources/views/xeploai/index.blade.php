@@ -21,14 +21,6 @@
         <div class="row">
             <div class="col-6">
                 <div class="card card-default">
-                    {{-- <div class="card-header">
-                        <div class="row">
-                            <div class="col-auto">
-                                <a href="{{ route('xeploai.create') }}"><button type="button"
-                                        class="btn bg-olive text-white w-100 text-nowrap"><span>Tạo mới</span></button></a>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card-body">
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
@@ -75,26 +67,11 @@
     <script>
         $(function() {
             $("#table").DataTable({
-                // responsive: {
-                //     details: {
-                //         display: DataTable.Responsive.display.modal({
-                //             header: function(row) {
-                //                 var data = row.data();
-                //                 return data[2];
-                //             }
-                //         }),
-                //         renderer: DataTable.Responsive.renderer.tableAll({
-                //             tableClass: 'table'
-                //         })
-                //     }
-                // },
-                // rowReorder: {
-                //     selector: 'td:nth-child(2)'
-                // },
                 lengthChange: false,
                 pageLength: 20,
                 searching: false,
                 autoWidth: false,
+                sorting: false,
                 dom: 'Bfrtip',
                 buttons: [{
                         text: 'Tạo mới',
@@ -108,7 +85,6 @@
                         style: 'bar',
                         text: 'Xuất:'
                     },
-                    //'csv',
                     'excel',
                     'pdf',
                 ],

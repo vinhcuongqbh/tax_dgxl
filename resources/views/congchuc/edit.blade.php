@@ -199,6 +199,9 @@
                     gioi_tinh: {
                         required: true,
                     },
+                    ngach: {
+                        required: true,
+                    },
                     don_vi: {
                         required: true,
                     },
@@ -220,6 +223,9 @@
                         required: "Vui lòng nhập thông tin",
                     },
                     gioi_tinh: {
+                        required: "Vui lòng chọn thông tin",
+                    },
+                    ngach: {
                         required: "Vui lòng chọn thông tin",
                     },
                     don_vi: {
@@ -253,7 +259,7 @@
                 var ma_don_vi = this.value;
                 $("#phong").html('');
                 $.ajax({
-                    url: "{{ url('phong/dm-phong') }}",
+                    url: "{{ url('/danhmuc/phong/dm-phong') }}",
                     type: "POST",
                     data: {
                         ma_don_vi: ma_don_vi,

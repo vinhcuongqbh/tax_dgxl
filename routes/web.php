@@ -22,17 +22,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::group(['middleware' => 'auth'], function () {
-
-        Route::resource('permissions', PermissionController::class);
-        Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy'])->name('permissions.delete');
-
-        Route::resource('roles', RoleController::class);
-        Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);
-        Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole']);
-        Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole']);
-    });
-
     Route::get('/', function () {
         return view('dashboard');
     });
@@ -45,60 +34,61 @@ Route::middleware('auth')->group(function () {
         return view('dangxaydung');
     });
 
-    Route::group(['prefix' => 'donvi'], function () {
-        Route::get('', [DonViController::class, 'index'])->name('donvi');
-        Route::get('create', [DonViController::class, 'create'])->name('donvi.create');
-        Route::post('store', [DonViController::class, 'store'])->name('donvi.store');
-        Route::get('{id}/edit', [DonViController::class, 'edit'])->name('donvi.edit');
-        Route::post('{id}/update', [DonViController::class, 'update'])->name('donvi.update');
-        Route::get('{id}/delete', [DonViController::class, 'destroy'])->name('donvi.delete');
-        Route::get('{id}/restore', [DonViController::class, 'restore'])->name('donvi.restore');
-    });
+    Route::group(['prefix' => 'danhmuc'], function () {
+        Route::group(['prefix' => 'donvi'], function () {
+            Route::get('', [DonViController::class, 'index'])->name('donvi');
+            Route::get('create', [DonViController::class, 'create'])->name('donvi.create');
+            Route::post('store', [DonViController::class, 'store'])->name('donvi.store');
+            Route::get('{id}/edit', [DonViController::class, 'edit'])->name('donvi.edit');
+            Route::post('{id}/update', [DonViController::class, 'update'])->name('donvi.update');
+            Route::get('{id}/delete', [DonViController::class, 'destroy'])->name('donvi.delete');
+            Route::get('{id}/restore', [DonViController::class, 'restore'])->name('donvi.restore');
+        });
 
-    Route::group(['prefix' => 'phong'], function () {
-        Route::get('', [PhongController::class, 'index'])->name('phong');
-        Route::get('create', [PhongController::class, 'create'])->name('phong.create');
-        Route::post('store', [PhongController::class, 'store'])->name('phong.store');
-        Route::get('{id}/edit', [PhongController::class, 'edit'])->name('phong.edit');
-        Route::post('{id}/update', [PhongController::class, 'update'])->name('phong.update');
-        Route::get('{id}/delete', [PhongController::class, 'destroy'])->name('phong.delete');
-        Route::get('{id}/restore', [PhongController::class, 'restore'])->name('phong.restore');
-        Route::post('dm-phong', [PhongController::class, 'dmPhong'])->name('phong.dmphong');
-    });
+        Route::group(['prefix' => 'phong'], function () {
+            Route::get('', [PhongController::class, 'index'])->name('phong');
+            Route::get('create', [PhongController::class, 'create'])->name('phong.create');
+            Route::post('store', [PhongController::class, 'store'])->name('phong.store');
+            Route::get('{id}/edit', [PhongController::class, 'edit'])->name('phong.edit');
+            Route::post('{id}/update', [PhongController::class, 'update'])->name('phong.update');
+            Route::get('{id}/delete', [PhongController::class, 'destroy'])->name('phong.delete');
+            Route::get('{id}/restore', [PhongController::class, 'restore'])->name('phong.restore');
+            Route::post('dm-phong', [PhongController::class, 'dmPhong'])->name('phong.dmphong');
+        });
 
-    Route::group(['prefix' => 'congchuc'], function () {
-        Route::get('', [UserController::class, 'index'])->name('congchuc');
-        Route::get('create', [UserController::class, 'create'])->name('congchuc.create');
-        Route::post('store', [UserController::class, 'store'])->name('congchuc.store');
-        Route::get('{id}/show', [UserController::class, 'show'])->name('congchuc.show');
-        Route::get('{id}/edit', [UserController::class, 'edit'])->name('congchuc.edit');
-        Route::post('{id}/update', [UserController::class, 'update'])->name('congchuc.update');
-        Route::get('{id}/delete', [UserController::class, 'destroy'])->name('congchuc.delete');
-        Route::get('{id}/restore', [UserController::class, 'restore'])->name('congchuc.restore');
-        Route::post('{id}/changePass', [UserController::class, 'changePass'])->name('congchuc.changePass');
-        Route::get('{id}/resetPass', [UserController::class, 'resetPass'])->name('congchuc.resetPass');
-        Route::post('userList', [UserController::class, 'userList'])->name('congchuc.userList');
-    });
+        Route::group(['prefix' => 'congchuc'], function () {
+            Route::get('', [UserController::class, 'index'])->name('congchuc');
+            Route::get('create', [UserController::class, 'create'])->name('congchuc.create');
+            Route::post('store', [UserController::class, 'store'])->name('congchuc.store');
+            Route::get('{id}/show', [UserController::class, 'show'])->name('congchuc.show');
+            Route::get('{id}/edit', [UserController::class, 'edit'])->name('congchuc.edit');
+            Route::post('{id}/update', [UserController::class, 'update'])->name('congchuc.update');
+            Route::get('{id}/delete', [UserController::class, 'destroy'])->name('congchuc.delete');
+            Route::get('{id}/restore', [UserController::class, 'restore'])->name('congchuc.restore');
+            Route::post('{id}/changePass', [UserController::class, 'changePass'])->name('congchuc.changePass');
+            Route::get('{id}/resetPass', [UserController::class, 'resetPass'])->name('congchuc.resetPass');
+            Route::post('userList', [UserController::class, 'userList'])->name('congchuc.userList');
+        });
 
-    Route::group(['prefix' => 'xeploai'], function () {
-        Route::get('', [XepLoaiController::class, 'index'])->name('xeploai');
-        Route::get('create', [XeploaiController::class, 'create'])->name('xeploai.create');
-        Route::post('store', [XeploaiController::class, 'store'])->name('xeploai.store');
-        Route::get('{id}/edit', [XeploaiController::class, 'edit'])->name('xeploai.edit');
-        Route::post('{id}/update', [XeploaiController::class, 'update'])->name('xeploai.update');
-        Route::get('{id}/delete', [XeploaiController::class, 'destroy'])->name('xeploai.delete');
-        Route::get('{id}/restore', [XeploaiController::class, 'restore'])->name('xeploai.restore');
-    });
-    Route::group(['prefix' => 'xeploai'], function () {
-        Route::get('', [XepLoaiController::class, 'index'])->name('xeploai');
-        Route::get('create', [XeploaiController::class, 'create'])->name('xeploai.create');
-        Route::post('store', [XeploaiController::class, 'store'])->name('xeploai.store');
-        Route::get('{id}/edit', [XeploaiController::class, 'edit'])->name('xeploai.edit');
-        Route::post('{id}/update', [XeploaiController::class, 'update'])->name('xeploai.update');
-        Route::get('{id}/delete', [XeploaiController::class, 'destroy'])->name('xeploai.delete');
-        Route::get('{id}/restore', [XeploaiController::class, 'restore'])->name('xeploai.restore');
-    });
+        Route::group(['prefix' => 'xeploai'], function () {
+            Route::get('', [XepLoaiController::class, 'index'])->name('xeploai');
+            Route::get('create', [XeploaiController::class, 'create'])->name('xeploai.create');
+            Route::post('store', [XeploaiController::class, 'store'])->name('xeploai.store');
+            Route::get('{id}/edit', [XeploaiController::class, 'edit'])->name('xeploai.edit');
+            Route::post('{id}/update', [XeploaiController::class, 'update'])->name('xeploai.update');
+            Route::get('{id}/delete', [XeploaiController::class, 'destroy'])->name('xeploai.delete');
+            Route::get('{id}/restore', [XeploaiController::class, 'restore'])->name('xeploai.restore');
+        });
+        
+        Route::resource('roles', RoleController::class);
+        Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy'])->name('roles.delete');
+        Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole']);
+        Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole'])->name('roles.give-permissions');
 
+        Route::resource('permissions', PermissionController::class);
+        Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy'])->name('permissions.delete');
+    });
+    
     Route::group(['prefix' => 'phieudanhgia'], function () {
         Route::get('canhanList', [PhieuDanhGiaController::class, 'canhanList'])->name('phieudanhgia.canhan.list');
         Route::get('canhanCreate', [PhieuDanhGiaController::class, 'canhanCreate'])->name('phieudanhgia.canhan.create');
@@ -131,7 +121,6 @@ Route::middleware('auth')->group(function () {
         Route::post('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
     });
 
-
     Route::group(['prefix' => 'phieuKTDG'], function () {
         Route::get('create', [PhieuDanhGiaController::class, 'phieuKTDGCreate'])->name('phieuKTDG.create');
         Route::post('store', [PhieuDanhGiaController::class, 'phieuKTDGStore'])->name('phieuKTDG.store');
@@ -144,8 +133,8 @@ Route::middleware('auth')->group(function () {
         Route::post('hoidongList', [PhieuDanhGiaController::class, 'hoiDongList'])->name('phieudanhgia.hoidong.list');
         Route::get('{id}/hoidongCreate', [PhieuDanhGiaController::class, 'hoiDongCreate'])->name('phieudanhgia.hoidong.create');
         Route::post('{id}/hoidongStore', [PhieuDanhGiaController::class, 'hoiDongStore'])->name('phieudanhgia.hoidong.store');
-        Route::get('tonghopdukien', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien']);
-        Route::post('tonghopdukien', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien'])->name('phieudanhgia.hoidong.tonghopdukien');
+        Route::get('tonghopdukienthang', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien']);
+        Route::post('tonghopdukienthang', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKien'])->name('phieudanhgia.hoidong.tonghopdukien');
         Route::post('tonghopdanhgia', [PhieuDanhGiaController::class, 'hoiDongTongHopDanhGia'])->name('phieudanhgia.hoidong.tonghopdanhgia');
         Route::get('tonghopdukienquy', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKienQuy']);
         Route::post('tonghopdukienquy', [PhieuDanhGiaController::class, 'hoiDongTongHopDuKienQuy'])->name('phieudanhgia.hoidong.tonghopdukienquy');

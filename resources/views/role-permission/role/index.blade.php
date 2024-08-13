@@ -24,8 +24,8 @@
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
                                 <col style="width:10%;">
-                                <col style="width:30%;">
                                 <col style="width:60%;">
+                                <col style="width:30%;">
                             </colgroup>
                             <thead style="text-align: center">
                                 <tr>
@@ -38,22 +38,22 @@
                                 @foreach ($roles as $role)
                                     <tr>
                                         <td class="text-center">{{ $role->id }}</td>
-                                        <td class=""><a
+                                        <td><a
                                                 href="{{ route('roles.edit', $role->id) }}">{{ $role->name }}</a></td>
-                                        <td>
-                                            <a href="{{ url('roles/' . $role->id . '/give-permissions') }}"
+                                        <td class="text-center align-middle">
+                                            <a href="{{ route('roles.give-permissions', $role->id ) }}"
                                                 class="btn btn-warning">
                                                 Cập nhật Permission
                                             </a>
 
                                             @can('update role')
-                                                <a href="{{ url('roles/' . $role->id . '/edit') }}" class="btn btn-success">
+                                                <a href="{{ route('roles.edit', $role->id ) }}" class="btn btn-success">
                                                     Edit
                                                 </a>
                                             @endcan
 
                                             @can('delete role')
-                                                <a href="{{ url('roles/' . $role->id . '/delete') }}"
+                                                <a href="{{ route('roles.delete', $role->id ) }}"
                                                     class="btn btn-danger mx-2">
                                                     Delete
                                                 </a>
@@ -96,14 +96,6 @@
                             window.location = '{{ route('roles.create') }}';
                         },
                     },
-                    // {
-                    //     extend: 'spacer',
-                    //     style: 'bar',
-                    //     text: 'Xuất:'
-                    // },
-                    // //'csv',
-                    // 'excel',
-                    // 'pdf',
                 ],
                 language: {
                     url: '/plugins/datatables/vi.json'

@@ -44,11 +44,11 @@ class RoleController extends Controller
             ]
         ]);
 
-        Role::create([
+        $role = Role::create([
             'name' => $request->name
         ]);
 
-        return redirect('roles')->with('msg_success', 'Đã tạo Role mới thành công');
+        return redirect()->route('roles.edit', $role->id)->with('msg_success', 'Đã tạo Role mới thành công');
     }
 
     
@@ -80,7 +80,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        return redirect('roles')->with('msg_success', 'Đã cập nhật role thành công');
+        return redirect()->route('roles.edit', $role->id)->with('msg_success', 'Đã cập nhật role thành công');
     }
 
     
@@ -113,10 +113,6 @@ class RoleController extends Controller
 
     public function givePermissionToRole(Request $request, $roleId)
     {
-        // $request->validate([
-        //     'permission' => 'required'
-        // ]);
-
         $role = Role::findOrFail($roleId);
         $role->syncPermissions($request->permission);
 

@@ -51,12 +51,12 @@ class PermissionController extends Controller
             'permission_group' => 'required'
         ]);
 
-        Permission::create([
+        $permission = Permission::create([
             'name' => $request->name,
             'permission_group' => $request->permission_group
         ]);
 
-        return redirect('permissions')->with('msg_success', 'Tạo mới permission thành công');
+        return redirect()->route('permissions.edit', $permission->id)->with('msg_success', 'Tạo mới permission thành công');
     }
 
     public function edit(Permission $permission)
@@ -84,20 +84,15 @@ class PermissionController extends Controller
 
         $permission->name = $request->name;
         $permission->permission_group = $request->permission_group;
-        $permission->save();
+        $permission->save();       
 
-        // $permission->update([
-        //     'name' => $request->name,
-        //     'permisson_group' => $request->permission_group
-        // ]);
-
-        return redirect('permissions')->with('msg_success', 'Cập nhật permission thành công');
+        return redirect()->route('permissions.edit', $permission->id)->with('msg_success', 'Cập nhật permission thành công');
     }
 
     public function destroy($permissionId)
     {
         $permission = Permission::find($permissionId);
         $permission->delete();
-        return redirect('permissions')->with('msg_success', 'Xóa Permission thành công');
+        return redirect()->route('permissions.index')->with('msg_success', 'Xóa Permission thành công');
     }
 }

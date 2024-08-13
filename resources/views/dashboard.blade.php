@@ -99,7 +99,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-cogs"></i>
                                 <p>1. Hệ thống
                                     <i class="right fas fa-angle-left"></i>
@@ -107,39 +107,39 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
-                                    <a href="/donvi" class="nav-link">
+                                    <a href="/danhmuc/donvi" class="nav-link">
                                         <p>1.1. Danh mục đơn vị</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/phong" class="nav-link">
+                                    <a href="/danhmuc/phong" class="nav-link">
                                         <p>1.2. Danh mục phòng/đội</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/congchuc" class="nav-link">
+                                    <a href="/danhmuc/congchuc" class="nav-link">
                                         <p>1.3. Danh sách công chức</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/xeploai" class="nav-link">
+                                    <a href="/danhmuc/xeploai" class="nav-link">
                                         <p>1.4. Danh mục xếp loại</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/roles" class="nav-link">
+                                    <a href="/danhmuc/roles" class="nav-link">
                                         <p>1.5. Danh sách Role</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/permissions" class="nav-link">
+                                    <a href="/danhmuc/permissions" class="nav-link">
                                         <p>1.6. Danh sách Permission</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
                                     2. Đánh giá, xếp loại cá nhân hàng tháng
@@ -175,7 +175,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
                                     3. Đánh giá, xếp loại cá nhân hàng quý
@@ -210,7 +210,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
                                     5. Quản lý Không tự đánh giá
@@ -231,12 +231,11 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
-                                <p>
-                                    6. Đánh giá xếp loại Cục trưởng
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
+                                <p>6. Đánh giá xếp loại Cục trưởng</p>
+                                <i class="right fas fa-angle-left"></i>
+
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
@@ -245,7 +244,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/cuctruong/tonghopdukien" class="nav-link">
+                                    <a href="/cuctruong/tonghopdukienthang" class="nav-link">
                                         <p>6.2. Tổng hợp kết quả đánh giá tháng</p>
                                     </a>
                                 </li>
@@ -257,12 +256,11 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
-                                <p>
-                                    7. Báo cáo hỗ trợ
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
+                                <p>7. Báo cáo hỗ trợ</p>
+                                <i class="right fas fa-angle-left"></i>
+
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
@@ -298,12 +296,11 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
-                                <p>
-                                    8. Thông tin về Ứng dụng
+                                <p>8. Thông tin về Ứng dụng</p>
                                     <i class="right fas fa-angle-left"></i>
-                                </p>
+                                
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">

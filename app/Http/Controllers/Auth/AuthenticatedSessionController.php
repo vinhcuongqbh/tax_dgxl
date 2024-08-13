@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         //return redirect()->intended(RouteServiceProvider::HOME);
-        return redirect()->route('congchuc.show', Auth::user()->so_hieu_cong_chuc);
+        return redirect()->route('phieudanhgia.canhan.list');
     }
 
     /**
