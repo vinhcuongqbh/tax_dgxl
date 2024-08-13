@@ -478,10 +478,12 @@ class PhieuDanhGiaController extends Controller
         $phieu_danh_gia->ma_trang_thai = 15;
         $phieu_danh_gia->save();
 
-        return redirect()->route(
-            'phieudanhgia.captren.show',
-            ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
-        )->with('msg_success', 'Cấp trên đã thực hiện đánh giá thành công');
+        return redirect()->route('phieudanhgia.captren.list')->with('msg_success', 'Cấp trên đã thực hiện đánh giá thành công');
+
+        // return redirect()->route(
+        //     'phieudanhgia.captren.show',
+        //     ['id' => $phieu_danh_gia->ma_phieu_danh_gia]
+        // )->with('msg_success', 'Cấp trên đã thực hiện đánh giá thành công');
     }
 
 

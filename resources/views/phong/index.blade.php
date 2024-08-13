@@ -21,14 +21,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="card card-default">
-                    {{-- <div class="card-header">
-                        <div class="row">
-                            <div class="col-auto">
-                                <a href="{{ route('phong.create') }}"><button type="button"
-                                        class="btn bg-olive text-white w-100 text-nowrap"><span>Tạo mới</span></button></a>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card-body">
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
@@ -48,7 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i=1 ?>
+                                <?php $i = 1; ?>
                                 @foreach ($phong as $phong)
                                     <tr>
                                         <td class="text-center">{{ $i++ }}</td>
@@ -58,17 +50,19 @@
                                         </td>
                                         <td>{{ $phong->ten_don_vi }}</td>
                                         <td class="text-center">
-                                            @if ($phong->ma_trang_thai == 1)
-                                                <a class="btn bg-danger text-nowrap w-100"
-                                                    href="{{ route('phong.delete', $phong->ma_phong) }}">
-                                                    Khóa
-                                                </a>
-                                            @else
-                                                <a class="btn bg-olive text-nowrap w-100"
-                                                    href="{{ route('phong.restore', $phong->ma_phong) }}">
-                                                    Mở
-                                                </a>
-                                            @endif
+                                            @can('khóa phòng/đội')
+                                                @if ($phong->ma_trang_thai == 1)
+                                                    <a class="btn bg-danger text-nowrap w-100"
+                                                        href="{{ route('phong.delete', $phong->ma_phong) }}">
+                                                        Khóa
+                                                    </a>
+                                                @else
+                                                    <a class="btn bg-olive text-nowrap w-100"
+                                                        href="{{ route('phong.restore', $phong->ma_phong) }}">
+                                                        Mở
+                                                    </a>
+                                                @endif
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

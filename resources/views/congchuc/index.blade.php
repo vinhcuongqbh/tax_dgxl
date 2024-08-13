@@ -67,17 +67,19 @@
                                         <td class="text-center">{{ $cong_chuc->ten_phong }}</td>
                                         <td class="text-center">{{ $cong_chuc->ten_don_vi }}</td>
                                         <td class="text-center" data-title="Mở/Khóa">
-                                            @if ($cong_chuc->ma_trang_thai == 1)
-                                                <a class="btn bg-danger text-nowrap w-100"
-                                                    href="{{ route('congchuc.delete', $cong_chuc->so_hieu_cong_chuc) }}">
-                                                    Khóa
-                                                </a>
-                                            @else
-                                                <a class="btn bg-olive text-nowrap w-100"
-                                                    href="{{ route('congchuc.restore', $cong_chuc->so_hieu_cong_chuc) }}">
-                                                    Mở
-                                                </a>
-                                            @endif
+                                            @can('khóa người dùng')
+                                                @if ($cong_chuc->ma_trang_thai == 1)
+                                                    <a class="btn bg-danger text-nowrap w-100"
+                                                        href="{{ route('congchuc.delete', $cong_chuc->so_hieu_cong_chuc) }}">
+                                                        Khóa
+                                                    </a>
+                                                @else
+                                                    <a class="btn bg-olive text-nowrap w-100"
+                                                        href="{{ route('congchuc.restore', $cong_chuc->so_hieu_cong_chuc) }}">
+                                                        Mở
+                                                    </a>
+                                                @endif
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

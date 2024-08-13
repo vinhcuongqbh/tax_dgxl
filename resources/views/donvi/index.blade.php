@@ -21,14 +21,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="card card-default">
-                    {{-- <div class="card-header">
-                        <div class="row">
-                            <div class="col-auto">
-                                <a href="{{ route('donvi.create') }}"><button type="button"
-                                        class="btn bg-olive text-white w-100 text-nowrap"><span>Tạo mới</span></button></a>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card-body">
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
@@ -48,7 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i=1 ?>
+                                <?php $i = 1; ?>
                                 @foreach ($don_vi as $don_vi)
                                     <tr>
                                         <td class="text-center">{{ $i++ }}</td>
@@ -58,17 +50,19 @@
                                         </td>
                                         <td>{{ $don_vi->ten_don_vi_cap_tren }}</td>
                                         <td class="text-center">
-                                            @if ($don_vi->ma_trang_thai == 1)
-                                                <a class="btn bg-danger text-nowrap w-100"
-                                                    href="{{ route('donvi.delete', $don_vi->ma_don_vi) }}">
-                                                    Khóa
-                                                </a>
-                                            @else
-                                                <a class="btn bg-olive text-nowrap w-100"
-                                                    href="{{ route('donvi.restore', $don_vi->ma_don_vi) }}">
-                                                    Mở
-                                                </a>
-                                            @endif
+                                            @can('khóa đơn vị')
+                                                @if ($don_vi->ma_trang_thai == 1)
+                                                    <a class="btn bg-danger text-nowrap w-100"
+                                                        href="{{ route('donvi.delete', $don_vi->ma_don_vi) }}">
+                                                        Khóa
+                                                    </a>
+                                                @else
+                                                    <a class="btn bg-olive text-nowrap w-100"
+                                                        href="{{ route('donvi.restore', $don_vi->ma_don_vi) }}">
+                                                        Mở
+                                                    </a>
+                                                @endif
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
