@@ -7,8 +7,6 @@
     <title>@yield('title')</title>
     <link rel="icon" type="image/x-icon" href="/img/logo.png">
 
-    {{-- <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="/css/google_font.css"> --}}
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <!-- IonIcons -->
@@ -17,7 +15,6 @@
     <link rel="stylesheet" href="/css/adminlte.min.css">
     <!-- SweetAlert2 -->
     <script src="/plugins/sweetalert2/sweetalert2.all.min.js"></script>
-
 
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
@@ -299,8 +296,8 @@
                             <a href="#" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>8. Thông tin về Ứng dụng</p>
-                                    <i class="right fas fa-angle-left"></i>
-                                
+                                <i class="right fas fa-angle-left"></i>
+
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item pl-3">
