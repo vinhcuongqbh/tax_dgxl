@@ -18,6 +18,7 @@
     <!-- SweetAlert2 -->
     <script src="/plugins/sweetalert2/sweetalert2.all.min.js"></script>
 
+
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
@@ -25,25 +26,6 @@
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE -->
     <script src="/js/adminlte.js"></script>
-
-    {{-- <!-- DataTables  & Plugins -->
-    <script src="//plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="//plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="//plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="//plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="//plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="//plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="//plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="//plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="//plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-    <script src="//plugins/jszip/jszip.min.js"></script>
-    <script src="//plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="//plugins/pdfmake/vfs_fonts.js"></script>
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="//plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="//plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="//plugins/datatables-buttons/css/buttons.bootstrap4.min.css"> --}}
 
     <script src="/js/jquery-3.7.0.js"></script>
     <script src="/js/jquery.dataTables.min.js"></script>
@@ -60,9 +42,10 @@
     <link rel="stylesheet" href="/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="/css/rowReorder.dataTables.min.css">
     <link rel="stylesheet" href="/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body class="sidebar-mini layout-navbar">
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -111,19 +94,6 @@
                     </div>
                 </div>
 
-                {{-- <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div> --}}
-
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
@@ -131,8 +101,7 @@
                         <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="fas fa-cogs"></i>
-                                <p>
-                                    1. Hệ thống
+                                <p>1. Hệ thống
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -413,7 +382,7 @@
             if (this.href) {
                 return this.href == url || url.href.indexOf(this.href) == 0;
             }
-        }) //.addClass('active');
+        }).addClass('active');
 
         // for the treeview
         $('ul.nav-treeview a').filter(function() {
