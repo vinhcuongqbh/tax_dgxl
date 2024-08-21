@@ -159,7 +159,7 @@
                 var ma_don_vi = this.value;
                 $("#phong").html('');
                 $.ajax({
-                    url: "{{ url('phong/dm-phong') }}",
+                    url: "{{ url('danhmuc/phong/dm-phong') }}",
                     type: "POST",
                     data: {
                         ma_don_vi: ma_don_vi,
@@ -180,7 +180,7 @@
                 var ma_phong = this.value;
                 $("#user").html('');
                 $.ajax({
-                    url: "{{ url('congchuc/userList') }}",
+                    url: "{{ url('danhmuc/congchuc/userList') }}",
                     type: "POST",
                     data: {
                         ma_phong: ma_phong,
