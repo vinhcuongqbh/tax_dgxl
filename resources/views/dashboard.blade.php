@@ -337,7 +337,7 @@
                             icon: 'success',
                             text: `{{ session()->get('msg_success') }}`,
                             showConfirmButton: false,
-                            timer: 3000
+                            timer: 5000
                         })
                     </script>
                 @elseif (session()->has('msg_error'))
@@ -346,7 +346,7 @@
                             icon: 'error',
                             text: `{{ session()->get('msg_error') }}`,
                             showConfirmButton: false,
-                            timer: 3000
+                            timer: 5000
                         })
                     </script>
                 @endif

@@ -74,7 +74,7 @@ class BaocaoController extends Controller
                 ->count();
             $cap_tren_da_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('ma_don_vi', $don_vi->ma_don_vi)
-                ->where('ma_trang_thai', 15)
+                ->where('ma_trang_thai', '>=', 15)
                 ->count();
             if ($don_vi->ma_don_vi == '4401') {
                 $ca_nhan_cho_chi_cuc_truong_phe_duyet = 0;
