@@ -1990,6 +1990,11 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                 ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
                 ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
+                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
+                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
+                ->orderBy('phieu_danh_gia.so_hieu_cong_chuc', 'ASC')
+                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->get();
         } else {
             $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
@@ -2002,6 +2007,11 @@ class PhieuDanhGiaController extends Controller
                 ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
                 ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
                 ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
+                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
+                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
+                ->orderBy('phieu_danh_gia.so_hieu_cong_chuc', 'ASC')
+                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
                 ->get();
         }
 
