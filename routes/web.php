@@ -119,6 +119,9 @@ Route::middleware('auth')->group(function () {
         Route::get('thongbaoquy', [PhieuDanhGiaController::class, 'thongBaoQuy'])->name('phieudanhgia.thongbaoquy');
         Route::get('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy']);
         Route::post('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
+
+        Route::get('tracuu', [PhieuDanhGiaController::class, 'traCuu']);
+        Route::post('tracuu', [PhieuDanhGiaController::class, 'traCuu'])->name('phieudanhgia.tracuu');
     });
 
     Route::group(['prefix' => 'phieuKTDG'], function () {

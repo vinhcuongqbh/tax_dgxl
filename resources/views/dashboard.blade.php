@@ -166,7 +166,12 @@
                                 </li>
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/baocaothang" class="nav-link">
-                                        <p>2.5. Báo cáo theo tháng </p>
+                                        <p>2.5. Báo cáo theo tháng</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/phieudanhgia/tracuu" class="nav-link">
+                                        <p>2.6. Tra cứu phiếu đánh giá</p>
                                     </a>
                                 </li>
                             </ul>

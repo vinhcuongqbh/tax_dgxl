@@ -70,6 +70,9 @@ class PhieuDanhGiaController extends Controller
         // Phiếu không tự đánh giá
         $this->middleware('permission:tạo phiếu không tự đánh giá', ['only' => ['phieuKTDGCreate', 'phieuKTDGStore']]);
         $this->middleware('permission:tra cứu phiếu không tự đánh giá', ['only' => ['phieuKTDGList']]);
+
+        // Tra cứu Phiếu đánh giá
+        $this->middleware('permission:tra cứu phiếu đánh giá', ['only' => ['traCuu']]);
     }
 
 
@@ -1958,6 +1961,65 @@ class PhieuDanhGiaController extends Controller
         }
 
         return redirect()->back()->with('msg_success', 'Đã tạo Phiếu không tự đánh giá thành công');
+    }
+
+    // Danh sách Thông báo Kết quả xếp loại theo tháng
+    public function traCuu(Request $request)
+    {
+        // Trường hợp không chọn năm đánh giá
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        // Trường hợp không chọn đơn vị
+        if (!isset($request->ma_don_vi_da_chon)) {
+            $ma_don_vi = 4400;
+        } else {
+            $ma_don_vi = $request->ma_don_vi_da_chon;
+        }
+
+        if ($ma_don_vi == 4400) {
+            $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('phieu_danh_gia.ket_qua_xep_loai', $request->xep_loai)
+                ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
+                ->get();
+        } else {
+            $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
+                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('phieu_danh_gia.ket_qua_xep_loai', $request->xep_loai)
+                ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
+                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
+                ->get();
+        }
+
+        $ds_don_vi = DonVi::where('ma_trang_thai', 1)->get();
+        $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
+        $phong = Phong::where('ma_trang_thai', 1)->get();
+        $dm_xep_loai = XepLoai::all();
+
+        return view('danhgia.tracuu', [
+            'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+            'phieu_danh_gia' => $phieu_danh_gia,
+            'don_vi' => $don_vi,
+            'phong' => $phong,
+            'ds_don_vi' => $ds_don_vi,
+            'ma_don_vi_da_chon' => $request->ma_don_vi_da_chon,
+            'ma_xep_loai_da_chon' => $request->xep_loai,
+            'dm_xep_loai' => $dm_xep_loai
+        ]);
     }
 
 
