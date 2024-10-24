@@ -79,7 +79,7 @@ class PhieuDanhGiaController extends Controller
     // Tạo Phiếu đánh giá cá nhân tự chấm
     public function canhanCreate()
     {
-        if (Carbon::now()->day > 10) {
+        if ((Carbon::now()->day > 10) and (!in_array(Auth::user()->ma_chuc_vu, ["01","02"]))) {
             return back()->with('msg_error', 'Đã quá thời hạn cá nhân tự đánh giá. Vui lòng liên hệ phòng Tổ chức cán bộ để được hỗ trợ.');
         } else {
             $thoi_diem_danh_gia = Carbon::now()->subMonth();
@@ -180,7 +180,7 @@ class PhieuDanhGiaController extends Controller
 
     public function canhanEdit($id)
     {
-        if (Carbon::now()->day > 10) {
+        if ((Carbon::now()->day > 10) and (!in_array(Auth::user()->ma_chuc_vu, ["01","02"]))) {
             return back()->with('msg_error', 'Đã quá thời hạn cá nhân tự đánh giá. Vui lòng liên hệ phòng Tổ chức cán bộ để được hỗ trợ.');
         } else {
             // Tìm Phiếu đánh giá
@@ -332,7 +332,7 @@ class PhieuDanhGiaController extends Controller
 
     public function canhanSend($ma_phieu_danh_gia)
     {
-        if (Carbon::now()->day > 10) {
+        if ((Carbon::now()->day > 10) and (!in_array(Auth::user()->ma_chuc_vu, ["01","02"]))) {
             return back()->with('msg_error', 'Đã quá thời hạn cá nhân tự đánh giá. Vui lòng liên hệ phòng Tổ chức cán bộ để được hỗ trợ.');
         } else {
             $phieu_danh_gia = PhieuDanhGia::where('ma_phieu_danh_gia', $ma_phieu_danh_gia)
