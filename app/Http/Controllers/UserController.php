@@ -56,7 +56,7 @@ class UserController extends Controller
     {
         $gioi_tinh = GioiTinh::all();
         $ngach = Ngach::where('ma_trang_thai', 1)->get();
-        $chuc_vu = ChucVu::where('ma_trang_thai', 1)->get();
+        $chuc_vu = ChucVu::where('ma_trang_thai', 1)->orderby('ma_chuc_vu','asc')->get();
         $don_vi = DonVi::where('ma_trang_thai', 1)->get();
         $roles = Role::whereNotIn('id', [1, 2])->orderby('id', 'asc')->pluck('name', 'name')->all();
 
@@ -135,7 +135,7 @@ class UserController extends Controller
         $user = User::where('so_hieu_cong_chuc', $id)->first();
         $gioi_tinh = GioiTinh::all();
         $ngach = Ngach::where('ma_trang_thai', 1)->get();
-        $chuc_vu = ChucVu::where('ma_trang_thai', 1)->get();
+        $chuc_vu = ChucVu::where('ma_trang_thai', 1)->orderby('ma_chuc_vu','asc')->get();
         $don_vi = DonVi::where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)
             ->where('ma_don_vi_cap_tren', $user->ma_don_vi)

@@ -99,7 +99,7 @@ class BaocaoController extends Controller
                 $ca_nhan_cho_cuc_truong_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '17')
                     ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                     ->where(function ($query) use ($dv) {
-                        $query->wherein('ma_chuc_vu', ['02', '04', '05', '07', '08'])
+                        $query->wherein('ma_chuc_vu', ['02', '04', '05', '07', '08', '07A', '08A'])
                             ->where('ma_don_vi', $dv)
                             ->orwhere('ma_don_vi', '4401')
                             ->where('ma_chuc_vu', null);
@@ -108,7 +108,7 @@ class BaocaoController extends Controller
                 $cuc_truong_da_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '>=', '19')
                     ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                     ->where(function ($query) use ($dv) {
-                        $query->wherein('ma_chuc_vu', ['02', '04', '05', '07', '08'])
+                        $query->wherein('ma_chuc_vu', ['02', '04', '05', '07', '08', '07A', '08A'])
                             ->where('ma_don_vi', $dv)
                             ->orwhere('ma_don_vi', '4401')
                             ->where('ma_chuc_vu', null);
@@ -118,14 +118,14 @@ class BaocaoController extends Controller
                 $ca_nhan_cho_cuc_truong_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '17')
                     ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                     ->where(function ($query) use ($dv) {
-                        $query->wherein('ma_chuc_vu', ['03', '06', '09', '10'])
+                        $query->wherein('ma_chuc_vu', ['03', '06', '09', '10', '10A'])
                             ->where('ma_don_vi', $dv);
                     })
                     ->count();
                 $cuc_truong_da_phe_duyet = PhieuDanhGia::where('ma_trang_thai', '>=', '19')
                     ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                     ->where(function ($query) use ($dv) {
-                        $query->wherein('ma_chuc_vu', ['03', '06', '09', '10'])
+                        $query->wherein('ma_chuc_vu', ['03', '06', '09', '10', '10A'])
                             ->where('ma_don_vi', $dv);
                     })
                     ->count();
@@ -133,11 +133,11 @@ class BaocaoController extends Controller
 
             if ($don_vi->ma_don_vi == '4401') {
                 $ca_nhan_cho_hoi_dong_phe_duyet = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                    ->where('ma_chuc_vu', '01')
+                    ->where('ma_chuc_vu', '01', '02A')
                     ->where('ma_trang_thai', '17')
                     ->count();
                 $hoi_dong_da_phe_duyet = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                    ->where('ma_chuc_vu', '01')
+                    ->where('ma_chuc_vu', '01', '02A')
                     ->where('ma_trang_thai', '>=', '19')
                     ->count();
             } else {
@@ -306,7 +306,7 @@ class BaocaoController extends Controller
                         ->where(function ($query) {
                             $query->where('ma_don_vi',  '4401')
                                 ->orwhere('ma_don_vi', '<>', '4401')
-                                ->wherein('ma_chuc_vu', ['03', '06', '09', '10']);
+                                ->wherein('ma_chuc_vu', ['03', '06', '09', '10', '10A']);
                         })
                         ->orderBy('ma_don_vi', 'ASC')
                         ->orderBy('ma_phong', 'ASC')
@@ -324,7 +324,7 @@ class BaocaoController extends Controller
                     $danh_sach = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                         ->where('ma_trang_thai', '17')
                         ->where('ma_don_vi', 'LIKE', $ma_don_vi)
-                        ->wherein('ma_chuc_vu', ['03', '06', '09', '10'])
+                        ->wherein('ma_chuc_vu', ['03', '06', '09', '10', '10A'])
                         ->orderBy('ma_don_vi', 'ASC')
                         ->orderBy('ma_phong', 'ASC')
                         ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
