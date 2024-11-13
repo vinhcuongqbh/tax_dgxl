@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\DonVi;
 use App\Models\Phong;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PhongController extends Controller
 {
@@ -19,18 +18,16 @@ class PhongController extends Controller
         $this->middleware('permission:mở khóa phòng/đội', ['only' => ['restore']]);
     }
 
-    //Hiển thị danh sách Phòng/Đội
+    // Hiển thị danh sách Phòng/Đội
     public function index()
     {
-        $phong = Phong::leftjoin('don_vi', 'don_vi.ma_don_vi', 'phong.ma_don_vi_cap_tren')
-            ->select('phong.id', 'phong.ma_phong', 'phong.ten_phong', 'don_vi.ten_don_vi', 'phong.ma_trang_thai')
-            ->get();
+        $phong = Phong::all();
 
         return view('phong.index', ['phong' => $phong]);
     }
 
 
-    //Tạo mới Phòng/Đội
+    // Tạo mới Phòng/Đội
     public function create()
     {
         $don_vi = DonVi::where('ma_trang_thai', 1)->get();
@@ -39,10 +36,10 @@ class PhongController extends Controller
     }
 
 
-    //Lưu trữ thông tin Phòng/Đội
+    // Lưu trữ thông tin Phòng/Đội
     public function store(Request $request)
     {
-        //Kiểm tra thông tin đầu vào
+        // Kiểm tra thông tin đầu vào
         $validated = $request->validate([
             'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
             'ten_phong' => 'required',
@@ -59,7 +56,7 @@ class PhongController extends Controller
     }
 
 
-    //Sửa thông tin Phòng/Đội
+    // Sửa thông tin Phòng/Đội
     public function edit($id)
     {
         $phong = Phong::where('ma_phong', $id)->first();
@@ -72,12 +69,12 @@ class PhongController extends Controller
     }
 
 
-    //Cập nhật thông tin Phòng/Đội
+    // Cập nhật thông tin Phòng/Đội
     public function update(Request $request, $id)
     {
-        //Kiểm tra thông tin đầu vào
+        // Kiểm tra thông tin đầu vào
         $validated = $request->validate([
-            //'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
+            // 'ma_phong' => 'required|unique:App\Models\Phong,ma_phong',
             'ten_phong' => 'required',
         ]);
 
@@ -85,12 +82,12 @@ class PhongController extends Controller
         $phong->ten_phong = $request->ten_phong;
         $phong->ma_don_vi_cap_tren = $request->ma_don_vi_cap_tren;
         $phong->save();
-        
+
         return redirect()->route('phong.edit', ['id' => $phong->ma_phong])->with('message', 'Đã cập nhật Phòng/Đội thành công');
     }
 
 
-    //Khóa Phòng/Đội
+    // Khóa Phòng/Đội
     public function destroy($id)
     {
         $phong = Phong::where('ma_phong', $id)->first();
@@ -101,7 +98,7 @@ class PhongController extends Controller
     }
 
 
-    //Mở khóa Phòng/Đội
+    // Mở khóa Phòng/Đội
     public function restore($id)
     {
         $phong = Phong::where('ma_phong', $id)->first();
@@ -112,7 +109,7 @@ class PhongController extends Controller
     }
 
 
-    //Lấy danh sách Phòng/Đội dựa trên Đơn vị
+    // Lấy danh sách Phòng/Đội dựa trên Đơn vị
     public function dmPhong(Request $request)
     {
         $data['phong'] = Phong::where('ma_don_vi_cap_tren', $request->ma_don_vi)

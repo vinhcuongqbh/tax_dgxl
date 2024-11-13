@@ -28,30 +28,16 @@ class UserController extends Controller
     }
 
 
-    //Hiển thị danh sách User
+    // Hiển thị danh sách User
     public function index()
     {
-        $users = User::wherein('users.ma_trang_thai', [0, 1])
-            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
-            ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
-            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
-            ->select(
-                'users.so_hieu_cong_chuc',
-                'users.name',
-                'users.ngay_sinh',
-                'chuc_vu.ten_chuc_vu',
-                'phong.ten_phong',
-                'don_vi.ten_don_vi',
-                'users.name',
-                'users.ma_trang_thai'
-            )
-            ->get();
+        $users = User::wherein('users.ma_trang_thai', [0, 1])->get();
 
         return view('congchuc.index', ['cong_chuc' => $users]);
     }
 
 
-    //Tạo mới User
+    // Tạo mới User
     public function create()
     {
         $gioi_tinh = GioiTinh::all();
@@ -70,10 +56,10 @@ class UserController extends Controller
     }
 
 
-    //Lưu trữ thông tin User
+    // Lưu trữ thông tin User
     public function store(Request $request)
     {
-        //Kiểm tra thông tin đầu vào
+        // Kiểm tra thông tin đầu vào
         $validated = $request->validate([
             'so_hieu_cong_chuc' => 'required|unique:App\Models\User,so_hieu_cong_chuc',
             'name' => 'required',
@@ -102,7 +88,7 @@ class UserController extends Controller
     }
 
 
-    //Xem thông tin User
+    // Xem thông tin User
     public function show($id)
     {
         if (Auth::user()->so_hieu_cong_chuc == $id) {
@@ -129,7 +115,7 @@ class UserController extends Controller
     }
 
 
-    //Sửa thông tin User
+    // Sửa thông tin User
     public function edit($id)
     {
         $user = User::where('so_hieu_cong_chuc', $id)->first();
@@ -156,12 +142,12 @@ class UserController extends Controller
     }
 
 
-    //Cập nhật thông tin User
+    // Cập nhật thông tin User
     public function update(Request $request, $id)
     {
-        //Kiểm tra thông tin đầu vào
+        // Kiểm tra thông tin đầu vào
         $validated = $request->validate([
-            //'ma_user' => 'required|unique:App\Models\User,ma_user',
+            // 'ma_user' => 'required|unique:App\Models\User,ma_user',
             'name' => 'required',
             'ngay_sinh' => 'required',
             'gioi_tinh' => 'required',
@@ -187,7 +173,7 @@ class UserController extends Controller
     }
 
 
-    //Khóa User
+    // Khóa User
     public function destroy($id)
     {
         $user = User::where('so_hieu_cong_chuc', $id)->first();
@@ -198,7 +184,7 @@ class UserController extends Controller
     }
 
 
-    //Mở khóa User
+    // Mở khóa User
     public function restore($id)
     {
         $user = User::where('so_hieu_cong_chuc', $id)->first();
@@ -209,7 +195,7 @@ class UserController extends Controller
     }
 
 
-    //Change Password
+    // Đổi mật mã
     public function changePass($id, Request $request)
     {
         if (Auth::user()->so_hieu_cong_chuc == $id) {
@@ -227,7 +213,7 @@ class UserController extends Controller
     }
 
 
-    //Reset Password
+    // Reset Password
     public function resetPass($id)
     {
         $user = User::where('so_hieu_cong_chuc', $id)->first();
@@ -238,7 +224,7 @@ class UserController extends Controller
     }
 
 
-    //Lấy danh sách cán bộ dựa trên Phòng
+    // Lấy danh sách cán bộ dựa trên Phòng
     public function userList(Request $request)
     {
         $data['user'] = User::where('ma_phong', $request->ma_phong)

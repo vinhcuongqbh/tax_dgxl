@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\DonVi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class DonViController extends Controller
 {
@@ -18,7 +17,7 @@ class DonViController extends Controller
         $this->middleware('permission:mở khóa đơn vị', ['only' => ['restore']]);
     }
 
-    //Hiển thị danh sách Đơn vị
+    // Hiển thị danh sách Đơn vị
     public function index()
     {
         $don_vi = DonVi::leftjoin('don_vi as dv2', 'dv2.ma_don_vi', 'don_vi.ma_don_vi_cap_tren')
@@ -29,7 +28,7 @@ class DonViController extends Controller
     }
 
 
-    //Tạo mới Đơn vị
+    // Tạo mới Đơn vị
     public function create()
     {
         $don_vi = DonVi::where('ma_trang_thai', 1)->get();
@@ -38,10 +37,10 @@ class DonViController extends Controller
     }
 
 
-    //Lưu trữ thông tin Đơn vị
+    // Lưu trữ thông tin Đơn vị
     public function store(Request $request)
     {
-        //Kiểm tra thông tin đầu vào
+        // Kiểm tra thông tin đầu vào
         $validated = $request->validate([
             'ma_don_vi' => 'required|unique:App\Models\DonVi,ma_don_vi',
             'ten_don_vi' => 'required',
@@ -58,7 +57,7 @@ class DonViController extends Controller
     }
 
 
-    //Sửa thông tin Đơn vị
+    // Sửa thông tin Đơn vị
     public function edit($id)
     {
         $don_vi = DonVi::where('ma_don_vi', $id)->first();
@@ -72,12 +71,12 @@ class DonViController extends Controller
     }
 
 
-    //Cập nhật thông tin Đơn vị
+    // Cập nhật thông tin Đơn vị
     public function update(Request $request, $id)
     {
-        //Kiểm tra thông tin đầu vào
+        // Kiểm tra thông tin đầu vào
         $validated = $request->validate([
-            //'ma_don_vi' => 'required|unique:App\Models\DonVi,ma_don_vi',
+            // 'ma_don_vi' => 'required|unique:App\Models\DonVi,ma_don_vi',
             'ten_don_vi' => 'required',
         ]);
 
@@ -88,7 +87,7 @@ class DonViController extends Controller
         return redirect()->route('donvi.edit', ['id' => $don_vi->ma_don_vi])->with('message', 'Đã cập nhật Đơn vị thành công');
     }
 
-    //Khóa Đơn vị
+    // Khóa Đơn vị
     public function destroy($id)
     {
         $don_vi = DonVi::where('ma_don_vi', $id)->first();
@@ -99,7 +98,7 @@ class DonViController extends Controller
     }
 
 
-    //Mở khóa Đơn vị
+    // Mở khóa Đơn vị
     public function restore($id)
     {
         $don_vi = DonVi::where('ma_don_vi', $id)->first();

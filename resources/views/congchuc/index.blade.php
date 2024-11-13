@@ -63,9 +63,9 @@
                                                 {{ $cong_chuc->name }}</a>
                                         </td>
                                         <td class="text-center">{{ date('d/m/Y', strtotime($cong_chuc->ngay_sinh)) }}</td>
-                                        <td class="text-center">{{ $cong_chuc->ten_chuc_vu }}</td>
-                                        <td class="text-center">{{ $cong_chuc->ten_phong }}</td>
-                                        <td class="text-center">{{ $cong_chuc->ten_don_vi }}</td>
+                                        <td class="text-center">{{ $cong_chuc->chuc_vu->ten_chuc_vu }}</td>
+                                        <td class="text-center">{{ $cong_chuc->phong->ten_phong }}</td>
+                                        <td class="text-center">{{ $cong_chuc->don_vi->ten_don_vi }}</td>
                                         <td class="text-center" data-title="Mở/Khóa">
                                             @can('khóa người dùng')
                                                 @if ($cong_chuc->ma_trang_thai == 1)

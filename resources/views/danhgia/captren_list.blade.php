@@ -50,10 +50,10 @@
                                             </td>
                                             <td><a
                                                     href="{{ route('phieudanhgia.captren.create', $danh_sach->ma_phieu_danh_gia) }}">
-                                                    {{ $danh_sach->name }}</a></td>
-                                            <td class="text-center">{{ $danh_sach->ten_chuc_vu }}</td>
-                                            <td class="text-center">{{ $danh_sach->ten_phong }}</td>
-                                            <td class="text-center">{{ $danh_sach->ten_don_vi }}</td>
+                                                    {{ $danh_sach->user->name }}</a></td>
+                                            <td class="text-center">{{ $danh_sach->chuc_vu->ten_chuc_vu }}</td>
+                                            <td class="text-center">{{ $danh_sach->phong->ten_phong }}</td>
+                                            <td class="text-center">{{ $danh_sach->don_vi->ten_don_vi }}</td>
                                             <td class="text-center">{{ $danh_sach->tong_diem_tu_cham }}</td>
                                             <td class="text-center">{{ $danh_sach->tong_diem_danh_gia }}</td>
                                             <td class="text-center">{{ $danh_sach->ket_qua_xep_loai }}</td>

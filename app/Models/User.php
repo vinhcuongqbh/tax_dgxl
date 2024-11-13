@@ -49,6 +49,10 @@ class User extends Authenticatable
     //protected $primaryKey = 'so_hieu_cong_chuc';
     //public $incrementing = false;
 
+    public function phieu_danh_gia(): HasMany
+    {
+        return $this->hasMany(PhieuDanhGia::class, 'so_hieu_cong_chuc', 'so_hieu_cong_chuc')->withDefault();
+    }
 
     public function chuc_vu(): BelongsTo
     {

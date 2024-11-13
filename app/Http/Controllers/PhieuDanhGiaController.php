@@ -30,8 +30,7 @@ class PhieuDanhGiaController extends Controller
 {
     use PhieuDanhGiaTrait;
     use DungChungTrait;
-
-    ///////////////////// Cá nhân tự đánh giá, xếp loại ////////////////////
+    
     public function __construct()
     {
         // Cấp tự đánh giá
@@ -75,7 +74,7 @@ class PhieuDanhGiaController extends Controller
         $this->middleware('permission:tra cứu phiếu đánh giá', ['only' => ['traCuu']]);
     }
 
-
+    ///////////////////// Cá nhân tự đánh giá, xếp loại ////////////////////
     // Tạo Phiếu đánh giá cá nhân tự chấm
     public function canhanCreate()
     {
@@ -86,18 +85,12 @@ class PhieuDanhGiaController extends Controller
             $ngay_thuc_hien_danh_gia = Carbon::now();
             $xep_loai = XepLoai::all();
 
-            $user = User::where('so_hieu_cong_chuc', Auth::user()->so_hieu_cong_chuc)
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
-                ->select('users.*', 'phong.ten_phong', 'chuc_vu.ten_chuc_vu', 'don_vi.ten_don_vi')
-                ->first();
+            $user = User::where('so_hieu_cong_chuc', Auth::user()->so_hieu_cong_chuc)->first();
 
             // Xác định mẫu phiếu và thông tin về mẫu phiếu
             list($mau_phieu_danh_gia, $thong_tin_mau_phieu) = $this->xacDinhMauPhieu();
 
-            return view(
-                'danhgia.canhan_create',
+            return view('danhgia.canhan_create',
                 [
                     'mau_phieu' => $mau_phieu_danh_gia,
                     'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -168,8 +161,7 @@ class PhieuDanhGiaController extends Controller
             //if (Auth::user()->ma_chuc_vu == "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
             $phieu_danh_gia->save();
 
-            return redirect()->route(
-                'phieudanhgia.canhan.show',
+            return redirect()->route('phieudanhgia.canhan.show',
                 [
                     'id' => $phieu_danh_gia->ma_phieu_danh_gia
                 ]
@@ -207,8 +199,7 @@ class PhieuDanhGiaController extends Controller
             $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
             $xep_loai = XepLoai::all();
 
-            return view(
-                'danhgia.canhan_edit',
+            return view('danhgia.canhan_edit',
                 [
                     'phieu_danh_gia' => $phieu_danh_gia,
                     'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -313,8 +304,7 @@ class PhieuDanhGiaController extends Controller
         $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
         $xep_loai = XepLoai::all();
 
-        return view(
-            'danhgia.canhan_show',
+        return view('danhgia.canhan_show',
             [
                 'phieu_danh_gia' => $phieu_danh_gia,
                 'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -352,14 +342,8 @@ class PhieuDanhGiaController extends Controller
 
     public function canhanList()
     {
-        $danh_sach_tu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.so_hieu_cong_chuc', Auth::user()->so_hieu_cong_chuc)
-            ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-            ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-            ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-            ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-            ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+        $danh_sach_tu_danh_gia = PhieuDanhGia::where('so_hieu_cong_chuc', Auth::user()->so_hieu_cong_chuc)            
+            ->orderBy('thoi_diem_danh_gia', 'DESC')
             ->get();
 
         return view('danhgia.canhan_list', ['danh_sach' => $danh_sach_tu_danh_gia]);
@@ -374,46 +358,28 @@ class PhieuDanhGiaController extends Controller
             // Nếu Người dùng có chức vụ Cục Trưởng, Phó Cục trưởng phụ trách
             // Đánh giá cho: 02-Phó Cục trưởng; 03-Chi Cục trưởng; 04-Chánh Văn phòng; 05-Trưởng phòng; 06A-Phó Chi cục Trưởng phụ trách; 
             // 07A-Phó Chánh Văn phòng phụ trách; 08A-Phó Trưởng phòng phụ trách
-            $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('phieu_danh_gia.ma_trang_thai', [13, 15])
-                ->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06A', '07A', '08A'])
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                ->orderBy('users.ma_don_vi', 'ASC')
-                ->orderBy('users.ma_phong', 'ASC')
+            $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('ma_trang_thai', [13, 15])
+                ->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06A', '07A', '08A'])
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
                 ->get();
         } elseif (in_array(Auth::user()->ma_chuc_vu, ['03', '06A'])) {
             // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục Trưởng phụ trách
             // Đánh giá cho: 06-Phó chi Cục trưởng; 09-Đội trưởng; 10A-Phó Đội trưởng phụ trách
-            $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('phieu_danh_gia.ma_trang_thai', [13, 15])
-                ->where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
-                ->wherein('phieu_danh_gia.ma_chuc_vu', ['06', '09', '10A'])
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('ma_trang_thai', [13, 15])
+                ->where('ma_don_vi', Auth::user()->ma_don_vi)
+                ->wherein('ma_chuc_vu', ['06', '09', '10A'])                
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
-        } elseif (in_array(Auth::user()->ma_chuc_vu, ['04', '05', '09', '07A', '08A', '10A'])) {             
+        } elseif (in_array(Auth::user()->ma_chuc_vu, ['04', '05', '09', '07A', '08A', '10A'])) {
             // Nếu Người dùng có chức vụ Chánh Văn phòng, Trưởng phòng, Đội trưởng , Phó Chánh Văn phòng phụ trách, 
             // Phó Trưởng phòng phụ trách, Phó Đội trưởng phụ trách
-            $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('phieu_danh_gia.ma_trang_thai', [13, 15])
-                ->where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
-                ->where('phieu_danh_gia.ma_phong', Auth::user()->ma_phong)
-                ->where('phieu_danh_gia.so_hieu_cong_chuc', '<>', Auth::user()->so_hieu_cong_chuc)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('ma_trang_thai', [13, 15])
+                ->where('ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('ma_phong', Auth::user()->ma_phong)
+                ->where('so_hieu_cong_chuc', '<>', Auth::user()->so_hieu_cong_chuc)                
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         } else {
             $danh_sach_cap_tren_danh_gia = Null;
@@ -450,8 +416,7 @@ class PhieuDanhGiaController extends Controller
             $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
             $xep_loai = XepLoai::all();
 
-            return view(
-                'danhgia.captren_create',
+            return view('danhgia.captren_create',
                 [
                     'phieu_danh_gia' => $phieu_danh_gia,
                     'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -523,8 +488,7 @@ class PhieuDanhGiaController extends Controller
         $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
         $xep_loai = XepLoai::all();
 
-        return view(
-            'danhgia.captren_show',
+        return view('danhgia.captren_show',
             [
                 'phieu_danh_gia' => $phieu_danh_gia,
                 'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -545,14 +509,14 @@ class PhieuDanhGiaController extends Controller
         if ((Carbon::now()->day > 31) and (Auth::user()->ma_chuc_vu != "01")) {
             return back()->with('msg_error', 'Đã quá thời hạn cấp trên đánh giá cho cấp dưới. Vui lòng liên hệ phòng Tổ chức cán bộ để được hỗ trợ.');
         } else {
-            if (in_array(Auth::user()->ma_chuc_vu,['01', '02A'])) {
+            if (in_array(Auth::user()->ma_chuc_vu, ['01', '02A'])) {
                 // Nếu Người dùng có chức vụ Cục Trưởng, Phó Cục trưởng phụ trách
                 // Gửi Đánh giá của: 02-Phó Cục trưởng; 03-Chi Cục trưởng; 04-Chánh Văn phòng; 05-Trưởng phòng; 06A-Phó Chi cục Trưởng phụ trách; 
                 // 07A-Phó Chánh Văn phòng phụ trách; 08A-Phó Trưởng phòng phụ trách
                 $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', 15)
                     ->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06A', '07A', '08A'])
                     ->get();
-            } elseif (in_array(Auth::user()->ma_chuc_vu,['03', '06A'])) {
+            } elseif (in_array(Auth::user()->ma_chuc_vu, ['03', '06A'])) {
                 // Nếu Người dùng có chức vụ Chi cục Trưởng
                 // Đánh giá cho: 06-Phó chi Cục trưởng; 09-Đội trưởng; 10A-Phó Đội trưởng phụ trách
                 $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', 15)
@@ -600,50 +564,38 @@ class PhieuDanhGiaController extends Controller
     // Danh sách Phiếu đánh giá cần phê duyệt
     public function capqdList()
     {
-        if (in_array(Auth::user()->ma_chuc_vu,['01', '02A'])) {
+        if (in_array(Auth::user()->ma_chuc_vu, ['01', '02A'])) {
             // Nếu Người dùng có chức vụ Cục Trưởng, Phó Cục trưởng phụ trách
             // Phê duyệt đánh giá cho: 02-Phó Cục trưởng; 03-Chi cục trưởng; 04-Chánh Văn phòng; 05-Trưởng phòng; 06-Phó Chi cục Trưởng; 
             // 07-Phó Chánh Văn phòng; 08-Phó Trưởng phòng; 09-Đội trưởng; 10-Phó Đội Trưởng; 06A- Phó Chi cục trưởng phụ trách; 
             // 07A- Phó Chánh Văn phòng phụ trách; 08A-Phó Trưởng phòng phụ trách; 10A-Phó Đội trưởng phụ trách
             // Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế            
-            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+            $danh_sach = PhieuDanhGia::where('ma_trang_thai', '17')
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where(function ($query) {
-                    $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
-                        ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi);
-                })
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                ->orderBy('users.ma_don_vi', 'ASC')
-                ->orderBy('users.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+                    $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
+                        ->orwhere('ma_don_vi', Auth::user()->ma_don_vi);
+                })                
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
                 ->get();
-        } elseif (in_array(Auth::user()->ma_chuc_vu,['03', '06A'])) {
+        } elseif (in_array(Auth::user()->ma_chuc_vu, ['03', '06A'])) {
             // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục trưởng phụ trách
             // Phê duyệt cho Công chức thuộc Chi cục     
-            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
-                ->where('phieu_danh_gia.ma_trang_thai', '17')
-                ->where('phieu_danh_gia.ma_chuc_vu', null)
-                ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
-                ->where('phieu_danh_gia.ma_trang_thai', '16')
-                ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                ->orderBy('users.ma_don_vi', 'ASC')
-                ->orderBy('users.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+            $danh_sach = PhieuDanhGia::where('ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('ma_trang_thai', '17')
+                ->where('ma_chuc_vu', null)
+                ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('ma_trang_thai', '16')
+                ->where('ma_chuc_vu', '<>', null)                
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
                 ->get();
         } else {
             $danh_sach = Null;
@@ -655,53 +607,41 @@ class PhieuDanhGiaController extends Controller
 
     public function capQDPheDuyetThang()
     {
-        if ((Carbon::now()->day > 31) and (in_array(Auth::user()->ma_chuc_vu,['01', '02A']))) {
+        if ((Carbon::now()->day > 31) and (in_array(Auth::user()->ma_chuc_vu, ['01', '02A']))) {
             return back()->with('msg_error', 'Đã quá thời hạn Phê duyệt kết quả cho cấp dưới. Vui lòng liên hệ phòng Tổ chức cán bộ để được hỗ trợ.');
         } else {
-            if (in_array(Auth::user()->ma_chuc_vu,['01', '02A'])) {
+            if (in_array(Auth::user()->ma_chuc_vu, ['01', '02A'])) {
                 // Nếu Người dùng có chức vụ Cục Trưởng, Phó Cục trưởng phụ trách
                 // Phê duyệt đánh giá cho: 02-Phó Cục trưởng; 03-Chi cục trưởng; 04-Chánh Văn phòng; 05-Trưởng phòng; 06-Phó Chi cục Trưởng; 
                 // 07-Phó Chánh Văn phòng; 08-Phó Trưởng phòng; 09-Đội trưởng; 10-Phó Đội Trưởng; 06A- Phó Chi cục trưởng phụ trách; 
                 // 07A- Phó Chánh Văn phòng phụ trách; 08A-Phó Trưởng phòng phụ trách; 10A-Phó Đội trưởng phụ trách
                 // Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế   
-                $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_trang_thai', '17')
-                    ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
+                $danh_sach = PhieuDanhGia::where('ma_trang_thai', '17')
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                     ->where(function ($query) {
-                        $query->wherein('phieu_danh_gia.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
-                            ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi);
-                    })
-                    ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                    ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                    ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                    ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                    ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                    ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                    ->orderBy('users.ma_don_vi', 'ASC')
-                    ->orderBy('users.ma_phong', 'ASC')
-                    ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+                        $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
+                            ->orwhere('ma_don_vi', Auth::user()->ma_don_vi);
+                    })                    
+                    ->orderBy('thoi_diem_danh_gia', 'DESC')
+                    ->orderBy('ma_don_vi', 'ASC')
+                    ->orderBy('ma_phong', 'ASC')
+                    ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
                     ->get();
-            } elseif (in_array(Auth::user()->ma_chuc_vu,['03', '06A'])) {
+            } elseif (in_array(Auth::user()->ma_chuc_vu, ['03', '06A'])) {
                 // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục trưởng phụ trách
                 // Đánh giá cho Công chức không giữ chức vụ lãnh đạo thuộc Chi cục     
-                $danh_sach = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
-                    ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
-                    ->where('phieu_danh_gia.ma_trang_thai', '17')
-                    ->where('phieu_danh_gia.ma_chuc_vu', null)
-                    ->orwhere('phieu_danh_gia.ma_don_vi', Auth::user()->ma_don_vi)
-                    ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', Carbon::now())
-                    ->where('phieu_danh_gia.ma_trang_thai', '16')
-                    ->where('phieu_danh_gia.ma_chuc_vu', '<>', null)
-                    ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                    ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                    ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                    ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                    ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                    ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                    ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
-                    ->orderBy('users.ma_don_vi', 'ASC')
-                    ->orderBy('users.ma_phong', 'ASC')
-                    ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+                $danh_sach = PhieuDanhGia::where('ma_don_vi', Auth::user()->ma_don_vi)
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                    ->where('ma_trang_thai', '17')
+                    ->where('ma_chuc_vu', null)
+                    ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                    ->where('ma_trang_thai', '16')
+                    ->where('ma_chuc_vu', '<>', null)                    
+                    ->orderBy('thoi_diem_danh_gia', 'DESC')
+                    ->orderBy('ma_don_vi', 'ASC')
+                    ->orderBy('ma_phong', 'ASC')
+                    ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
                     ->get();
             } else {
                 $danh_sach = Null;
@@ -766,31 +706,19 @@ class PhieuDanhGiaController extends Controller
         }
 
         if ($ma_don_vi == 4400) {
-            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
+            $danh_sach = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_trang_thai', '>=', 19)                
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
                 ->get();
         } else {
-            $danh_sach = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
-                ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
+            $danh_sach = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ma_trang_thai', '>=', 19)
+                ->where('ma_don_vi', $ma_don_vi)                
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
                 ->get();
         }
 
@@ -928,10 +856,10 @@ class PhieuDanhGiaController extends Controller
     public function capQDDSQuy(Request $request)
     {
         // Lấy danh sách Cục trưởng/Chi cục trưởng phê duyệt
-        if (in_array(Auth::user()->ma_chuc_vu,['01', '02A'])) {
+        if (in_array(Auth::user()->ma_chuc_vu, ['01', '02A'])) {
             // Nếu Người dùng có chức vụ Cục Trưởng , Phó Cục trưởng phụ trách
             $user_list = $this->danhSachCucTruongPheDuyet();
-        } elseif (in_array(Auth::user()->ma_chuc_vu,['03', '06A'])) {
+        } elseif (in_array(Auth::user()->ma_chuc_vu, ['03', '06A'])) {
             // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục trưởng phụ trách
             $user_list = $this->danhSachChiCucTruongPheDuyet();
         } else {
@@ -1021,9 +949,9 @@ class PhieuDanhGiaController extends Controller
                 if ($ket_qua_xep_loai != null) {
                     $collection->push([
                         'name' => $user->name,
-                        'ten_chuc_vu' => $user->ten_chuc_vu,
-                        'ten_phong' => $user->ten_phong,
-                        'ten_don_vi' => $user->ten_don_vi,
+                        'ten_chuc_vu' => $user->chuc_vu->ten_chuc_vu,
+                        'ten_phong' => $user->phong->ten_phong,
+                        'ten_don_vi' => $user->don_vi->ten_don_vi,
                         'xep_loai_1' => $xep_loai_1,
                         'xep_loai_2' => $xep_loai_2,
                         'xep_loai_3' => $xep_loai_3,
@@ -1049,10 +977,10 @@ class PhieuDanhGiaController extends Controller
     public function capQDPheDuyetDSQuy(Request $request)
     {
         // Lấy danh sách Cục trưởng/Chi cục trưởng phê duyệt
-        if (in_array(Auth::user()->ma_chuc_vu,['01', '02A'])) {
+        if (in_array(Auth::user()->ma_chuc_vu, ['01', '02A'])) {
             // Nếu Người dùng có chức vụ Cục Trưởng, Phó Cục trưởng phụ trách
             $user_list = $this->danhSachCucTruongPheDuyet();
-        } elseif (in_array(Auth::user()->ma_chuc_vu,['03', '06A'])) {
+        } elseif (in_array(Auth::user()->ma_chuc_vu, ['03', '06A'])) {
             // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục trưởng phụ trách
             $user_list = $this->danhSachChiCucTruongPheDuyet();
         } else {
@@ -1843,37 +1771,25 @@ class PhieuDanhGiaController extends Controller
         }
 
         if ($ma_don_vi == 4400) {
-            $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.ly_do_khong_tu_danh_gia', '<>', null)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '>=', $thang_dau_tien->toDateString())
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
-                ->orderBy('phieu_danh_gia.so_hieu_cong_chuc', 'ASC')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            $phieu_danh_gia = PhieuDanhGia::where('ly_do_khong_tu_danh_gia', '<>', null)
+                ->where('thoi_diem_danh_gia', '>=', $thang_dau_tien->toDateString())
+                ->where('thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())                
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
+                ->orderBy('so_hieu_cong_chuc', 'ASC')
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         } else {
-            $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.ly_do_khong_tu_danh_gia', '<>', null)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '>=', $thang_dau_tien->toDateString())
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())
-                ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
-                ->orderBy('phieu_danh_gia.so_hieu_cong_chuc', 'ASC')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            $phieu_danh_gia = PhieuDanhGia::where('ly_do_khong_tu_danh_gia', '<>', null)
+                ->where('thoi_diem_danh_gia', '>=', $thang_dau_tien->toDateString())
+                ->where('thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())
+                ->where('ma_don_vi', $ma_don_vi)                
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
+                ->orderBy('so_hieu_cong_chuc', 'ASC')
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         }
 
@@ -1881,8 +1797,7 @@ class PhieuDanhGiaController extends Controller
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
 
-        return view(
-            'danhgia.phieuKTDG_list',
+        return view('danhgia.phieuKTDG_list',
             [
                 'thang_dau_tien' => $thang_dau_tien,
                 'thang_cuoi_cung' => $thang_cuoi_cung,
@@ -1984,37 +1899,25 @@ class PhieuDanhGiaController extends Controller
         }
 
         if ($ma_don_vi == 4400) {
-            $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->where('phieu_danh_gia.ket_qua_xep_loai', $request->xep_loai)
-                ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
-                ->orderBy('phieu_danh_gia.so_hieu_cong_chuc', 'ASC')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            $phieu_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ket_qua_xep_loai', $request->xep_loai)
+                ->where('ma_trang_thai', '>=', 13)                
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
+                ->orderBy('so_hieu_cong_chuc', 'ASC')
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         } else {
-            $phieu_danh_gia = PhieuDanhGia::where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->where('phieu_danh_gia.ket_qua_xep_loai', $request->xep_loai)
-                ->where('phieu_danh_gia.ma_trang_thai', '>=', 19)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
-                ->leftjoin('ly_do_khong_tu_danh_gia', 'ly_do_khong_tu_danh_gia.id', 'phieu_danh_gia.ly_do_khong_tu_danh_gia')
-                ->select('phieu_danh_gia.*', 'users.name', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi', 'ly_do_khong_tu_danh_gia.ly_do')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
-                ->orderBy('phieu_danh_gia.so_hieu_cong_chuc', 'ASC')
-                ->orderBy('phieu_danh_gia.thoi_diem_danh_gia', 'DESC')
+            $phieu_danh_gia = PhieuDanhGia::where('ma_don_vi', $ma_don_vi)
+                ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
+                ->where('ket_qua_xep_loai', $request->xep_loai)
+                ->where('ma_trang_thai', '>=', 13)               
+                ->orderBy('ma_don_vi', 'ASC')
+                ->orderBy('ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
+                ->orderBy('so_hieu_cong_chuc', 'ASC')
+                ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         }
 
@@ -2136,38 +2039,27 @@ class PhieuDanhGiaController extends Controller
     // Danh sách phê duyệt kết quả đánh giá của Cục trưởng
     public function danhSachCucTruongPheDuyet()
     {
-        $user_list = User::wherein('users.ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '02A', '06A', '07A', '08A', '10A'])
-            ->orwhere('users.ma_don_vi', Auth::user()->ma_don_vi)
-            ->where('users.ma_chuc_vu', null)
-            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
-            ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
-            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
-            ->select('users.*', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-            ->orderBy('users.ma_don_vi', 'ASC')
-            ->orderBy('users.ma_phong', 'ASC')
-            ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+        $user_list = User::wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '02A', '06A', '07A', '08A', '10A'])
+            ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
+            ->where('ma_chuc_vu', null)
+            ->orderBy('ma_don_vi', 'ASC')
+            ->orderBy('ma_phong', 'ASC')
+            ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
             ->get();
         return $user_list;
     }
-
 
     // Danh sách phê duyệt kết quả đánh giá của Chi Cục trưởng
     public function danhSachChiCucTruongPheDuyet()
     {
-        $user_list = User::where('users.ma_don_vi', Auth::user()->ma_don_vi)
-            ->where('users.ma_chuc_vu', null)
-            ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'users.ma_chuc_vu')
-            ->leftjoin('phong', 'phong.ma_phong', 'users.ma_phong')
-            ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'users.ma_don_vi')
-            ->select('users.*', 'chuc_vu.ten_chuc_vu', 'phong.ten_phong', 'don_vi.ten_don_vi')
-            ->orderBy('users.ma_don_vi', 'ASC')
-            ->orderBy('users.ma_phong', 'ASC')
-            ->orderByRaw('ISNULL(users.ma_chuc_vu), users.ma_chuc_vu ASC')
+        $user_list = User::where('ma_don_vi', Auth::user()->ma_don_vi)
+            ->where('ma_chuc_vu', null)            
+            ->orderBy('ma_don_vi', 'ASC')
+            ->orderBy('ma_phong', 'ASC')
+            ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
             ->get();
         return $user_list;
     }
-
-
 
     // Danh sách Lãnh đạo cục Thuế
     public function danhSachLanhDaoCucThue()

@@ -48,7 +48,7 @@
                                         <td><a
                                                 href="{{ route('phong.edit', $phong->ma_phong) }}">{{ $phong->ten_phong }}</a>
                                         </td>
-                                        <td>{{ $phong->ten_don_vi }}</td>
+                                        <td>{{ $phong->don_vi->ten_don_vi }}</td>
                                         <td class="text-center">
                                             @can('khóa phòng/đội')
                                                 @if ($phong->ma_trang_thai == 1)

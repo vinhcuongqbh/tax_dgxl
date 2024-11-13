@@ -45,9 +45,9 @@
                             {{-- Phần Thông tin cá nhân --}}
                             <h6>&emsp;&emsp;&emsp;- Họ và tên: {{ $user->name }}</h6>
                             @if ($thong_tin_mau_phieu['mau'] == 'mau01A')
-                                <h6>&emsp;&emsp;&emsp;- Chức vụ: {{ $user->ten_chuc_vu }}</h6>
+                                <h6>&emsp;&emsp;&emsp;- Chức vụ: {{ $user->chuc_vu->ten_chuc_vu }}</h6>
                             @endif
-                            <h6>&emsp;&emsp;&emsp;- Đơn vị: {{ $user->ten_phong }}, {{ $user->ten_don_vi }}</h6>
+                            <h6>&emsp;&emsp;&emsp;- Đơn vị: {{ $user->phong->ten_phong }}, {{ $user->don_vi->ten_don_vi }}</h6>
                             <br>
 
                             {{-- Phần A --}}

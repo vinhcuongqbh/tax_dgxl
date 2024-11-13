@@ -30,9 +30,6 @@
         <div class="row">
             <div class="col-xl-6">
                 <div class="card card-default">
-                    {{-- <div class="card-header">
-                        <h3 class="card-title text-bold">Sửa thông tin phòng/đội</h3>
-                    </div> --}}
                     <form action="{{ route('phong.update', $phong->ma_phong) }}" method="post" id="phong-edit">
                         @csrf
                         <div class="card-body">

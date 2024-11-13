@@ -46,14 +46,14 @@
                                         </td>
                                         <td><a
                                                 href="{{ route('phieudanhgia.canhan.show', $danh_sach->ma_phieu_danh_gia) }}">
-                                                {{ $danh_sach->name }}
+                                                {{ $danh_sach->user->name }}
                                             </a>
                                         </td>
-                                        <td class="text-center">{{ $danh_sach->ten_chuc_vu }}</td>
-                                        <td class="text-center">{{ $danh_sach->ten_phong }}</td>
-                                        <td class="text-center">{{ $danh_sach->ten_don_vi }}</td>
+                                        <td class="text-center">{{ $danh_sach->chuc_vu->ten_chuc_vu }}</td>
+                                        <td class="text-center">{{ $danh_sach->phong->ten_phong }}</td>
+                                        <td class="text-center">{{ $danh_sach->don_vi->ten_don_vi }}</td>
                                         <td class="text-center">{{ $danh_sach->tong_diem_tu_cham }}</td>
-                                        <td class="text-center">{{ $danh_sach->ca_nhan_tu_xep_loai }} <br> {{ $danh_sach->ly_do }}</td>
+                                        <td class="text-center">{{ $danh_sach->ca_nhan_tu_xep_loai }} <br> {{ $danh_sach->ly_do->ly_do }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

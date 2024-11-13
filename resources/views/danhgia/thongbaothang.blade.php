@@ -87,13 +87,13 @@
                                         @foreach ($phieu_danh_gia->where('ma_phong', $ph->ma_phong) as $phieu)
                                             <tr>
                                                 <td class="text-center">{{ $j++ }}</td>
-                                                <td>{{ $phieu->name }}</td>
-                                                <td class="text-center">{{ $phieu->ten_chuc_vu }}</td>
+                                                <td>{{ $phieu->user->name }}</td>
+                                                <td class="text-center">{{ $phieu->chuc_vu->ten_chuc_vu }}</td>
                                                 <td class="text-center">{{ $phieu->tong_diem_danh_gia }}</td>
                                                 <td class="text-center">{{ $phieu->ket_qua_xep_loai }}</td>
-                                                <td class="text-center">{{ $phieu->ly_do }}</td>
-                                                <td style="display: none;">{{ $phieu->ten_phong }}</td>
-                                                <td style="display: none;">{{ $phieu->ten_don_vi }}</td>
+                                                <td class="text-center">{{ $phieu->ly_do->ly_do }}</td>
+                                                <td style="display: none;">{{ $phieu->phong->ten_phong }}</td>
+                                                <td style="display: none;">{{ $phieu->don_vi->ten_don_vi }}</td>
                                             </tr>
                                         @endforeach
                                     @endforeach

@@ -41,11 +41,11 @@
                             <br>
 
                             {{-- Phần Thông tin cá nhân --}}
-                            <h6>&emsp;&emsp;&emsp;- Họ và tên: {{ $phieu_danh_gia->name }}</h6>
+                            <h6>&emsp;&emsp;&emsp;- Họ và tên: {{ $phieu_danh_gia->user->name }}</h6>
                             @if ($phieu_danh_gia->mau_phieu_danh_gia == 'mau01A')
-                                <h6>&emsp;&emsp;&emsp;- Chức vụ: {{ $phieu_danh_gia->ten_chuc_vu }}</h6>
+                                <h6>&emsp;&emsp;&emsp;- Chức vụ: {{ $phieu_danh_gia->chuc_vu->ten_chuc_vu }}</h6>
                             @endif
-                            <h6>&emsp;&emsp;&emsp;- Đơn vị: {{ $phieu_danh_gia->ten_phong }}, {{ $phieu_danh_gia->ten_don_vi }}</h6>
+                            <h6>&emsp;&emsp;&emsp;- Đơn vị: {{ $phieu_danh_gia->phong->ten_phong }}, {{ $phieu_danh_gia->don_vi->ten_don_vi }}</h6>
                             <br>
 
                             {{-- Phần A --}}

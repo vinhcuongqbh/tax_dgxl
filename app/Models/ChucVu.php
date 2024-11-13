@@ -16,6 +16,11 @@ class ChucVu extends Model
 
     public function user(): HasMany
     {
-        return $this->HasMany(User::class);
+        return $this->HasMany(User::class, 'ma_chuc_vu', 'ma_chuc_vu');
+    }
+
+    public function phieu_danh_gia(): HasMany
+    {
+        return $this->hasMany(PhieuDanhGia::class, 'ma_chuc_vu', 'ma_chuc_vu')->withDefault();
     }
 }
