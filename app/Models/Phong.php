@@ -29,5 +29,10 @@ class Phong extends Model
         return $this->BelongsTo(DonVi::class, 'ma_don_vi_cap_tren', 'ma_don_vi')->withDefault();
     }
 
+    public function kqxl(): HasMany
+    {
+        return $this->hasMany(KQXLNamTapThe::class, 'ma_phong', 'ma_phong')->withDefault();
+    }
+
     
 }

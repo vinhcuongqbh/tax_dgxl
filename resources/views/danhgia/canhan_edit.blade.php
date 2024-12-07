@@ -220,12 +220,12 @@
                             {{-- Mục Lý do Điểm thưởng --}}
                             <h6>&emsp;&emsp;&emsp;- Các nhiệm vụ có sáng kiến, đổi mới, sáng tạo, mang lại hiệu quả được áp
                                 dụng điểm thưởng: <i>(mô tả tóm tắt cách thức, hiệu quả mang lại)</i></h6>
-                            <div class="form-group">
+                            <div class="form-group align-middle">
                                 <textarea class="form-control" id="ly_do_diem_cong" name="ly_do_diem_cong" rows="7">@if ($ly_do_diem_cong) {{ $ly_do_diem_cong->noi_dung }} @endif</textarea>
                             </div>
                             {{-- Mục Lý do Điểm trừ --}}
                             <h6>&emsp;&emsp;&emsp;- Lý do áp dụng điểm trừ: <i>(mô tả tóm tắt)</i></h6>
-                            <div class="form-group">
+                            <div class="form-group align-middle">
                                 <textarea class="form-control" id="ly_do_diem_tru" name="ly_do_diem_tru" rows="7">@if ($ly_do_diem_tru) {{ $ly_do_diem_tru->noi_dung }} @endif</textarea>
                             </div>
                             {{-- Mục Cá nhân tự xếp loại --}}
@@ -570,12 +570,24 @@
     {{-- Kiểm tra dữ liệu đầu vào --}}
     <script>
         $(function() {
-            $('#maudanhgia-create').validate({
+            $('#mauphieudanhgia').validate({
                 rules: {
                     thang_danh_gia: {
                         required: true,
                         min: 1,
                         max: {{ $phieu_danh_gia->thoi_diem_danh_gia }},
+                    },
+                    ly_do_diem_cong: {
+                        required: function(element) {
+                            return $("#tc_400").val() > 0;
+                        },
+                        minlength: 5,
+                    },
+                    ly_do_diem_tru: {
+                        required: function(element) {
+                            return $("#tc_500").val() > 0;
+                        },
+                        minlength: 5,
                     },
                     @php
                         foreach ($ket_qua_muc_A as $data) {
@@ -598,6 +610,14 @@
                         required: "Vui lòng nhập thông tin",
                         min: "Không nhập số âm",
                         max: "Chưa đến thời điểm đánh giá",
+                    },
+                    ly_do_diem_cong: {
+                        required: "Vì bạn đã thêm ĐIỂM THƯỞNG nên vui lòng nhập lý do được cộng điểm",
+                        minlength: "Vì bạn đã thêm ĐIỂM THƯỞNG nên vui lòng nhập lý do được cộng điểm",
+                    },
+                    ly_do_diem_tru: {
+                        required: "Vì bạn đã thêm ĐIỂM TRỪ nên vui lòng nhập lý do bị trừ điểm",
+                        minlength: "Vì bạn đã thêm ĐIỂM TRỪ nên vui lòng nhập lý do bị trừ điểm",
                     },
                     @php
                         foreach ($ket_qua_muc_A as $data) {

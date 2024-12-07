@@ -206,10 +206,37 @@
                             <a href="/dangxaydung" class="nav-link">
                                 <i class="fas fa-chart-bar"></i>
                                 <p>
-                                    4. Đánh giá, xếp loại cá nhân theo năm
+                                    4. Đánh giá, xếp loại theo năm
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item pl-3">
+                                    <a href="/tapthe/nhapketqua" class="nav-link">
+                                        <p>4.1. Nhập kết quả xếp loại của tập thể</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/tapthe/tracuu" class="nav-link">
+                                        <p>4.2. Tra cứu kết quả của tập thể</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/canhan/dukienxeploai" class="nav-link">
+                                        <p>4.3. Dự kiến xếp loại năm của cá nhân</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/canhan/nhapketqua" class="nav-link">
+                                        <p>4.4. Nhập kết quả xếp loại năm của cá nhân</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
+                                    <a href="/canhan/thongbaokq" class="nav-link">
+                                        <p>4.5. Thông báo kết quả xếp loại năm của cá nhân</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">

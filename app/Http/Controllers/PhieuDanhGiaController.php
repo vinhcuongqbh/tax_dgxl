@@ -6,6 +6,7 @@ use App\Models\DonVi;
 use App\Models\KetQuaMucA;
 use App\Models\KetQuaMucACucTruong;
 use App\Models\KetQuaMucB;
+use App\Models\KQXLNamTapThe;
 use App\Models\KQXLQuy;
 use App\Models\LyDoDiemCong;
 use App\Models\LyDoDiemTru;
@@ -30,7 +31,7 @@ class PhieuDanhGiaController extends Controller
 {
     use PhieuDanhGiaTrait;
     use DungChungTrait;
-    
+
     public function __construct()
     {
         // Cấp tự đánh giá
@@ -90,7 +91,8 @@ class PhieuDanhGiaController extends Controller
             // Xác định mẫu phiếu và thông tin về mẫu phiếu
             list($mau_phieu_danh_gia, $thong_tin_mau_phieu) = $this->xacDinhMauPhieu();
 
-            return view('danhgia.canhan_create',
+            return view(
+                'danhgia.canhan_create',
                 [
                     'mau_phieu' => $mau_phieu_danh_gia,
                     'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -161,7 +163,8 @@ class PhieuDanhGiaController extends Controller
             //if (Auth::user()->ma_chuc_vu == "01") $phieu_danh_gia->ket_qua_xep_loai = $ca_nhan_tu_xep_loai;
             $phieu_danh_gia->save();
 
-            return redirect()->route('phieudanhgia.canhan.show',
+            return redirect()->route(
+                'phieudanhgia.canhan.show',
                 [
                     'id' => $phieu_danh_gia->ma_phieu_danh_gia
                 ]
@@ -199,7 +202,8 @@ class PhieuDanhGiaController extends Controller
             $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
             $xep_loai = XepLoai::all();
 
-            return view('danhgia.canhan_edit',
+            return view(
+                'danhgia.canhan_edit',
                 [
                     'phieu_danh_gia' => $phieu_danh_gia,
                     'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -304,7 +308,8 @@ class PhieuDanhGiaController extends Controller
         $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
         $xep_loai = XepLoai::all();
 
-        return view('danhgia.canhan_show',
+        return view(
+            'danhgia.canhan_show',
             [
                 'phieu_danh_gia' => $phieu_danh_gia,
                 'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -342,7 +347,7 @@ class PhieuDanhGiaController extends Controller
 
     public function canhanList()
     {
-        $danh_sach_tu_danh_gia = PhieuDanhGia::where('so_hieu_cong_chuc', Auth::user()->so_hieu_cong_chuc)            
+        $danh_sach_tu_danh_gia = PhieuDanhGia::where('so_hieu_cong_chuc', Auth::user()->so_hieu_cong_chuc)
             ->orderBy('thoi_diem_danh_gia', 'DESC')
             ->get();
 
@@ -369,7 +374,7 @@ class PhieuDanhGiaController extends Controller
             // Đánh giá cho: 06-Phó chi Cục trưởng; 09-Đội trưởng; 10A-Phó Đội trưởng phụ trách
             $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('ma_trang_thai', [13, 15])
                 ->where('ma_don_vi', Auth::user()->ma_don_vi)
-                ->wherein('ma_chuc_vu', ['06', '09', '10A'])                
+                ->wherein('ma_chuc_vu', ['06', '09', '10A'])
                 ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         } elseif (in_array(Auth::user()->ma_chuc_vu, ['04', '05', '09', '07A', '08A', '10A'])) {
@@ -378,7 +383,7 @@ class PhieuDanhGiaController extends Controller
             $danh_sach_cap_tren_danh_gia = PhieuDanhGia::wherein('ma_trang_thai', [13, 15])
                 ->where('ma_don_vi', Auth::user()->ma_don_vi)
                 ->where('ma_phong', Auth::user()->ma_phong)
-                ->where('so_hieu_cong_chuc', '<>', Auth::user()->so_hieu_cong_chuc)                
+                ->where('so_hieu_cong_chuc', '<>', Auth::user()->so_hieu_cong_chuc)
                 ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->get();
         } else {
@@ -416,7 +421,8 @@ class PhieuDanhGiaController extends Controller
             $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
             $xep_loai = XepLoai::all();
 
-            return view('danhgia.captren_create',
+            return view(
+                'danhgia.captren_create',
                 [
                     'phieu_danh_gia' => $phieu_danh_gia,
                     'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -488,7 +494,8 @@ class PhieuDanhGiaController extends Controller
         $ngay_thuc_hien_danh_gia = Carbon::create($phieu_danh_gia->created_at);
         $xep_loai = XepLoai::all();
 
-        return view('danhgia.captren_show',
+        return view(
+            'danhgia.captren_show',
             [
                 'phieu_danh_gia' => $phieu_danh_gia,
                 'thong_tin_mau_phieu' => $thong_tin_mau_phieu,
@@ -571,11 +578,12 @@ class PhieuDanhGiaController extends Controller
             // 07A- Phó Chánh Văn phòng phụ trách; 08A-Phó Trưởng phòng phụ trách; 10A-Phó Đội trưởng phụ trách
             // Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế            
             $danh_sach = PhieuDanhGia::where('ma_trang_thai', '17')
-                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
                 ->where(function ($query) {
                     $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
                         ->orwhere('ma_don_vi', Auth::user()->ma_don_vi);
-                })                
+                })
                 ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
@@ -585,13 +593,14 @@ class PhieuDanhGiaController extends Controller
             // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục trưởng phụ trách
             // Phê duyệt cho Công chức thuộc Chi cục     
             $danh_sach = PhieuDanhGia::where('ma_don_vi', Auth::user()->ma_don_vi)
-                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
                 ->where('ma_trang_thai', '17')
                 ->where('ma_chuc_vu', null)
                 ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
                 ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where('ma_trang_thai', '16')
-                ->where('ma_chuc_vu', '<>', null)                
+                ->where('ma_chuc_vu', '<>', null)
                 ->orderBy('thoi_diem_danh_gia', 'DESC')
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
@@ -617,11 +626,12 @@ class PhieuDanhGiaController extends Controller
                 // 07A- Phó Chánh Văn phòng phụ trách; 08A-Phó Trưởng phòng phụ trách; 10A-Phó Đội trưởng phụ trách
                 // Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế   
                 $danh_sach = PhieuDanhGia::where('ma_trang_thai', '17')
-                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                    // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
                     ->where(function ($query) {
                         $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
                             ->orwhere('ma_don_vi', Auth::user()->ma_don_vi);
-                    })                    
+                    })
                     ->orderBy('thoi_diem_danh_gia', 'DESC')
                     ->orderBy('ma_don_vi', 'ASC')
                     ->orderBy('ma_phong', 'ASC')
@@ -631,13 +641,14 @@ class PhieuDanhGiaController extends Controller
                 // Nếu Người dùng có chức vụ Chi cục Trưởng, Phó Chi cục trưởng phụ trách
                 // Đánh giá cho Công chức không giữ chức vụ lãnh đạo thuộc Chi cục     
                 $danh_sach = PhieuDanhGia::where('ma_don_vi', Auth::user()->ma_don_vi)
-                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                    // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
                     ->where('ma_trang_thai', '17')
                     ->where('ma_chuc_vu', null)
                     ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
                     ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                     ->where('ma_trang_thai', '16')
-                    ->where('ma_chuc_vu', '<>', null)                    
+                    ->where('ma_chuc_vu', '<>', null)
                     ->orderBy('thoi_diem_danh_gia', 'DESC')
                     ->orderBy('ma_don_vi', 'ASC')
                     ->orderBy('ma_phong', 'ASC')
@@ -707,7 +718,7 @@ class PhieuDanhGiaController extends Controller
 
         if ($ma_don_vi == 4400) {
             $danh_sach = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
-                ->where('ma_trang_thai', '>=', 19)                
+                ->where('ma_trang_thai', '>=', 19)
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -715,7 +726,7 @@ class PhieuDanhGiaController extends Controller
         } else {
             $danh_sach = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('ma_trang_thai', '>=', 19)
-                ->where('ma_don_vi', $ma_don_vi)                
+                ->where('ma_don_vi', $ma_don_vi)
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -1773,7 +1784,7 @@ class PhieuDanhGiaController extends Controller
         if ($ma_don_vi == 4400) {
             $phieu_danh_gia = PhieuDanhGia::where('ly_do_khong_tu_danh_gia', '<>', null)
                 ->where('thoi_diem_danh_gia', '>=', $thang_dau_tien->toDateString())
-                ->where('thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())                
+                ->where('thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -1784,7 +1795,7 @@ class PhieuDanhGiaController extends Controller
             $phieu_danh_gia = PhieuDanhGia::where('ly_do_khong_tu_danh_gia', '<>', null)
                 ->where('thoi_diem_danh_gia', '>=', $thang_dau_tien->toDateString())
                 ->where('thoi_diem_danh_gia', '<=', $thang_cuoi_cung->toDateString())
-                ->where('ma_don_vi', $ma_don_vi)                
+                ->where('ma_don_vi', $ma_don_vi)
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -1797,7 +1808,8 @@ class PhieuDanhGiaController extends Controller
         $don_vi = DonVi::where('ma_don_vi', '<>', '4400')->where('ma_trang_thai', 1)->get();
         $phong = Phong::where('ma_trang_thai', 1)->get();
 
-        return view('danhgia.phieuKTDG_list',
+        return view(
+            'danhgia.phieuKTDG_list',
             [
                 'thang_dau_tien' => $thang_dau_tien,
                 'thang_cuoi_cung' => $thang_cuoi_cung,
@@ -1901,7 +1913,7 @@ class PhieuDanhGiaController extends Controller
         if ($ma_don_vi == 4400) {
             $phieu_danh_gia = PhieuDanhGia::where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('ket_qua_xep_loai', $request->xep_loai)
-                ->where('ma_trang_thai', '>=', 13)                
+                ->where('ma_trang_thai', '>=', 13)
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -1912,7 +1924,7 @@ class PhieuDanhGiaController extends Controller
             $phieu_danh_gia = PhieuDanhGia::where('ma_don_vi', $ma_don_vi)
                 ->where('thoi_diem_danh_gia', $thoi_diem_danh_gia->toDateString())
                 ->where('ket_qua_xep_loai', $request->xep_loai)
-                ->where('ma_trang_thai', '>=', 13)               
+                ->where('ma_trang_thai', '>=', 13)
                 ->orderBy('ma_don_vi', 'ASC')
                 ->orderBy('ma_phong', 'ASC')
                 ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -2053,7 +2065,7 @@ class PhieuDanhGiaController extends Controller
     public function danhSachChiCucTruongPheDuyet()
     {
         $user_list = User::where('ma_don_vi', Auth::user()->ma_don_vi)
-            ->where('ma_chuc_vu', null)            
+            ->where('ma_chuc_vu', null)
             ->orderBy('ma_don_vi', 'ASC')
             ->orderBy('ma_phong', 'ASC')
             ->orderByRaw('ISNULL(ma_chuc_vu), ma_chuc_vu ASC')
@@ -2150,6 +2162,72 @@ class PhieuDanhGiaController extends Controller
         return $user_list;
     }
 
+    public function nhapKetQuaTapThe(Request $request)
+    {
+        // Trường hợp không chọn năm đánh giá
+        if (!isset($request->nam_danh_gia)) {
+            $thoi_diem_danh_gia = Carbon::now()->subMonth()->endOfMonth();
+        } else {
+            $thoi_diem_danh_gia = Carbon::createFromDate($request->nam_danh_gia, $request->thang_danh_gia)->endOfMonth();
+        }
+
+        // Trường hợp không chọn đơn vị
+        if (!isset($request->ma_don_vi_da_chon)) {
+            $ma_don_vi = 4400;
+        } else {
+            $ma_don_vi = $request->ma_don_vi_da_chon;
+        }
+
+        if ($ma_don_vi == 4400) {
+            $don_vi = DonVi::where('ma_don_vi', '<>', '4400')
+                ->where('ma_trang_thai', 1)
+                ->get();
+            $kqxl = Phong::where('ma_trang_thai', 1)
+                ->kqxl()
+                ->where('nam_danh_gia', $thoi_diem_danh_gia->year)
+                ->get();
+        } else {
+            $don_vi = DonVi::where('ma_don_vi', '<>', '4400')
+                ->where('ma_don_vi', $ma_don_vi)
+                ->where('ma_trang_thai', 1)
+                ->get();
+            $kqxl = Phong::where('ma_don_vi_cap_tren', $ma_don_vi)
+                ->where('ma_trang_thai', 1)
+                ->kqxl()
+                ->where('nam_danh_gia', $thoi_diem_danh_gia->year)
+                ->get();
+        }
+        $ds_don_vi = DonVi::where('ma_trang_thai', 1)->get();
+
+        return view('danhgiatapthe.create', [
+            'thoi_diem_danh_gia' => $thoi_diem_danh_gia,
+            'don_vi' => $don_vi,
+            'phong' => $kqxl,
+            'ds_don_vi' => $ds_don_vi,
+            'ma_don_vi_da_chon' => $request->ma_don_vi_da_chon,
+        ]);
+    }
+
+
+    public function luuKetQuaTapThe(Request $request)
+    {
+        $phong = Phong::where('ma_trang_thai', 1)->get();
+
+        foreach ($phong as $ph) {
+            if ($request->input($ph->ma_phong) !== NULL) {
+                $kqxl = KQXLNamTapThe::updateOrCreate(
+                    [
+                        'nam_danh_gia' => $request->nam_danh_gia_2,
+                        'ma_phong' => $ph->ma_phong,
+                    ],
+                    [
+                        'ket_qua_xep_loai' => $request->input($ph->ma_phong),
+                        'ma_trang_thai' => 1,
+                    ]
+                );
+            }
+        }
+    }
 
     public function dangxaydung()
     {

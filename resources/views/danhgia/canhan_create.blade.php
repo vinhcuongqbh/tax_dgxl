@@ -31,7 +31,8 @@
                             <br>
                             <br>
                             <h4 class="text-center text-bold my-0">PHIẾU ĐÁNH GIÁ, XẾP LOẠI CHẤT LƯỢNG HẰNG THÁNG</h4>
-                            <h6 class="text-center font-italic my-0">(Áp dụng đối với {{ $thong_tin_mau_phieu['doi_tuong_ap_dung'] }})
+                            <h6 class="text-center font-italic my-0">(Áp dụng đối với
+                                {{ $thong_tin_mau_phieu['doi_tuong_ap_dung'] }})
                             </h6>
                             <h6 class="text-center align-middle my-0">Tháng
                                 <input type="number" class="text-center" id="thang_danh_gia" name="thang_danh_gia"
@@ -47,7 +48,8 @@
                             @if ($thong_tin_mau_phieu['mau'] == 'mau01A')
                                 <h6>&emsp;&emsp;&emsp;- Chức vụ: {{ $user->chuc_vu->ten_chuc_vu }}</h6>
                             @endif
-                            <h6>&emsp;&emsp;&emsp;- Đơn vị: {{ $user->phong->ten_phong }}, {{ $user->don_vi->ten_don_vi }}</h6>
+                            <h6>&emsp;&emsp;&emsp;- Đơn vị: {{ $user->phong->ten_phong }}, {{ $user->don_vi->ten_don_vi }}
+                            </h6>
                             <br>
 
                             {{-- Phần A --}}
@@ -145,7 +147,8 @@
                                         <td></td>
                                         <td class="align-middle text-bold">TỔNG CỘNG</td>
                                         <td></td>
-                                        <td class="align-middle text-center text-bold" id="tong_diem_tu_cham"> {{-- display-4 p-0 --}}
+                                        <td class="align-middle text-center text-bold" id="tong_diem_tu_cham">
+                                            {{-- display-4 p-0 --}}
                                             90
                                         </td>
                                     </tr>
@@ -189,12 +192,12 @@
                             {{-- Mục Lý do Điểm thưởng --}}
                             <h6>&emsp;&emsp;&emsp;- Các nhiệm vụ có sáng kiến, đổi mới, sáng tạo, mang lại hiệu quả được
                                 áp dụng điểm thưởng: <i>(mô tả tóm tắt cách thức, hiệu quả mang lại)</i></h6>
-                            <div class="form-group">
+                            <div class="form-group align-middle">
                                 <textarea class="form-control" id="ly_do_diem_cong" name="ly_do_diem_cong" rows="7"></textarea>
                             </div>
                             {{-- Mục Lý do Điểm trừ --}}
                             <h6>&emsp;&emsp;&emsp;- Lý do áp dụng điểm trừ: <i>(mô tả tóm tắt)</i></h6>
-                            <div class="form-group">
+                            <div class="form-group align-middle">
                                 <textarea class="form-control" id="ly_do_diem_tru" name="ly_do_diem_tru" rows="7"></textarea>
                             </div>
                             {{-- Mục Cá nhân tự xếp loại --}}
@@ -265,8 +268,10 @@
                                     <tr>
                                         <td class="py-0"></td>
                                         <td class="py-0"></td>
-                                        <td class="text-center font-italic py-0">Ngày {{ $ngay_thuc_hien_danh_gia->day }} tháng
-                                            {{ $ngay_thuc_hien_danh_gia->month }} năm {{ $ngay_thuc_hien_danh_gia->year }} </td>
+                                        <td class="text-center font-italic py-0">Ngày {{ $ngay_thuc_hien_danh_gia->day }}
+                                            tháng
+                                            {{ $ngay_thuc_hien_danh_gia->month }} năm {{ $ngay_thuc_hien_danh_gia->year }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="text-center text-bold py-0">LÃNH ĐẠO ĐƠN VỊ</td>
@@ -457,7 +462,7 @@
                         targets: [0, 1, 2, 3, 4, 5, 6]
                     }
                 ],
-            })            
+            })
 
             //Xóa Dòng
             table.on('click', 'tbody tr', (e) => {
@@ -473,6 +478,7 @@
 
             //Thêm Dòng
             let ma_tieu_chi = 1;
+
             function addNewRow() {
                 if (ma_tieu_chi <= 50) {
                     table.row
@@ -540,6 +546,18 @@
                         min: 1,
                         max: {{ $thoi_diem_danh_gia->month }},
                     },
+                    ly_do_diem_cong: {
+                        required: function(element) {
+                            return $("#tc_400").val() > 0;
+                        },
+                        minlength: 5,
+                    },
+                    ly_do_diem_tru: {
+                        required: function(element) {
+                            return $("#tc_500").val() > 0;
+                        },
+                        minlength: 5,
+                    },
                     @php
                         foreach ($mau_phieu as $data) {
                             echo '
@@ -561,6 +579,14 @@
                         required: "Vui lòng nhập thông tin",
                         min: "Không nhập số âm",
                         max: "Chưa đến thời điểm đánh giá",
+                    },
+                    ly_do_diem_cong: {
+                        required: "Vì bạn đã thêm ĐIỂM THƯỞNG nên vui lòng nhập lý do được cộng điểm",
+                        minlength: "Vì bạn đã thêm ĐIỂM THƯỞNG nên vui lòng nhập lý do được cộng điểm",
+                    },
+                    ly_do_diem_tru: {
+                        required: "Vì bạn đã thêm ĐIỂM TRỪ nên vui lòng nhập lý do bị trừ điểm",
+                        minlength: "Vì bạn đã thêm ĐIỂM TRỪ nên vui lòng nhập lý do bị trừ điểm",
                     },
                     @php
                         foreach ($mau_phieu as $data) {
