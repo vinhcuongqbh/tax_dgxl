@@ -131,6 +131,10 @@ Route::middleware('auth')->group(function () {
         Route::get('tracuuketqua', [PhieuDanhGiaController::class, 'traCuuKetQuaTapThe'])->name('tapthe.tracuu');       
     });
 
+    Route::group(['prefix' => 'canhan'], function () {
+        Route::get('dukienkqxlnam', [PhieuDanhGiaController::class, 'dukienkqxlnam'])->name('canhan.dukienkqxlnam');  
+    });
+
     Route::group(['prefix' => 'phieuKTDG'], function () {
         Route::get('create', [PhieuDanhGiaController::class, 'phieuKTDGCreate'])->name('phieuKTDG.create');
         Route::post('store', [PhieuDanhGiaController::class, 'phieuKTDGStore'])->name('phieuKTDG.store');

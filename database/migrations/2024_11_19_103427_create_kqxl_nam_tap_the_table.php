@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('ma_phong');
             $table->string('nam_danh_gia');
             $table->string('ket_qua_xep_loai');
+            $table->string('ma_can_bo_cap_nhat');
             $table->tinyInteger('ma_trang_thai');
             $table->timestamps();
         });

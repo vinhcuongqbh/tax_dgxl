@@ -217,12 +217,12 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/tapthe/tracuu" class="nav-link">
+                                    <a href="/tapthe/tracuuketqua" class="nav-link">
                                         <p>4.2. Tra cứu kết quả của tập thể</p>
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/canhan/dukienxeploai" class="nav-link">
+                                    <a href="/canhan/dukienkqxlnam" class="nav-link">
                                         <p>4.3. Dự kiến xếp loại năm của cá nhân</p>
                                     </a>
                                 </li>

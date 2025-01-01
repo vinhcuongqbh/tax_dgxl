@@ -3,35 +3,38 @@
 @section('title', 'Nhập kết quả xếp loại năm của tập thể')
 
 @section('heading')
-    <form action="{{ route('tapthe.nhapketqua') }}" method="post">
-        @csrf
-        <div class="d-flex">
-            <div class="col-4">
-                Nhập KQXL năm của tập thể
-            </div>
-            <div class="d-flex justify-content-end col-8">
-                <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
-                <select id="ma_don_vi_da_chon" name="ma_don_vi_da_chon" class="form-control custom-select col-6">
-                    @foreach ($ds_don_vi as $ds_don_vi)
-                        <option value="{{ $ds_don_vi->ma_don_vi }}" @if ($ma_don_vi_da_chon == $ds_don_vi->ma_don_vi) selected @endif>
-                            {{ $ds_don_vi->ten_don_vi }}</option>
-                    @endforeach
-                </select>
-                <label class="h6 mt-2 mx-2">Năm</label>
-                <input type="number" name="nam_danh_gia" value="{{ $thoi_diem_danh_gia->year }}"
-                    class="form-control  text-center">
-                <button type="submit" class="btn bg-olive form-control ml-2">Xem</button>
-            </div>
+    <div class="d-flex">
+        <div class="col-4">
+            Nhập KQXL năm của tập thể
         </div>
-    </form>
+        <div class="d-flex justify-content-end col-8">
+            {{-- <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
+        <select id="ma_don_vi_da_chon" name="ma_don_vi_da_chon" class="form-control custom-select col-6">
+            @foreach ($ds_don_vi as $ds_don_vi)
+                <option value="{{ $ds_don_vi->ma_don_vi }}" @if ($ma_don_vi_da_chon == $ds_don_vi->ma_don_vi) selected @endif>
+                    {{ $ds_don_vi->ten_don_vi }}</option>
+            @endforeach
+        </select> --}}
+            <label class="h6 mt-2 mx-2">Năm</label>
+            <input type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $thoi_diem_danh_gia->year }}"
+                onchange="setNamDangGia()" class="form-control text-center col-2">
+        </div>
+    </div>
 @stop
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <form action="{{ route('tapthe.luuketqua') }}" method="post" id="luuketqua">
-                    @csrf
+    <form action="{{ route('tapthe.luuketqua') }}" method="post" id="luuketqua">
+        @csrf
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
                     <div class="card card-default">
                         <div class="card-body">
                             <table id="table" class="table table-bordered table-striped">
@@ -68,13 +71,14 @@
                                                 <td class="text-center">{{ $ph->ma_phong }}</td>
                                                 <td>{{ $ph->ten_phong }}</td>
                                                 <td class="text-center">
-                                                    <select id="{{ $ph->ma_phong }}" name="{{ $ph->ma_phong }}"
+                                                    <select id="e{{ $ph->ma_phong }}" name="{{ $ph->ma_phong }}"
                                                         class="form-control custom-select">
                                                         <option selected></option>
-                                                        <option value="A" @if ($ph->ket_qua_xep_loai == "A") selected @endif>A</option>
-                                                        <option value="B" @if ($ph->ket_qua_xep_loai == "B") selected @endif>B</option>
-                                                        <option value="C" @if ($ph->ket_qua_xep_loai == "C") selected @endif>C</option>
-                                                        <option value="D" @if ($ph->ket_qua_xep_loai == "D") selected @endif>D</option>
+                                                        @foreach ($xep_loai as $xl)
+                                                            <option value="{{ $xl->ma_xep_loai }}"
+                                                                @if ($ph->ket_qua_xep_loai == '{{ $xl->ma_xep_loai }}') selected @endif>
+                                                                {{ $xl->ma_xep_loai }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </td>
                                                 <td></td>
@@ -86,17 +90,16 @@
                             </table>
                         </div>
                         <!-- /.card-body -->
+                        <input type="hidden" id="nam_danh_gia_2" name="nam_danh_gia_2" value="{{ $thoi_diem_danh_gia->year }}">
                     </div>
                     <!-- /.card -->
-                    <input type="hidden" name="nam_danh_gia_2" value="{{ $thoi_diem_danh_gia->year }}"
-                    class="form-control  text-center">
-                </form>
+                </div>
+                <!-- /.col -->
             </div>
-            <!-- /.col -->
+            <!-- /.row -->
         </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
+    </form>
 @stop
 
 @section('css')
@@ -138,4 +141,9 @@
             }).buttons().container().appendTo('#table_wrapper .col-md-6:eq(0)');
         });
     </script>
+    <script>
+        function setNamDangGia() {
+            document.getElementById("nam_danh_gia_2").value = document.getElementById("nam_danh_gia").value;
+        }
+    </script>    
 @stop
