@@ -232,7 +232,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
-                                    <a href="/canhan/thongbaokq" class="nav-link">
+                                    <a href="/phieudanhgia/thongbaonam" class="nav-link">
                                         <p>4.5. Thông báo kết quả xếp loại năm của cá nhân</p>
                                     </a>
                                 </li>

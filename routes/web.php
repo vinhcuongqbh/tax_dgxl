@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\BaocaoController;
 use App\Http\Controllers\DonViController;
+use App\Http\Controllers\KQXLNamController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PhieuDanhGiaController;
 use App\Http\Controllers\PhongController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XepLoaiController;
+use App\Http\Controllers\ExcelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,15 +112,20 @@ Route::middleware('auth')->group(function () {
         Route::get('capqdList', [PhieuDanhGiaController::class, 'capqdList'])->name('phieudanhgia.capqd.list');
         Route::get('capqdpheduyethang', [PhieuDanhGiaController::class, 'capQDPheDuyetThang'])->name('phieudanhgia.capqd.pheduyetthang');
         Route::get('{id}/capqdSendBack', [PhieuDanhGiaController::class, 'capqdSendBack'])->name('phieudanhgia.capqd.sendback');
-        Route::get('thongbaothang', [PhieuDanhGiaController::class, 'thongBaoThang'])->name('phieudanhgia.thongbaothang');
+        Route::get('thongbaothang', [PhieuDanhGiaController::class, 'thongBaoThang']);
+        Route::post('thongbaothang', [PhieuDanhGiaController::class, 'thongBaoThang'])->name('phieudanhgia.thongbaothang');
         Route::get('baocaothang', [PhieuDanhGiaController::class, 'baoCaoThang']);
         Route::post('baocaothang', [PhieuDanhGiaController::class, 'baoCaoThang'])->name('phieudanhgia.baocaothang');
 
         Route::get('capqddsquy', [PhieuDanhGiaController::class, 'capQDDSQuy'])->name('phieudanhgia.capqd.dsquy');
         Route::get('capqdpheduyetdsquy', [PhieuDanhGiaController::class, 'capQDPheDuyetDSQuy'])->name('phieudanhgia.capqd.pheduyetdsquy');
-        Route::get('thongbaoquy', [PhieuDanhGiaController::class, 'thongBaoQuy'])->name('phieudanhgia.thongbaoquy');
+        Route::get('thongbaoquy', [PhieuDanhGiaController::class, 'thongBaoQuy']);
+        Route::post('thongbaoquy', [PhieuDanhGiaController::class, 'thongBaoQuy'])->name('phieudanhgia.thongbaoquy');
         Route::get('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy']);
         Route::post('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
+
+        Route::get('thongbaonam', [PhieuDanhGiaController::class, 'thongBaoNam']);
+        Route::post('thongbaonam', [PhieuDanhGiaController::class, 'thongBaoNam'])->name('phieudanhgia.thongbaonam');
 
         Route::get('tracuu', [PhieuDanhGiaController::class, 'traCuu']);
         Route::post('tracuu', [PhieuDanhGiaController::class, 'traCuu'])->name('phieudanhgia.tracuu');
@@ -132,7 +139,11 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'canhan'], function () {
-        Route::get('dukienkqxlnam', [PhieuDanhGiaController::class, 'dukienkqxlnam'])->name('canhan.dukienkqxlnam');  
+        Route::get('dukienkqxlnam', [KQXLNamController::class, 'dukienkqxlnam'])->name('canhan.dukienkqxlnam');  
+        Route::get('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam'])->name('canhan.nhapketqua');
+        Route::post('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam']);
+        Route::post('readExcel', [KQXLNamController::class, 'readExcel'])->name('canhan.readExcel');
+
     });
 
     Route::group(['prefix' => 'phieuKTDG'], function () {

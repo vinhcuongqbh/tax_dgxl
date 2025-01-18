@@ -44,7 +44,7 @@
                             <thead style="text-align: center">
                                 <tr>
                                     <th class="text-center align-middle">STT</th>
-                                    {{-- <th class="text-center align-middle">Số hiệu</th> --}}
+                                    <th class="text-center align-middle">Số hiệu</th>
                                     <th class="text-center align-middle">Họ và tên</th>
                                     <th class="text-center align-middle">Ngày sinh</th>
                                     <th class="text-center align-middle">Chức vụ</th>
@@ -58,7 +58,7 @@
                                 @foreach ($cong_chuc as $cong_chuc)
                                     <tr>
                                         <td class="text-center">{{ $i++ }}</td>
-                                        {{-- <td class="text-center">{{ $cong_chuc->so_hieu_cong_chuc }}</td>                                         --}}
+                                        <td class="text-center">{{ $cong_chuc->so_hieu_cong_chuc }}</td>
                                         <td><a href="{{ route('congchuc.edit', $cong_chuc->so_hieu_cong_chuc) }}">
                                                 {{ $cong_chuc->name }}</a>
                                         </td>

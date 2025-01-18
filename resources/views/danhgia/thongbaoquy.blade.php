@@ -3,7 +3,7 @@
 @section('title', 'Thông báo kết quả xếp loại quý')
 
 @section('heading')
-    <form action="{{ route('phieudanhgia.thongbaoquy') }}" method="get" id="mauphieudanhgia">
+    <form action="{{ route('phieudanhgia.thongbaoquy') }}" method="post" id="mauphieudanhgia">
         @csrf
         <div class="d-flex">
             <div class="col-4">

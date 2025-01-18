@@ -1,11 +1,11 @@
 @extends('dashboard')
 
-@section('title', 'Nhập kết quả xếp loại năm của tập thể')
+@section('title', 'Nhập kết quả xếp loại năm của cá nhân')
 
 @section('heading')
     <div class="d-flex">
         <div class="col-4">
-            Nhập KQXL năm của tập thể
+            Nhập KQXL năm của cá nhân
         </div>
         <div class="d-flex justify-content-end col-8">
             {{-- <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
@@ -16,7 +16,7 @@
             @endforeach
         </select> --}}
             <label class="h6 mt-2 mx-2">Năm</label>
-            <input type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $thoi_diem_danh_gia->year }}"
+            <input type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $thoi_diem_danh_gia->year }}" max="{{ $thoi_diem_danh_gia->year }}"
                 onchange="setNamDangGia()" class="form-control text-center col-2">
         </div>
     </div>
