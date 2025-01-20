@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('ma_kqxl')->unique();            
             $table->string('so_hieu_cong_chuc');
+            $table->string('ma_chuc_vu')->nullable();
+            $table->string('ma_phong');
+            $table->string('ma_don_vi');
             $table->string('nam_danh_gia');
-            $table->string('kqxl')->nullable(); 
+            $table->string('kqxl'); 
             $table->string('ma_can_bo_cap_nhat');
             $table->tinyInteger('ma_trang_thai')->default(1);
             $table->timestamps();

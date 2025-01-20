@@ -16,20 +16,28 @@
     <div class="container-fluid">
         <form action="{{ route('canhan.readExcel') }}" method="POST" enctype="multipart/form-data" class="col-6 py-3">
             @csrf
+            <div class="row pb-3">
+                <div class="col-auto">
+                    <label>File mẫu KQXL Năm </label>
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-primary" href="/canhan/kqxlNamTemplate">Tải file</a>
+                </div>
+            </div>
             <div class="row">
-                    <div class="col-auto">
-                        <label>Upload file</label>
+                <div class="col-auto">
+                    <label>Upload file</label>
+                </div>
+                <div class="col-auto">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="KQXLNam" name="KQXLNam"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label class="custom-file-label" for="KQXLNam"></label>
                     </div>
-                    <div class="col-auto">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="KQXLNam" name="KQXLNam"
-                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                            <label class="custom-file-label" for="KQXLNam"></label>
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
             </div>
         </form>
         <div class="row">
@@ -39,8 +47,11 @@
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
                                 <col style="width:5%;">
-                                <col style="width:25%;">
-                                <col style="width:25%;">
+                                <col style="width:10%;">
+                                <col style="width:20%;">
+                                <col style="width:7%;">
+                                <col style="width:7%;">
+                                <col style="width:7%;">
                                 <col style="width:10%;">
                                 <col style="width:10%;">
                                 <col style="width:25%;">
@@ -52,6 +63,9 @@
                                     <th class="text-center align-middle">STT</th>
                                     <th class="text-center align-middle">Số hiệu công chức</th>
                                     <th class="text-center align-middle">Họ và tên</th>
+                                    <th class="text-center align-middle">Mã chức vụ</th>
+                                    <th class="text-center align-middle">Mã phòng</th>
+                                    <th class="text-center align-middle">Mã đơn vị</th>
                                     <th class="text-center align-middle">Xếp loại</th>
                                     <th class="text-center align-middle">Năm đánh giá</th>
                                     <th class="text-center align-middle">Ghi chú</th>
@@ -67,6 +81,9 @@
                                             <td class="text-center">{{ $i++ }}</td>
                                             <td class="text-center">{{ $phieu['so_hieu_cong_chuc'] }}</td>
                                             <td>{{ $phieu['name'] }}</td>
+                                            <td class="text-center">{{ $phieu['ma_chuc_vu'] }}</td>
+                                            <td class="text-center">{{ $phieu['ma_phong'] }}</td>
+                                            <td class="text-center">{{ $phieu['ma_don_vi'] }}</td>
                                             <td class="text-center">{{ $phieu['xep_loai'] }}</td>
                                             <td class="text-center">{{ $phieu['nam_danh_gia'] }}</td>
                                             <td class="text-justify">{{ $phieu['ghi_chu'] }}</td>

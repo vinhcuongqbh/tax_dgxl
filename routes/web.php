@@ -143,7 +143,7 @@ Route::middleware('auth')->group(function () {
         Route::get('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam'])->name('canhan.nhapketqua');
         Route::post('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam']);
         Route::post('readExcel', [KQXLNamController::class, 'readExcel'])->name('canhan.readExcel');
-
+        Route::get('kqxlNamTemplate', [KQXLNamController::class, 'downloadKQXLNamTemplate'])->name('canhan.donwnloadKQXLNamTemplate');
     });
 
     Route::group(['prefix' => 'phieuKTDG'], function () {

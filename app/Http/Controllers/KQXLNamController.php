@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KQXLNamTemplate;
 use Illuminate\Http\Request;
-use App\Imports\KQLXNamImport;
 use App\Imports\KQXLNamImport;
 use App\Models\DonVi;
 use App\Models\KQXLQuy;
@@ -154,4 +154,10 @@ class KQXLNamController extends Controller
             ]);
         }
     }
+
+
+    public function downloadKQXLNamTemplate() 
+{
+    return Excel::download(new KQXLNamTemplate, 'KQLXNam.xlsx');
+}
 }

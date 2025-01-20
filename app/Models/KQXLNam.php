@@ -14,6 +14,9 @@ class KQXLNam extends Model
     protected $fillable = [
         'ma_kqxl',
         'so_hieu_cong_chuc',
+        'ma_chuc_vu',
+        'ma_phong',
+        'ma_don_vi',
         'nam_danh_gia',
         'kqxl',
         'ma_can_bo_cap_nhat',

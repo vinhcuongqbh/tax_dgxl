@@ -2,7 +2,10 @@
 
 namespace App\Imports;
 
+use App\Models\ChucVu;
+use App\Models\DonVi;
 use App\Models\KQXLNam;
+use App\Models\Phong;
 use App\Models\User;
 use App\Models\XepLoai;
 use Illuminate\Support\Collection;
@@ -24,12 +27,19 @@ class KQXLNamImport implements ToCollection, WithStartRow
         foreach ($rows as $row) {
             $error = 0;
             $error_cc = "";
+            $error_chuc_vu = "";
+            $error_phong = "";
+            $error_don_vi = "";
             $error_kqxl = "";
             $error_nam = "";
 
             $cong_chuc = User::where('so_hieu_cong_chuc', $row[1])->get();
-            $kqxl = XepLoai::where('ma_xep_loai', $row[3])->get();
-            $nam_xep_loai = $row[4];
+            if (isset($row[3])) $ma_chuc_vu = ChucVu::where('ma_chuc_vu', $row[3])->get()->count();
+            else $ma_chuc_vu = 1;
+            $ma_phong = Phong::where('ma_phong', $row[5])->get();
+            $ma_don_vi = DonVi::where('ma_don_vi', $row[7])->get();
+            $kqxl = XepLoai::where('ma_xep_loai', $row[9])->get();
+            $nam_xep_loai = $row[10];
 
             // if ($nam_xep_loai == null) $nam_xep_loai = " ";          
 
@@ -37,6 +47,24 @@ class KQXLNamImport implements ToCollection, WithStartRow
                 $error++;
                 $error_sum++;
                 $error_cc = "Lỗi CCCD không có trong cơ sở dữ liệu.";
+            }
+
+            if ($ma_chuc_vu == 0) {
+                $error++;
+                $error_sum++;
+                $error_chuc_vu = "Lỗi mã Chức vụ không có trong cơ sở dữ liệu";
+            }
+
+            if ($ma_phong->count() == 0) {
+                $error++;
+                $error_sum++;
+                $error_phong = "Lỗi mã Phòng không có trong cơ sở dữ liệu";
+            }
+
+            if ($ma_don_vi->count() == 0) {
+                $error++;
+                $error_sum++;
+                $error_don_vi = "Lỗi mã Đơn vị không có trong cơ sở dữ liệu";
             }
 
             if ($kqxl->count() == 0) {
@@ -55,9 +83,13 @@ class KQXLNamImport implements ToCollection, WithStartRow
                 $error_list->push([
                     'so_hieu_cong_chuc' => $row[1],
                     'name' => $row[2],
-                    'xep_loai' => $row[3],
-                    'nam_danh_gia' => $row[4],
-                    'ghi_chu' => $error_cc . "\n". $error_kqxl . "\n". $error_nam
+                    'ma_chuc_vu' => $row[3],
+                    'ma_phong' => $row[5],
+                    'ma_don_vi' => $row[7],
+                    'xep_loai' => $row[9],
+                    'nam_danh_gia' => $row[10],
+                    'ghi_chu' => $error_cc . "\n" . $error_chuc_vu . "\n" . $error_phong
+                        . "\n" . $error_don_vi . "\n" . $error_kqxl . "\n" . $error_nam
                 ]);
             }
         }
@@ -66,11 +98,14 @@ class KQXLNamImport implements ToCollection, WithStartRow
         if ($error_sum == 0) {
             foreach ($rows as $row) {
                 KQXLNam::updateOrCreate(
-                    ['ma_kqxl' => $row[4] . "_" . $row[1]],
+                    ['ma_kqxl' => $row[10] . "_" . $row[1]],
                     [
                         'so_hieu_cong_chuc' => $row[1],
-                        'nam_danh_gia' => $row[4],
-                        'kqxl' => $row[3],
+                        'ma_chuc_vu' => $row[3],
+                        'ma_phong' => $row[5],
+                        'ma_don_vi' => $row[7],
+                        'kqxl' => $row[9],
+                        'nam_danh_gia' => $row[10],                        
                         'ma_can_bo_cap_nhat' => Auth::user()->so_hieu_cong_chuc,
                         'ma_trang_thai' => 1
                     ]

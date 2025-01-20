@@ -1304,9 +1304,9 @@ class PhieuDanhGiaController extends Controller
     public function thongBaoNam(Request $request)
     {
         //Xác định quý đánh giá, năm đánh giá
-        if (isset($request->nam_danh_gia)) {            
+        if (isset($request->nam_danh_gia)) {
             $nam_danh_gia = $request->nam_danh_gia;
-        } else {          
+        } else {
             $nam_danh_gia = Carbon::now()->subYear()->year;
         }
 
@@ -1320,31 +1320,27 @@ class PhieuDanhGiaController extends Controller
         $thang_cuoi_cung = Carbon::create($nam_danh_gia)->endOfYear();
 
         if ($ma_don_vi == 4400) {
-            $danh_sach = KQXLNam::where('kqxl_nam.nam_danh_gia', $nam_danh_gia)                
-                ->leftjoin('phieu_danh_gia', 'kqxl_nam.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+            $danh_sach = KQXLNam::where('kqxl_nam.nam_danh_gia', $nam_danh_gia)
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'kqxl_nam.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'kqxl_nam.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'kqxl_nam.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'kqxl_nam.ma_don_vi')
                 ->select('kqxl_nam.*', 'users.name', 'chuc_vu.ma_chuc_vu', 'chuc_vu.ten_chuc_vu', 'phong.ma_phong', 'don_vi.ma_don_vi')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
+                ->orderBy('kqxl_nam.ma_don_vi', 'ASC')
+                ->orderBy('kqxl_nam.ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(kqxl_nam.ma_chuc_vu), kqxl_nam.ma_chuc_vu ASC')
                 ->get();
         } else {
             $danh_sach = KQXLNam::where('kqxl_nam.nam_danh_gia', $nam_danh_gia)
-                ->leftjoin('phieu_danh_gia', 'kqxl_nam.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->where('phieu_danh_gia.thoi_diem_danh_gia', $thang_cuoi_cung->toDateString())
-                ->where('phieu_danh_gia.ma_don_vi', $ma_don_vi)
-                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'phieu_danh_gia.so_hieu_cong_chuc')
-                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'phieu_danh_gia.ma_chuc_vu')
-                ->leftjoin('phong', 'phong.ma_phong', 'phieu_danh_gia.ma_phong')
-                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'phieu_danh_gia.ma_don_vi')
+                ->where('kqxl_nam.ma_don_vi', $ma_don_vi)
+                ->leftjoin('users', 'users.so_hieu_cong_chuc', 'kqxl_nam.so_hieu_cong_chuc')
+                ->leftjoin('chuc_vu', 'chuc_vu.ma_chuc_vu', 'kqxl_nam.ma_chuc_vu')
+                ->leftjoin('phong', 'phong.ma_phong', 'kqxl_nam.ma_phong')
+                ->leftjoin('don_vi', 'don_vi.ma_don_vi', 'kqxl_nam.ma_don_vi')
                 ->select('kqxl_nam.*', 'users.name', 'chuc_vu.ma_chuc_vu', 'chuc_vu.ten_chuc_vu', 'phong.ma_phong', 'don_vi.ma_don_vi')
-                ->orderBy('phieu_danh_gia.ma_don_vi', 'ASC')
-                ->orderBy('phieu_danh_gia.ma_phong', 'ASC')
-                ->orderByRaw('ISNULL(phieu_danh_gia.ma_chuc_vu), phieu_danh_gia.ma_chuc_vu ASC')
+                ->orderBy('kqxl_nam.ma_don_vi', 'ASC')
+                ->orderBy('kqxl_nam.ma_phong', 'ASC')
+                ->orderByRaw('ISNULL(kqxl_nam.ma_chuc_vu), kqxl_nam.ma_chuc_vu ASC')
                 ->get();
         }
 
@@ -2322,7 +2318,7 @@ class PhieuDanhGiaController extends Controller
             'ds_don_vi' => $ds_don_vi,
             'ma_don_vi_da_chon' => $request->ma_don_vi_da_chon,
         ]);
-    }    
+    }
 
     public function dangxaydung()
     {
