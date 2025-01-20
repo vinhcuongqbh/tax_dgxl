@@ -52,19 +52,19 @@ class KQXLNamImport implements ToCollection, WithStartRow
             if ($ma_chuc_vu == 0) {
                 $error++;
                 $error_sum++;
-                $error_chuc_vu = "Lỗi mã Chức vụ không có trong cơ sở dữ liệu.";
+                $error_chuc_vu = "Lỗi Mã chức vụ không có trong cơ sở dữ liệu.";
             }
 
             if ($ma_phong->count() == 0) {
                 $error++;
                 $error_sum++;
-                $error_phong = "Lỗi mã Phòng không có trong cơ sở dữ liệu.";
+                $error_phong = "Lỗi Mã phòng không có trong cơ sở dữ liệu.";
             }
 
             if ($ma_don_vi->count() == 0) {
                 $error++;
                 $error_sum++;
-                $error_don_vi = "Lỗi mã Đơn vị không có trong cơ sở dữ liệu.";
+                $error_don_vi = "Lỗi Mã đơn vị không có trong cơ sở dữ liệu.";
             }
 
             if ($kqxl->count() == 0) {
