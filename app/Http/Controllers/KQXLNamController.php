@@ -6,12 +6,14 @@ use App\Exports\KQXLNamTemplate;
 use Illuminate\Http\Request;
 use App\Imports\KQXLNamImport;
 use App\Models\DonVi;
+use App\Models\KQXLNamBanKySo;
 use App\Models\KQXLQuy;
 use App\Models\Phong;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Storage;
 
 class KQXLNamController extends Controller
 {
@@ -119,12 +121,37 @@ class KQXLNamController extends Controller
 
     public function nhapKQXLNam(Request $request)
     {
-        if (Session::get('error') >0 ) $error_list = Session::get('error_list');
+        if (Session::get('error') > 0) $error_list = Session::get('error_list');
         else  $error_list = null;
 
         session()->forget(['error', 'error_list']);
 
         return view('danhgia.nhapKQXLNam', ['error_list' => $error_list]);
+    }
+
+    public function nhapKQXLNamBanKySo(Request $request)
+    {
+        if (isset($request->nam_danh_gia)) $nam_danh_gia = $request->nam_danh_gia;
+        else $nam_danh_gia = Carbon::now()->subYear()->year;
+
+        if (!empty($request->file('KQXLNamBanKySo'))) {
+            //$file = Storage::putFile('/File', $request->file('KQXLNamBanKySo'));
+            //$path = $request->file('KQXLNamBanKySo')->storeAs('KQXLNam', $nam_danh_gia);    
+            $path = '/storage/'.Storage::disk('public')->put('File', $request->file('KQXLNamBanKySo'));
+
+            KQXLNamBanKySo::updateOrCreate(
+                ['nam_danh_gia' => $nam_danh_gia],
+                [
+                    'duong_dan_file' => $path,
+                    'ma_can_bo_cap_nhat' => Auth::user()->so_hieu_cong_chuc,
+                    'ma_trang_thai' => 1
+                ]
+            );
+        }
+
+        $kqxl_nam_ban_ky_so = KQXLNamBanKySo::orderby('nam_danh_gia', 'desc')->get();
+
+        return view('danhgia.nhapKQXLNamBanKySo', ['kqxl_nam_ban_ky_so' => $kqxl_nam_ban_ky_so, 'nam_danh_gia' => $nam_danh_gia]);
     }
 
 
@@ -156,8 +183,8 @@ class KQXLNamController extends Controller
     }
 
 
-    public function downloadKQXLNamTemplate() 
-{
-    return Excel::download(new KQXLNamTemplate, 'KQLXNam.xlsx');
-}
+    public function downloadKQXLNamTemplate()
+    {
+        return Excel::download(new KQXLNamTemplate, 'KQLXNam.xlsx');
+    }
 }

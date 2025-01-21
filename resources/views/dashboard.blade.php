@@ -232,8 +232,13 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
+                                    <a href="/canhan/nhapKQXLnambankyso" class="nav-link">
+                                        <p>4.5. Nhập bản ký số KQXL năm của cá nhân</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/thongbaonam" class="nav-link">
-                                        <p>4.5. Thông báo kết quả xếp loại năm của cá nhân</p>
+                                        <p>4.6. Thông báo kết quả xếp loại năm của cá nhân</p>
                                     </a>
                                 </li>
                             </ul>

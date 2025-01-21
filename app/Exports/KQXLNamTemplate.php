@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Invoice;
 use App\Models\User;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -10,8 +9,11 @@ use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class KQXLNamTemplate implements FromCollection, WithColumnWidths, WithStyles
+
+class KQXLNamTemplate implements FromCollection, WithColumnWidths, WithStyles, WithColumnFormatting
 {
     public function collection()
     {
@@ -121,6 +123,14 @@ class KQXLNamTemplate implements FromCollection, WithColumnWidths, WithStyles
                     'vertical' => Alignment::VERTICAL_CENTER,
                 ],
             ],
+        ];
+    }
+
+
+    public function columnFormats(): array
+    {
+        return [
+            'A:Z' => NumberFormat::FORMAT_TEXT, // Cột B được định dạng là text
         ];
     }
 }

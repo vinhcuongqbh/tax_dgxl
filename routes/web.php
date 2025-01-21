@@ -140,8 +140,10 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['prefix' => 'canhan'], function () {
         Route::get('dukienkqxlnam', [KQXLNamController::class, 'dukienkqxlnam'])->name('canhan.dukienkqxlnam');  
-        Route::get('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam'])->name('canhan.nhapketqua');
-        Route::post('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam']);
+        Route::get('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam']);
+        Route::post('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam'])->name('canhan.nhapketqua');
+        Route::get('nhapKQXLnambankyso', [KQXLNamController::class, 'nhapKQXLNamBanKySo']);
+        Route::post('nhapKQXLnambankyso', [KQXLNamController::class, 'nhapKQXLNamBanKySo'])->name('canhan.nhapKQXLnambankyso');
         Route::post('readExcel', [KQXLNamController::class, 'readExcel'])->name('canhan.readExcel');
         Route::get('kqxlNamTemplate', [KQXLNamController::class, 'downloadKQXLNamTemplate'])->name('canhan.donwnloadKQXLNamTemplate');
     });
