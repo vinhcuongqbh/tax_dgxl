@@ -12,27 +12,27 @@
 
 @section('content')
     <div class="container-fluid">
-        <form action="" method="POST" enctype="multipart/form-data" class="col-6 py-3">
+        <form action="" method="POST" enctype="multipart/form-data" class="py-3">
             @csrf
             <div class="row">
                 <div class="col-auto">
                     <label>Năm đánh giá</label>
                 </div>
-                <div class="col-auto">
+                <div class="col-1">
                     <input type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $nam_danh_gia }}"
                         class="form-control text-center">
                 </div>
                 <div class="col-auto">
                     <label>File</label>
                 </div>
-                <div class="col-auto">
+                <div class="col-4">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="KQXLNamBanKySo" name="KQXLNamBanKySo"
                             accept="application/pdf">
                         <label class="custom-file-label" for="KQXLNamBanKySo"></label>
                     </div>
                 </div>
-                <div class="col-auto">
+                <div class="col-2">
                     <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
             </div>

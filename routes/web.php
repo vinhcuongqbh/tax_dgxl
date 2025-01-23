@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\XepLoaiController;
 use App\Http\Controllers\ExcelController;
+use App\Models\KQXLNam;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -124,22 +125,23 @@ Route::middleware('auth')->group(function () {
         Route::get('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy']);
         Route::post('baocaoquy', [PhieuDanhGiaController::class, 'baoCaoQuy'])->name('phieudanhgia.baocaoquy');
 
-        Route::get('thongbaonam', [PhieuDanhGiaController::class, 'thongBaoNam']);
-        Route::post('thongbaonam', [PhieuDanhGiaController::class, 'thongBaoNam'])->name('phieudanhgia.thongbaonam');
+        Route::get('thongbaonam', [KQXLNamController::class, 'thongBaoNam']);
+        Route::post('thongbaonam', [KQXLNamController::class, 'thongBaoNam'])->name('phieudanhgia.thongbaonam');
 
         Route::get('tracuu', [PhieuDanhGiaController::class, 'traCuu']);
         Route::post('tracuu', [PhieuDanhGiaController::class, 'traCuu'])->name('phieudanhgia.tracuu');
     });
 
     Route::group(['prefix' => 'tapthe'], function () {
-        Route::get('nhapketqua', [PhieuDanhGiaController::class, 'nhapKetQuaTapThe']);
-        Route::post('nhapketqua', [PhieuDanhGiaController::class, 'nhapKetQuaTapThe'])->name('tapthe.nhapketqua');
-        Route::post('luuketqua', [PhieuDanhGiaController::class, 'luuKetQuaTapThe'])->name('tapthe.luuketqua');
-        Route::get('tracuuketqua', [PhieuDanhGiaController::class, 'traCuuKetQuaTapThe'])->name('tapthe.tracuu');       
+        Route::get('nhapketqua', [KQXLNamController::class, 'nhapKetQuaTapThe']);
+        Route::post('nhapketqua', [KQXLNamController::class, 'nhapKetQuaTapThe'])->name('tapthe.nhapketqua');
+        Route::post('luuketqua', [KQXLNamController::class, 'luuKetQuaTapThe'])->name('tapthe.luuketqua');
+        Route::get('tracuuketqua', [KQXLNamController::class, 'traCuuKetQuaTapThe'])->name('tapthe.tracuu');       
     });
 
     Route::group(['prefix' => 'canhan'], function () {
-        Route::get('dukienkqxlnam', [KQXLNamController::class, 'dukienkqxlnam'])->name('canhan.dukienkqxlnam');  
+        //Route::get('dukienkqxlnam', [KQXLNamController::class, 'dukienkqxlnam'])->name('canhan.dukienkqxlnam');  
+        Route::get('dukienkqxlnam', [PhieuDanhGiaController::class, 'dangxaydung']);
         Route::get('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam']);
         Route::post('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam'])->name('canhan.nhapketqua');
         Route::get('nhapKQXLnambankyso', [KQXLNamController::class, 'nhapKQXLNamBanKySo']);
