@@ -579,7 +579,7 @@ class PhieuDanhGiaController extends Controller
             // Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế            
             $danh_sach = PhieuDanhGia::where('ma_trang_thai', '17')
                 // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
-                ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where(function ($query) {
                     $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
                         ->orwhere('ma_don_vi', Auth::user()->ma_don_vi);
@@ -594,7 +594,7 @@ class PhieuDanhGiaController extends Controller
             // Phê duyệt cho Công chức thuộc Chi cục     
             $danh_sach = PhieuDanhGia::where('ma_don_vi', Auth::user()->ma_don_vi)
                 // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
-                ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
+                ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                 ->where('ma_trang_thai', '17')
                 ->where('ma_chuc_vu', null)
                 ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
@@ -627,7 +627,7 @@ class PhieuDanhGiaController extends Controller
                 // Công chức không giữ chức vụ lãnh đạo thuộc Văn phòng, Phòng của Cục thuế   
                 $danh_sach = PhieuDanhGia::where('ma_trang_thai', '17')
                     // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
-                    ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                     ->where(function ($query) {
                         $query->wherein('ma_chuc_vu', ['02', '03', '04', '05', '06', '07', '08', '09', '10', '06A', '07A', '08A', '10A'])
                             ->orwhere('ma_don_vi', Auth::user()->ma_don_vi);
@@ -642,7 +642,7 @@ class PhieuDanhGiaController extends Controller
                 // Đánh giá cho Công chức không giữ chức vụ lãnh đạo thuộc Chi cục     
                 $danh_sach = PhieuDanhGia::where('ma_don_vi', Auth::user()->ma_don_vi)
                     // ->where('thoi_diem_danh_gia', '<=', Carbon::now())
-                    ->where('thoi_diem_danh_gia', '<=', Carbon::now()->addMonth())
+                    ->where('thoi_diem_danh_gia', '<=', Carbon::now())
                     ->where('ma_trang_thai', '17')
                     ->where('ma_chuc_vu', null)
                     ->orwhere('ma_don_vi', Auth::user()->ma_don_vi)
