@@ -40,10 +40,10 @@
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
                                 <col style="width:5%;">
-                                <col style="width:15%;">
-                                <col style="width:50%;">
-                                <col style="width:15%;">
-                                <col style="width:15%;">
+                                    <col style="width:15%;">
+                                    <col style="width:45%;">
+                                    <col style="width:25%;">
+                                    <col style="width:10%;">
                             </colgroup>
                             <thead>
                                 <tr>

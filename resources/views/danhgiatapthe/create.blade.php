@@ -41,9 +41,9 @@
                                 <colgroup>
                                     <col style="width:5%;">
                                     <col style="width:15%;">
-                                    <col style="width:50%;">
-                                    <col style="width:15%;">
-                                    <col style="width:15%;">
+                                    <col style="width:45%;">
+                                    <col style="width:25%;">
+                                    <col style="width:10%;">
                                 </colgroup>
                                 <thead>
                                     <tr>
@@ -77,7 +77,7 @@
                                                         @foreach ($xep_loai as $xl)
                                                             <option value="{{ $xl->ma_xep_loai }}"
                                                                 @if ($ph->ket_qua_xep_loai == '{{ $xl->ma_xep_loai }}') selected @endif>
-                                                                {{ $xl->ma_xep_loai }}</option>
+                                                                {{ $xl->ten_xep_loai }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>

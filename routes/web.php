@@ -144,6 +144,8 @@ Route::middleware('auth')->group(function () {
         Route::get('dukienkqxlnam', [PhieuDanhGiaController::class, 'dangxaydung']);
         Route::get('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam']);
         Route::post('nhapketqua', [KQXLNamController::class, 'nhapKQXLNam'])->name('canhan.nhapketqua');
+        Route::get('nhapbanTuDGXLcanhan', [KQXLNamController::class, 'nhapbanTuDGXLcanhan']);
+        Route::post('nhapbanTuDGXLcanhan', [KQXLNamController::class, 'nhapbanTuDGXLcanhan'])->name('canhan.nhapbanTuDGXLcanhan');
         Route::get('nhapKQXLnambankyso', [KQXLNamController::class, 'nhapKQXLNamBanKySo']);
         Route::post('nhapKQXLnambankyso', [KQXLNamController::class, 'nhapKQXLNamBanKySo'])->name('canhan.nhapKQXLnambankyso');
         Route::post('readExcel', [KQXLNamController::class, 'readExcel'])->name('canhan.readExcel');

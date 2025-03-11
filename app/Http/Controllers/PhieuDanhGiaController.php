@@ -1825,7 +1825,7 @@ class PhieuDanhGiaController extends Controller
 
     public function phieuKTDGCreate()
     {
-        $don_vi = DonVi::where('ma_trang_thai', 1)->get();
+        $don_vi = DonVi::where('ma_trang_thai', 1)->where('ma_don_vi','<>','4400')->get();
         return view(
             'danhgia.phieuKTDG_create',
             [

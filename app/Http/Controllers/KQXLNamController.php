@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KQXLNamTapThe;
+use App\Models\User;
 use App\Models\XepLoai;
 
 class KQXLNamController extends Controller
@@ -23,7 +24,7 @@ class KQXLNamController extends Controller
     public function __construct()
     {
         // Cấp tự đánh giá
-        $this->middleware('permission:nhập KQXL năm của tập thể', ['only' => ['nhapKetQuaTapThe','luuKetQuaTapThe']]);
+        $this->middleware('permission:nhập KQXL năm của tập thể', ['only' => ['nhapKetQuaTapThe', 'luuKetQuaTapThe']]);
         $this->middleware('permission:thông báo KQXL năm của tập thể', ['only' => ['traCuuKetQuaTapThe']]);
         $this->middleware('permission:dự kiến KQXL năm của cá nhân', ['only' => ['dukienkqxlnam']]);
         $this->middleware('permission:nhập KQXL năm của cá nhân', ['only' => ['nhapKQXLNam']]);
@@ -231,6 +232,52 @@ class KQXLNamController extends Controller
         // ]);
     }
 
+    public function nhapbanTuDGXLcanhan(Request $request)
+    {
+        if (isset($request->nam_danh_gia)) $nam_danh_gia = $request->nam_danh_gia;
+        else $nam_danh_gia = Carbon::now()->subYear()->year;
+
+        $don_vi = DonVi::where('ma_trang_thai', 1)->where('ma_don_vi', '<>', '4400')->get();
+        $phong = Phong::where('ma_trang_thai', 1)
+            ->where('ma_don_vi_cap_tren', $request->don_vi)
+            ->get();
+        $user = User::where('ma_trang_thai', 1)
+            ->where('ma_phong', $request->phong)
+            ->get();
+
+        if ($request->isMethod('get')) {
+            return view('danhgia.nhapbanTuDGXLcanhan', [
+                'don_vi' => $don_vi,
+                'phong' => $phong,
+                'cong_chuc' => $user,
+                'nam_danh_gia' => $nam_danh_gia,
+                'don_vi_da_chon' => $request->don_vi,
+                'phong_da_chon' => $request->phong,
+                'cong_chuc_da_chon' => $request->user,
+            ]);
+        } elseif ($request->isMethod('post')) {
+            if (!empty($request->file('banTuDGXLcanhan'))) {
+                $path = '/storage/' . Storage::disk('public')->put('File/' . $nam_danh_gia, $request->file('banTuDGXLcanhan'));
+
+                $kqxl_nam = KQXLNam::where('ma_kqxl', $nam_danh_gia . "_" . $request->user)->first();
+                $kqxl_nam->file_tu_dgxl = $path;
+                $kqxl_nam->save();
+            }
+
+            session()->flash('msg_success', 'Đã cập nhật thành công');
+
+            return view('danhgia.nhapbanTuDGXLcanhan', [
+                'don_vi' => $don_vi,
+                'phong' => $phong,
+                'cong_chuc' => $user,
+                'nam_danh_gia' => $nam_danh_gia,
+                'don_vi_da_chon' => $request->don_vi,
+                'phong_da_chon' => $request->phong,
+                'cong_chuc_da_chon' => $request->user,
+            ]);
+        }
+
+    }
 
     // Nhập KQXL năm của cá nhân
     public function nhapKQXLNam(Request $request)
@@ -252,7 +299,7 @@ class KQXLNamController extends Controller
         if (!empty($request->file('KQXLNamBanKySo'))) {
             //$file = Storage::putFile('/File', $request->file('KQXLNamBanKySo'));
             //$path = $request->file('KQXLNamBanKySo')->storeAs('KQXLNam', $nam_danh_gia);    
-            $path = '/storage/'.Storage::disk('public')->put('File', $request->file('KQXLNamBanKySo'));
+            $path = '/storage/' . Storage::disk('public')->put('File', $request->file('KQXLNamBanKySo'));
 
             KQXLNamBanKySo::updateOrCreate(
                 ['nam_danh_gia' => $nam_danh_gia],

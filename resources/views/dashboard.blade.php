@@ -232,10 +232,15 @@
                                     </a>
                                 </li>
                                 <li class="nav-item pl-3">
+                                    <a href="/canhan/nhapbanTuDGXLcanhan" class="nav-link">
+                                        <p>4.5. Nhập bản tự đánh giá xếp loại năm của cá nhân</p>
+                                    </a>
+                                </li>
+                                {{-- <li class="nav-item pl-3">
                                     <a href="/canhan/nhapKQXLnambankyso" class="nav-link">
                                         <p>4.5. Nhập bản ký số KQXL năm của cá nhân</p>
                                     </a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item pl-3">
                                     <a href="/phieudanhgia/thongbaonam" class="nav-link">
                                         <p>4.6. Thông báo kết quả xếp loại năm của cá nhân</p>
@@ -387,6 +392,10 @@
                         })
                     </script>
                 @endif
+                @php
+                    session()->forget('msg_success');
+                    session()->forget('msg_error');
+                @endphp
                 @yield('content')
             </section>
         </div>
