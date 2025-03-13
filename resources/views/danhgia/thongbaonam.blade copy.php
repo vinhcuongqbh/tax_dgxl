@@ -17,7 +17,8 @@
                             {{ $ds_don_vi->ten_don_vi }}</option>
                     @endforeach
                 </select>
-                <label class="h6 mt-2 mx-2">Năm</label><input type="number" id="nam_danh_gia" name="nam_danh_gia"
+                <label class="h6 mt-2 mx-2">Năm</label><input
+                    type="number" id="nam_danh_gia" name="nam_danh_gia" 
                     value="{{ $nam_danh_gia }}" class="form-control text-center">
                 <button type="submit" class="btn bg-olive form-control ml-2">Xem</button>
             </div>
@@ -35,25 +36,17 @@
                             <colgroup>
                                 <col style="width:5%;">
                                 <col style="width:25%;">
-                                <col style="width:20%;">
-                                <col style="width:10%;">
-                                <col style="width:10%;">
-                                <col style="width:10%;">
-                                <col style="width:10%;">
-                                <col style="width:10%;">
+                                <col style="width:25%;">
+                                <col style="width:30%;">
+                                <col style="width:15%;">                                
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle" rowspan="2">STT</th>
-                                    <th class="text-center align-middle" rowspan="2">Họ và tên</th>
-                                    <th class="text-center align-middle" rowspan="2">Chức vụ</th>
-                                    <th class="text-center align-middle" colspan="4">Mức độ đánh giá xếp loại</th>
-                                    <th class="text-center align-middle" rowspan="2">Bản tự đánh giá xếp loại (ký số)</th>
-                                </tr>
-                                <tr>
-                                    @foreach ($xep_loai as $xl)
-                                        <th class="text-center align-middle">{{ $xl->ten_xep_loai }}</th>
-                                    @endforeach
+                                    <th class="text-center align-middle">STT</th>
+                                    <th class="text-center align-middle">Họ và tên</th>
+                                    <th class="text-center align-middle">Chức vụ</th>
+                                    <th class="text-center align-middle">Kết quả xếp loại</th>
+                                    <th class="text-center align-middle">Ghi chú</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,10 +55,7 @@
                                     @if ($phieu_danh_gia->where('ma_don_vi', $dv->ma_don_vi)->count() > 0)
                                         <tr>
                                             <td class="text-center text-bold bg-olive">{{ $i++ }}</td>
-                                            <td class="text-bold bg-olive" colspan="7">{{ $dv->ten_don_vi }}</td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
+                                            <td class="text-bold bg-olive" colspan="4">{{ $dv->ten_don_vi }}</td>
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
@@ -74,10 +64,7 @@
                                         @if ($phieu_danh_gia->where('ma_phong', $ph->ma_phong)->count() > 0)
                                             <tr>
                                                 <td class="text-center"></td>
-                                                <td class="text-bold" colspan="7">{{ $ph->ten_phong }}</td>
-                                                <td style="display: none;"></td>
-                                                <td style="display: none;"></td>
-                                                <td style="display: none;"></td>
+                                                <td class="text-bold" colspan="4">{{ $ph->ten_phong }}</td>
                                                 <td style="display: none;"></td>
                                                 <td style="display: none;"></td>
                                                 <td style="display: none;"></td>
@@ -89,19 +76,8 @@
                                                 <td class="text-center">{{ $j++ }}</td>
                                                 <td>{{ $phieu->name }}</td>
                                                 <td class="text-center">{{ $phieu->ten_chuc_vu }}</td>
-                                                @foreach ($xep_loai as $xl)
-                                                    <td class="text-center">
-                                                        @if ($phieu->kqxl == $xl->ma_xep_loai)
-                                                            x
-                                                        @endif
-                                                    </td>
-                                                @endforeach
-                                                <td class="text-center">
-                                                    @if (isset($phieu->file_tu_dgxl))
-                                                        <a href="{{ $phieu->file_tu_dgxl }}" target="_blank" rel="noopener noreferrer"><img
-                                                                src="/img/pdf.png" width="30" height="30"></a>
-                                                    @endif
-                                                </td>
+                                                <td>{{ $phieu->ten_xep_loai }}</td>
+                                                <td></td>
                                             </tr>
                                         @endforeach
                                     @endforeach

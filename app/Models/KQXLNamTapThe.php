@@ -14,6 +14,7 @@ class KQXLNamTapThe extends Model
     protected $fillable = [
         'nam_danh_gia',
         'ma_phong',
+        'ket_qua_chuyen_mon',
         'ket_qua_xep_loai',
         'ma_can_bo_cap_nhat',
         'ma_trang_thai'

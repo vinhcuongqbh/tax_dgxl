@@ -1,11 +1,11 @@
 @extends('dashboard')
 
-@section('title', 'Nhập kết quả xếp loại năm của cá nhân')
+@section('title', 'Nhập kết quả xếp loại năm của tập thể')
 
 @section('heading')
     <div class="d-flex">
         <div class="col-4">
-            Nhập KQXL năm của cá nhân
+            Nhập KQXL năm của tập thể
         </div>
         <div class="d-flex justify-content-end col-8">
             {{-- <label for="ma_don_vi" class="h6 mt-2 mx-2">ĐV: </label>
@@ -16,8 +16,8 @@
             @endforeach
         </select> --}}
             <label class="h6 mt-2 mx-2">Năm</label>
-            <input type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $thoi_diem_danh_gia->year }}" max="{{ $thoi_diem_danh_gia->year }}"
-                onchange="setNamDangGia()" class="form-control text-center col-2">
+            <input type="number" id="nam_danh_gia" name="nam_danh_gia" value="{{ $thoi_diem_danh_gia->year }}"
+                max="{{ $thoi_diem_danh_gia->year }}" onchange="setNamDangGia()" class="form-control text-center col-2">
         </div>
     </div>
 @stop
@@ -40,17 +40,19 @@
                             <table id="table" class="table table-bordered table-striped">
                                 <colgroup>
                                     <col style="width:5%;">
-                                    <col style="width:15%;">
-                                    <col style="width:45%;">
-                                    <col style="width:25%;">
                                     <col style="width:10%;">
+                                    <col style="width:40%;">
+                                    <col style="width:15%;">
+                                    <col style="width:25%;">
+                                    <col style="width:5%;">
                                 </colgroup>
                                 <thead>
                                     <tr>
                                         <th class="text-center align-middle">STT</th>
                                         <th class="text-center align-middle">Mã phòng/đội</th>
                                         <th class="text-center align-middle">Tên phòng/đội</th>
-                                        <th class="text-center align-middle">Xếp loại</th>
+                                        <th class="text-center align-middle">Mức độ hoàn thành chuyên môn</th>
+                                        <th class="text-center align-middle">Phân loại Tập thể</th>
                                         <th class="text-center align-middle">Ghi chú</th>
                                     </tr>
                                 </thead>
@@ -59,10 +61,33 @@
                                     @foreach ($don_vi as $dv)
                                         <tr>
                                             <td class="text-center text-bold bg-olive">{{ $i }}</td>
-                                            <td class="text-bold bg-olive" colspan="4">{{ $dv->ten_don_vi }}</td>
+                                            <td class="text-bold bg-olive" colspan="2">{{ $dv->ten_don_vi }}</td>
                                             <td style="display: none"></td>
-                                            <td style="display: none"></td>
-                                            <td style="display: none"></td>
+                                            <td class="text-center bg-olive">
+                                                @if ($dv->ma_don_vi != '4401')
+                                                    <select id="cm{{ $dv->ma_don_vi }}" name="cm{{ $dv->ma_don_vi }}"
+                                                        class="form-control custom-select">
+                                                        <option selected></option>
+                                                        @foreach ($xep_loai as $xl)
+                                                            <option value="{{ $xl->ma_xep_loai }}">{{ $xl->ma_xep_loai }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                @endif
+                                            </td>
+                                            <td class="text-center bg-olive">
+                                                @if ($dv->ma_don_vi != '4401')
+                                                    <select id="tt{{ $dv->ma_don_vi }}" name="tt{{ $dv->ma_don_vi }}"
+                                                        class="form-control custom-select">
+                                                        <option selected></option>
+                                                        @foreach ($xep_loai as $xl)
+                                                            <option value="{{ $xl->ma_xep_loai }}">{{ $xl->ten_xep_loai }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                @endif
+                                            </td>
+                                            <td class="text-center bg-olive"></td>
                                         </tr>
                                         @php $j = 1 @endphp
                                         @foreach ($phong->where('ma_don_vi_cap_tren', $dv->ma_don_vi) as $ph)
@@ -71,7 +96,18 @@
                                                 <td class="text-center">{{ $ph->ma_phong }}</td>
                                                 <td>{{ $ph->ten_phong }}</td>
                                                 <td class="text-center">
-                                                    <select id="e{{ $ph->ma_phong }}" name="{{ $ph->ma_phong }}"
+                                                    <select id="cm{{ $ph->ma_phong }}" name="cm{{ $ph->ma_phong }}"
+                                                        class="form-control custom-select">
+                                                        <option selected></option>
+                                                        @foreach ($xep_loai as $xl)
+                                                            <option value="{{ $xl->ma_xep_loai }}"
+                                                                @if ($ph->ket_qua_xep_loai == '{{ $xl->ma_xep_loai }}') selected @endif>
+                                                                {{ $xl->ma_xep_loai }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <select id="tt{{ $ph->ma_phong }}" name="tt{{ $ph->ma_phong }}"
                                                         class="form-control custom-select">
                                                         <option selected></option>
                                                         @foreach ($xep_loai as $xl)
@@ -90,7 +126,8 @@
                             </table>
                         </div>
                         <!-- /.card-body -->
-                        <input type="hidden" id="nam_danh_gia_2" name="nam_danh_gia_2" value="{{ $thoi_diem_danh_gia->year }}">
+                        <input type="hidden" id="nam_danh_gia_2" name="nam_danh_gia_2"
+                            value="{{ $thoi_diem_danh_gia->year }}">
                     </div>
                     <!-- /.card -->
                 </div>
@@ -145,5 +182,5 @@
         function setNamDangGia() {
             document.getElementById("nam_danh_gia_2").value = document.getElementById("nam_danh_gia").value;
         }
-    </script>    
+    </script>
 @stop

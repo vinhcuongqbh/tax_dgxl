@@ -40,31 +40,73 @@
                         <table id="table" class="table table-bordered table-striped">
                             <colgroup>
                                 <col style="width:5%;">
-                                    <col style="width:15%;">
-                                    <col style="width:45%;">
-                                    <col style="width:25%;">
-                                    <col style="width:10%;">
+                                <col style="width:7%;">
+                                <col style="width:30%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:5%;">
+                                <col style="width:7%;">
+                                <col style="width:7%;">
+                                <col style="width:7%;">
+                                <col style="width:7%;">
+                                <col style="width:10%;">
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">STT</th>
-                                    <th class="text-center align-middle">Mã phòng/đội</th>
-                                    <th class="text-center align-middle">Tên phòng/đội</th>
-                                    <th class="text-center align-middle">Xếp loại</th>
-                                    <th class="text-center align-middle">Ghi chú</th>
+                                    <th class="text-center align-middle" rowspan="2">STT</th>
+                                    <th class="text-center align-middle" rowspan="2">Mã phòng/đội</th>
+                                    <th class="text-center align-middle" rowspan="2">Tên phòng/đội</th>
+                                    <th class="text-center align-middle" colspan="4">Mức độ hoàn thành nhiệm vụ chuyên
+                                        môn</th>
+                                    <th class="text-center align-middle" colspan="4">Phân loại tập thể</th>
+                                    <th class="text-center align-middle" rowspan="2">Ghi chú</th>
+                                </tr>
+                                <tr>
+                                    @foreach ($xep_loai as $xl)
+                                        <th class="text-center align-middle">{{ $xl->ma_xep_loai }}</th>
+                                    @endforeach
+                                    @foreach ($xep_loai as $xl)
+                                        <th class="text-center align-middle">{{ $xl->ten_xep_loai }}</th>
+                                    @endforeach
                                 </tr>
                             </thead>
                             <tbody>
                                 @php $i = 0 @endphp
-                                @foreach ($don_vi as $dv)                                    
+                                @foreach ($don_vi as $dv)
                                     @if ($kqxl->where('ma_don_vi_cap_tren', $dv->ma_don_vi)->count() > 0)
-                                    @php $i++ @endphp
+                                        @php $i++ @endphp
                                         <tr>
                                             <td class="text-center text-bold bg-olive">{{ $i }}</td>
-                                            <td class="text-bold bg-olive" colspan="4">{{ $dv->ten_don_vi }}</td>
-                                            <td style="display: none"></td>
-                                            <td style="display: none"></td>
-                                            <td style="display: none"></td>
+                                            <td class="text-bold bg-olive" colspan="2">{{ $dv->ten_don_vi }}</td>
+                                            <td style="display: none;"></td>
+                                            @foreach ($xep_loai as $xl)
+                                                <td class="text-center text-bold bg-olive">
+                                                    @php
+                                                        $item = $kqxl->where('ma_phong', $dv->ma_don_vi)->first();
+                                                        if ($item) {
+                                                            $ket_qua = $item['ket_qua_chuyen_mon'];
+                                                            if ($ket_qua == $xl->ma_xep_loai) {
+                                                                echo 'x';
+                                                            }
+                                                        }
+                                                    @endphp
+                                                </td>
+                                            @endforeach
+                                            @foreach ($xep_loai as $xl)
+                                                <td class="text-center text-bold bg-olive">
+                                                    @php
+                                                        $item = $kqxl->where('ma_phong', $dv->ma_don_vi)->first();
+                                                        if ($item) {
+                                                            $ket_qua = $item['ket_qua_xep_loai'];
+                                                            if ($ket_qua == $xl->ma_xep_loai) {
+                                                                echo 'x';
+                                                            }
+                                                        }
+                                                    @endphp
+                                                </td>
+                                            @endforeach
+                                            <td class="text-bold bg-olive"></td>
                                         </tr>
                                     @endif
                                     @php $j = 1 @endphp
@@ -73,7 +115,20 @@
                                             <td class="text-center">{{ $i }}.{{ $j++ }}</td>
                                             <td class="text-center">{{ $kq->ma_phong }}</td>
                                             <td>{{ $kq->ten_phong }}</td>
-                                            <td class="text-center">{{ $kq->ket_qua_xep_loai }}</td>
+                                            @foreach ($xep_loai as $xl)
+                                                <td class="text-center">
+                                                    @if ($kq->ket_qua_chuyen_mon == $xl->ma_xep_loai)
+                                                        x
+                                                    @endif
+                                                </td>
+                                            @endforeach
+                                            @foreach ($xep_loai as $xl)
+                                                <td class="text-center">
+                                                    @if ($kq->ket_qua_xep_loai == $xl->ma_xep_loai)
+                                                        x
+                                                    @endif
+                                                </td>
+                                            @endforeach
                                             <td></td>
                                         </tr>
                                     @endforeach
